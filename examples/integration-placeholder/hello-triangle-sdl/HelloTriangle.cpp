@@ -95,7 +95,7 @@ int main(int, char**)
         std::cout << "GL_RENDERER = " << info.renderer << '\n';
         std::cout << "GL_VERSION  = " << info.version_string << '\n';
 
-        const float vertices[] = {
+        constexpr float vertices[] = {
             -0.5f, -0.5f, 0.0f,
              0.5f, -0.5f, 0.0f,
              0.0f,  0.5f, 0.0f
