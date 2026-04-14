@@ -25,7 +25,7 @@ set_target_properties(easy-gl PROPERTIES
     SOVERSION ${PROJECT_VERSION_MAJOR})
 
 target_sources(easy-gl
-    PRIVATE
+        PRIVATE
         src/Config.cpp
         src/ContextInfo.cpp
         src/Capabilities.cpp
@@ -37,19 +37,28 @@ target_sources(easy-gl
         src/VertexArray.cpp
         src/platform/GlApiLoader.cpp
         src/platform/GlFunctions.cpp
-    PUBLIC
+        PUBLIC
         FILE_SET HEADERS
         BASE_DIRS include
         FILES
-            include/easygl/easygl.hpp
-            include/easygl/Config.hpp
-            include/easygl/Export.hpp
-            include/easygl/Version.hpp
-            include/easygl/Exception.hpp
-            include/easygl/Types.hpp
-            include/easygl/ContextInfo.hpp
-            include/easygl/Capabilities.hpp
-            include/easygl/Feature.hpp
-            include/easygl/Device.hpp
-            include/easygl/Buffer.hpp
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/easy-gl)
+        include/easygl/easygl.hpp
+        include/easygl/Config.hpp
+        include/easygl/Export.hpp
+        include/easygl/Version.hpp
+        include/easygl/Exception.hpp
+        include/easygl/Types.hpp
+        include/easygl/ContextInfo.hpp
+        include/easygl/Capabilities.hpp
+        include/easygl/Feature.hpp
+        include/easygl/Device.hpp
+        include/easygl/Buffer.hpp
+        include/easygl/Shader.hpp
+        include/easygl/Program.hpp
+        include/easygl/Texture.hpp
+        include/easygl/VertexArray.hpp
+        include/easygl/detail/NonCopyable.hpp
+)
+install(TARGETS easy-gl
+        EXPORT easy-gl-targets
+        FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
