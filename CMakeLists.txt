@@ -35,7 +35,6 @@ target_sources(easy-gl
         src/Program.cpp
         src/Texture.cpp
         src/VertexArray.cpp
-        src/detail/NonCopyable.cpp
         src/platform/GlApiLoader.cpp
         src/platform/GlFunctions.cpp
         src/platform/GlFunctions.hpp
