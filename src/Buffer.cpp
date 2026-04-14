@@ -3,7 +3,10 @@
 namespace easygl
 {
     Buffer::Buffer() = default;
-    Buffer::~Buffer() = default;
+    Buffer::~Buffer()
+    {
+        destroy();
+    }
 
     Buffer::Buffer(Buffer&& other) noexcept
         : handle_(other.handle_)
@@ -15,6 +18,7 @@ namespace easygl
     {
         if (this != &other)
         {
+            destroy();
             handle_ = other.handle_;
             other.handle_ = 0;
         }

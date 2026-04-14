@@ -62,3 +62,12 @@ install(TARGETS easy-gl
         EXPORT easy-gl-targets
         FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
+
+if(BUILD_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
+
+if(EASYGL_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()

@@ -3,6 +3,8 @@
 #include <cstddef>
 #include "easygl/Export.hpp"
 
+#include "easygl/detail/NonCopyable.hpp"
+
 namespace easygl
 {
     enum class BufferTarget
@@ -14,14 +16,11 @@ namespace easygl
         CopyWrite
     };
 
-    class EASYGL_API Buffer
+    class EASYGL_API Buffer : public detail::NonCopyable
     {
     public:
         Buffer();
         ~Buffer();
-
-        Buffer(const Buffer&) = delete;
-        Buffer& operator=(const Buffer&) = delete;
 
         Buffer(Buffer&& other) noexcept;
         Buffer& operator=(Buffer&& other) noexcept;

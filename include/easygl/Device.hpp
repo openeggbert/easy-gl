@@ -5,6 +5,7 @@
 #include "easygl/Exception.hpp"
 #include "easygl/Export.hpp"
 #include "easygl/Feature.hpp"
+#include "easygl/Types.hpp"
 
 namespace easygl
 {
@@ -14,7 +15,7 @@ namespace easygl
         Device();
         explicit Device(Config config);
 
-        void initialize();
+        void initialize(GLGetProcAddressFn loader);
 
         [[nodiscard]] const Config& config() const noexcept;
         [[nodiscard]] const Capabilities& capabilities() const noexcept;

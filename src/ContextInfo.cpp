@@ -1,3 +1,6 @@
-//
-// Created by robertvokac on 4/14/26.
-//
+#include "easygl/ContextInfo.hpp"
+
+namespace easygl
+{
+    // Minimal stub
+}

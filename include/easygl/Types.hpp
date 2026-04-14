@@ -13,4 +13,11 @@ namespace easygl
     using i16 = std::int16_t;
     using i32 = std::int32_t;
     using i64 = std::int64_t;
+
+    /**
+     * @brief A function pointer type that loads OpenGL function pointers.
+     * 
+     * This type is compatible with SDL_GL_GetProcAddress, glfwGetProcAddress, etc.
+     */
+    using GLGetProcAddressFn = void* (*)(const char* name);
 }
