@@ -1,0 +1,30 @@
+#pragma once
+
+#include "easygl/Capabilities.hpp"
+#include "easygl/Config.hpp"
+#include "easygl/Exception.hpp"
+#include "easygl/Export.hpp"
+#include "easygl/Feature.hpp"
+
+namespace easygl
+{
+    class EASYGL_API Device
+    {
+    public:
+        Device();
+        explicit Device(Config config);
+
+        void initialize();
+
+        [[nodiscard]] const Config& config() const noexcept;
+        [[nodiscard]] const Capabilities& capabilities() const noexcept;
+
+        [[nodiscard]] bool supports(Feature feature) const;
+        void require(Feature feature) const;
+
+    private:
+        Config config_{};
+        Capabilities capabilities_{};
+        bool initialized_ = false;
+    };
+}

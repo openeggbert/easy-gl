@@ -1,0 +1,15 @@
+#pragma once
+
+#include "easygl/Buffer.hpp"
+#include "easygl/Capabilities.hpp"
+#include "easygl/Config.hpp"
+#include "easygl/ContextInfo.hpp"
+#include "easygl/Device.hpp"
+#include "easygl/Exception.hpp"
+#include "easygl/Feature.hpp"
+#include "easygl/Program.hpp"
+#include "easygl/Shader.hpp"
+#include "easygl/Texture.hpp"
+#include "easygl/Types.hpp"
+#include "easygl/Version.hpp"
+#include "easygl/VertexArray.hpp"

@@ -1,0 +1,11 @@
+option(EASYGL_BUILD_SHARED "Build easy-gl as shared library" OFF)
+option(EASYGL_BUILD_TESTS "Build tests" ON)
+option(EASYGL_BUILD_EXAMPLES "Build examples" ON)
+option(EASYGL_ENABLE_WARNINGS "Enable compiler warnings" ON)
+option(EASYGL_USE_SYSTEM_OPENGL "Link against system OpenGL when useful" ON)
+
+if(EASYGL_BUILD_SHARED)
+    set(BUILD_SHARED_LIBS ON)
+else()
+    set(BUILD_SHARED_LIBS OFF)
+endif()

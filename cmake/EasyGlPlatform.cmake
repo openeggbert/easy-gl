@@ -1,0 +1,10 @@
+if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+    set(EMSCRIPTEN TRUE)
+endif()
+
+message(STATUS "easy-gl platform summary:")
+message(STATUS "  System name      : ${CMAKE_SYSTEM_NAME}")
+message(STATUS "  C++ compiler     : ${CMAKE_CXX_COMPILER_ID}")
+message(STATUS "  Build shared     : ${BUILD_SHARED_LIBS}")
+message(STATUS "  Build tests      : ${EASYGL_BUILD_TESTS}")
+message(STATUS "  Build examples   : ${EASYGL_BUILD_EXAMPLES}")
