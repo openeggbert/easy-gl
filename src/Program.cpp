@@ -50,6 +50,11 @@ namespace easygl
         // TODO: glAttachShader
     }
 
+    void Program::detach(const Shader&)
+    {
+        // TODO: glDetachShader
+    }
+
     void Program::link()
     {
         // TODO: glLinkProgram
@@ -58,6 +63,38 @@ namespace easygl
     void Program::use() const
     {
         // TODO: glUseProgram
+    }
+
+    std::string Program::info_log() const
+    {
+        // TODO: glGetProgramInfoLog
+        return "";
+    }
+
+    int Program::uniform_location(const std::string&) const
+    {
+        // TODO: glGetUniformLocation
+        return -1;
+    }
+
+    void Program::set_uniform(int, int)
+    {
+        // TODO: glUniform1i
+    }
+
+    void Program::set_uniform(int, float)
+    {
+        // TODO: glUniform1f
+    }
+
+    void Program::set_uniform(int, float, float, float)
+    {
+        // TODO: glUniform3f
+    }
+
+    void Program::set_uniform_matrix4(int, const float*, bool)
+    {
+        // TODO: glUniformMatrix4fv
     }
 
     bool Program::is_linked() const noexcept { return linked_; }

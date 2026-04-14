@@ -51,6 +51,12 @@ namespace easygl
         // TODO: Implement shader compilation
     }
 
+    std::string Shader::info_log() const
+    {
+        // TODO: glGetShaderInfoLog
+        return "";
+    }
+
     ShaderStage Shader::stage() const noexcept { return stage_; }
     bool Shader::is_compiled() const noexcept { return compiled_; }
     bool Shader::is_created() const noexcept { return handle_ != 0; }

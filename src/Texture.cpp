@@ -40,6 +40,11 @@ namespace easygl
         // TODO: glBindTexture
     }
 
+    void Texture::set_image_2d(TextureTarget, int, int, int, const void*)
+    {
+        // TODO: glTexImage2D
+    }
+
     bool Texture::is_created() const noexcept { return handle_ != 0; }
     unsigned int Texture::native_handle() const noexcept { return handle_; }
 }

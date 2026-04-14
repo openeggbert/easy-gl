@@ -26,16 +26,16 @@ namespace easygl
             throw Exception("GL loader callback is null.");
         }
 
+        loader_ = loader;
+
         // Initialize internal GL function pointers
-        if (!platform::initialize_gl_functions(platform::g_gl, loader))
+        if (!platform::initialize_gl_functions(platform::g_gl, loader_))
         {
             throw Exception("Failed to initialize GL function pointers.");
         }
 
-        // TODO: Implement GL runtime loading and capability detection here.
-        // For now, this is a minimal foundation stub.
-        
-        // Example of setting context info (stubs)
+        // TODO: Query real GL context information using glGetString/glGetStringi
+        // For now, we use a stub for demonstration.
         ContextInfo info;
         info.api = ApiKind::OpenGL;
         info.major = 3;
@@ -44,9 +44,16 @@ namespace easygl
         info.renderer = "easy-gl stub renderer";
         info.version_string = "3.3.0 easy-gl stub";
         info.shading_language_version = "3.30";
-        
+        // info.extensions = ...; // TODO: Query extensions via glGetString(GL_EXTENSIONS) or glGetStringi
+
         capabilities_.set_context_info(std::move(info));
         
+        // Basic feature detection based on version
+        capabilities_.detect_common_features();
+
+        // TODO: Query GL limits (e.g., GL_MAX_TEXTURE_SIZE) and set them
+        // capabilities_.set_limit("max_texture_size", max_tex_size);
+
         initialized_ = true;
     }
 

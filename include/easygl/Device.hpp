@@ -26,6 +26,7 @@ namespace easygl
     private:
         Config config_{};
         Capabilities capabilities_{};
+        GLGetProcAddressFn loader_ = nullptr;
         bool initialized_ = false;
     };
 }

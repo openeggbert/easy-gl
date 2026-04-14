@@ -1,5 +1,5 @@
 #pragma once
-
+#include <cstddef>
 #include "easygl/Export.hpp"
 #include "easygl/detail/NonCopyable.hpp"
 
@@ -17,6 +17,9 @@ namespace easygl
         void create();
         void destroy() noexcept;
         void bind() const;
+
+        void set_attribute_pointer(unsigned int index, int size, int type, bool normalized, std::size_t stride, const void* pointer);
+        void enable_attribute(unsigned int index);
 
         [[nodiscard]] bool is_created() const noexcept;
         [[nodiscard]] unsigned int native_handle() const noexcept;

@@ -38,7 +38,12 @@ namespace easygl
 
     void Buffer::bind(BufferTarget) const
     {
-        // TODO glBindBuffer
+        // TODO: glBindBuffer
+    }
+
+    void Buffer::bind_base(BufferTarget, unsigned int) const
+    {
+        // TODO: glBindBufferBase
     }
 
     void Buffer::set_data(const void*, std::size_t)

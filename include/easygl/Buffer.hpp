@@ -28,6 +28,7 @@ namespace easygl
         void create();
         void destroy() noexcept;
         void bind(BufferTarget target) const;
+        void bind_base(BufferTarget target, unsigned int index) const;
         void set_data(const void* data, std::size_t size_in_bytes);
 
         [[nodiscard]] bool is_created() const noexcept;

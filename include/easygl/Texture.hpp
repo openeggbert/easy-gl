@@ -24,6 +24,7 @@ namespace easygl
         void create();
         void destroy() noexcept;
         void bind(TextureTarget target) const;
+        void set_image_2d(TextureTarget target, int level, int width, int height, const void* data);
 
         [[nodiscard]] bool is_created() const noexcept;
         [[nodiscard]] unsigned int native_handle() const noexcept;

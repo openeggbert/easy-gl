@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include "easygl/Export.hpp"
 
 namespace easygl
@@ -21,6 +22,7 @@ namespace easygl
         std::string renderer;
         std::string version_string;
         std::string shading_language_version;
+        std::vector<std::string> extensions;
 
         [[nodiscard]] bool is_opengl() const noexcept { return api == ApiKind::OpenGL; }
         [[nodiscard]] bool is_opengles() const noexcept { return api == ApiKind::OpenGLES; }

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.23)
 
 project(easy-gl
     VERSION 0.1.0
@@ -35,8 +35,10 @@ target_sources(easy-gl
         src/Program.cpp
         src/Texture.cpp
         src/VertexArray.cpp
+        src/detail/NonCopyable.cpp
         src/platform/GlApiLoader.cpp
         src/platform/GlFunctions.cpp
+        src/platform/GlFunctions.hpp
         PUBLIC
         FILE_SET HEADERS
         BASE_DIRS include
@@ -58,6 +60,8 @@ target_sources(easy-gl
         include/easygl/VertexArray.hpp
         include/easygl/detail/NonCopyable.hpp
 )
+
+easygl_apply_warnings(easy-gl)
 install(TARGETS easy-gl
         EXPORT easy-gl-targets
         FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}

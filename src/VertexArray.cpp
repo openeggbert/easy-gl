@@ -40,6 +40,16 @@ namespace easygl
         // TODO: glBindVertexArray
     }
 
+    void VertexArray::set_attribute_pointer(unsigned int, int, int, bool, std::size_t, const void*)
+    {
+        // TODO: glVertexAttribPointer
+    }
+
+    void VertexArray::enable_attribute(unsigned int)
+    {
+        // TODO: glEnableVertexAttribArray
+    }
+
     bool VertexArray::is_created() const noexcept { return handle_ != 0; }
     unsigned int VertexArray::native_handle() const noexcept { return handle_; }
 }

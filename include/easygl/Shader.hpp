@@ -29,6 +29,7 @@ namespace easygl
         void destroy() noexcept;
         void compile_from_source(const std::string& source);
 
+        [[nodiscard]] std::string info_log() const;
         [[nodiscard]] ShaderStage stage() const noexcept;
         [[nodiscard]] bool is_compiled() const noexcept;
         [[nodiscard]] bool is_created() const noexcept;
