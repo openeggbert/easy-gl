@@ -1,13 +1,8 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
-
-#if defined(__APPLE__)
-#include <OpenGL/gl3.h>
-#else
-#include <GL/gl.h>
-#endif
-
+#include <easygl/easygl.hpp>
 #include <iostream>
+#include <vector>
 
 namespace
 {
@@ -27,34 +22,6 @@ void main()
 {
     FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
 })";
-
-    void printShaderCompileError(GLuint shader)
-    {
-        GLint success = 0;
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-        if (success == GL_TRUE)
-        {
-            return;
-        }
-
-        char infoLog[512] = {};
-        glGetShaderInfoLog(shader, sizeof(infoLog), nullptr, infoLog);
-        std::cerr << "Shader compilation failed:\n" << infoLog << '\n';
-    }
-
-    void printProgramLinkError(GLuint program)
-    {
-        GLint success = 0;
-        glGetProgramiv(program, GL_LINK_STATUS, &success);
-        if (success == GL_TRUE)
-        {
-            return;
-        }
-
-        char infoLog[512] = {};
-        glGetProgramInfoLog(program, sizeof(infoLog), nullptr, infoLog);
-        std::cerr << "Program linking failed:\n" << infoLog << '\n';
-    }
 }
 
 int main(int, char**)
@@ -65,29 +32,18 @@ int main(int, char**)
         return 1;
     }
 
-    // Request desktop OpenGL 3.3 core.
-    if (!SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3) ||
-        !SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3) ||
-        !SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE) ||
-        !SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1))
-    {
-        std::cerr << "SDL_GL_SetAttribute failed: " << SDL_GetError() << '\n';
-        SDL_Quit();
-        return 1;
-    }
+    // Request OpenGL 3.3 Core Profile.
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 #if defined(__APPLE__)
-    // macOS commonly needs forward-compatible core context for modern OpenGL.
-    if (!SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG))
-    {
-        std::cerr << "SDL_GL_SetAttribute(forward compatible) failed: " << SDL_GetError() << '\n';
-        SDL_Quit();
-        return 1;
-    }
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
 #endif
 
     SDL_Window* window = SDL_CreateWindow(
-        "Hello Triangle - SDL3",
+        "Hello Triangle - SDL3 + easy-gl",
         SCR_WIDTH,
         SCR_HEIGHT,
         SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
@@ -120,102 +76,103 @@ int main(int, char**)
     // Optional vsync.
     SDL_GL_SetSwapInterval(1);
 
-    GLint maxSize = 0;
-    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxSize);
-    std::cout << "GL_MAX_TEXTURE_SIZE = " << maxSize << '\n';
-    std::cout << "GL_VENDOR   = " << reinterpret_cast<const char*>(glGetString(GL_VENDOR)) << '\n';
-    std::cout << "GL_RENDERER = " << reinterpret_cast<const char*>(glGetString(GL_RENDERER)) << '\n';
-    std::cout << "GL_VERSION  = " << reinterpret_cast<const char*>(glGetString(GL_VERSION)) << '\n';
-
-    const float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
-    };
-
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-    glCompileShader(vertexShader);
-    printShaderCompileError(vertexShader);
-
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-    glCompileShader(fragmentShader);
-    printShaderCompileError(fragmentShader);
-
-    GLuint shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    printProgramLinkError(shaderProgram);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-    GLuint VBO = 0;
-    GLuint VAO = 0;
-
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(
-        0,
-        3,
-        GL_FLOAT,
-        GL_FALSE,
-        3 * static_cast<GLsizei>(sizeof(float)),
-        static_cast<void*>(nullptr));
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-    int drawableWidth = 0;
-    int drawableHeight = 0;
-    SDL_GetWindowSizeInPixels(window, &drawableWidth, &drawableHeight);
-    glViewport(0, 0, drawableWidth, drawableHeight);
-
-    bool running = true;
-    while (running)
+    // easy-gl initialization and main loop in a scope to ensure 
+    // GL resources are destroyed before the context is destroyed.
     {
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
+        easygl::Device device;
+        try {
+            device.initialize(reinterpret_cast<easygl::GLGetProcAddressFn>(SDL_GL_GetProcAddress));
+        } catch (const easygl::Exception& e) {
+            std::cerr << "easy-gl initialization failed: " << e.what() << '\n';
+            SDL_GL_DestroyContext(glContext);
+            SDL_DestroyWindow(window);
+            SDL_Quit();
+            return 1;
+        }
+
+        const auto& info = device.capabilities().context_info();
+        std::cout << "GL_VENDOR   = " << info.vendor << '\n';
+        std::cout << "GL_RENDERER = " << info.renderer << '\n';
+        std::cout << "GL_VERSION  = " << info.version_string << '\n';
+
+        const float vertices[] = {
+            -0.5f, -0.5f, 0.0f,
+             0.5f, -0.5f, 0.0f,
+             0.0f,  0.5f, 0.0f
+        };
+
+        easygl::Shader vertexShader(easygl::ShaderStage::Vertex);
+        vertexShader.compile_from_source(vertexShaderSource);
+        if (!vertexShader.is_compiled()) {
+            std::cerr << "Vertex Shader compilation failed:\n" << vertexShader.info_log() << '\n';
+        }
+
+        easygl::Shader fragmentShader(easygl::ShaderStage::Fragment);
+        fragmentShader.compile_from_source(fragmentShaderSource);
+        if (!fragmentShader.is_compiled()) {
+            std::cerr << "Fragment Shader compilation failed:\n" << fragmentShader.info_log() << '\n';
+        }
+
+        easygl::Program shaderProgram;
+        shaderProgram.attach(vertexShader);
+        shaderProgram.attach(fragmentShader);
+        shaderProgram.link();
+        if (!shaderProgram.is_linked()) {
+            std::cerr << "Program linking failed:\n" << shaderProgram.info_log() << '\n';
+        }
+
+        easygl::VertexArray vao;
+        vao.create();
+
+        easygl::Buffer vbo;
+        vbo.create();
+
+        vao.bind();
+        vbo.bind(easygl::BufferTarget::Array);
+        vbo.set_data(vertices, sizeof(vertices));
+
+        // Set up vertex attributes (layout)
+        vao.set_attribute_pointer(0, 3, easygl::DataType::Float, false, 3 * sizeof(float), nullptr);
+        vao.enable_attribute(0);
+
+        int drawableWidth = 0;
+        int drawableHeight = 0;
+        SDL_GetWindowSizeInPixels(window, &drawableWidth, &drawableHeight);
+        device.set_viewport(0, 0, drawableWidth, drawableHeight);
+
+        bool running = true;
+        while (running)
         {
-            if (event.type == SDL_EVENT_QUIT)
+            SDL_Event event;
+            while (SDL_PollEvent(&event))
             {
-                running = false;
-            }
-            else if (event.type == SDL_EVENT_KEY_DOWN)
-            {
-                if (event.key.key == SDLK_ESCAPE)
+                if (event.type == SDL_EVENT_QUIT)
                 {
                     running = false;
                 }
+                else if (event.type == SDL_EVENT_KEY_DOWN)
+                {
+                    if (event.key.key == SDLK_ESCAPE)
+                    {
+                        running = false;
+                    }
+                }
+                else if (event.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED)
+                {
+                    device.set_viewport(0, 0, event.window.data1, event.window.data2);
+                }
             }
-            else if (event.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED)
-            {
-                glViewport(0, 0, event.window.data1, event.window.data2);
-            }
+
+            device.set_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
+            device.clear(easygl::ClearFlags::Color);
+
+            shaderProgram.use();
+            vao.bind();
+            device.draw_arrays(easygl::PrimitiveType::Triangles, 0, 3);
+
+            SDL_GL_SwapWindow(window);
         }
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        SDL_GL_SwapWindow(window);
     }
-
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
 
     SDL_GL_DestroyContext(glContext);
     SDL_DestroyWindow(window);

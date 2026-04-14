@@ -11,3 +11,13 @@
 - OpenGL-only features must be capability-gated and treated as unsupported on OpenGLES platforms.
 - Avoid unnecessary abstractions.
 - If runtime GL loading is not ready yet, leave clear TODOs and preserve build success.
+- 
+- easy-gl owns all OpenGL/OpenGLES interaction.
+- Example applications must not call raw OpenGL directly.
+- Example applications may use SDL3 only for window creation, GL context creation, event processing, and swap.
+- Never expose SDL3, glad, GLFW, or raw OpenGL symbols in easy-gl public headers.
+- Keep OpenGL/OpenGLES function loading internal to easy-gl.
+- Prefer a small working vertical slice over a broad incomplete architecture.
+- Implement only the minimum needed for HelloTriangle first.
+- OpenGL-only features must be capability-gated.
+- Do not overengineer.

@@ -1,7 +1,23 @@
 #include "easygl/VertexArray.hpp"
+#include "platform/GlFunctions.hpp"
 
 namespace easygl
 {
+    static platform::GLenum to_gl(DataType type)
+    {
+        switch (type)
+        {
+            case DataType::Float:         return platform::GL_FLOAT;
+            case DataType::Byte:          return platform::GL_BYTE;
+            case DataType::UnsignedByte:  return platform::GL_UNSIGNED_BYTE;
+            case DataType::Short:         return platform::GL_SHORT;
+            case DataType::UnsignedShort: return platform::GL_UNSIGNED_SHORT;
+            case DataType::Int:           return platform::GL_INT;
+            case DataType::UnsignedInt:   return platform::GL_UNSIGNED_INT;
+            default: return 0;
+        }
+    }
+
     VertexArray::VertexArray() = default;
     VertexArray::~VertexArray()
     {
@@ -27,27 +43,32 @@ namespace easygl
 
     void VertexArray::create()
     {
-        // TODO: glGenVertexArrays / glCreateVertexArrays
+        if (is_created()) return;
+        platform::g_gl.GenVertexArrays(1, &handle_);
     }
 
     void VertexArray::destroy() noexcept
     {
-        // TODO: glDeleteVertexArrays
+        if (is_created())
+        {
+            platform::g_gl.DeleteVertexArrays(1, &handle_);
+            handle_ = 0;
+        }
     }
 
     void VertexArray::bind() const
     {
-        // TODO: glBindVertexArray
+        platform::g_gl.BindVertexArray(handle_);
     }
 
-    void VertexArray::set_attribute_pointer(unsigned int, int, int, bool, std::size_t, const void*)
+    void VertexArray::set_attribute_pointer(unsigned int index, int size, DataType type, bool normalized, std::size_t stride, const void* pointer)
     {
-        // TODO: glVertexAttribPointer
+        platform::g_gl.VertexAttribPointer(index, size, to_gl(type), normalized ? 1 : 0, static_cast<platform::GLsizei>(stride), pointer);
     }
 
-    void VertexArray::enable_attribute(unsigned int)
+    void VertexArray::enable_attribute(unsigned int index)
     {
-        // TODO: glEnableVertexAttribArray
+        platform::g_gl.EnableVertexAttribArray(index);
     }
 
     bool VertexArray::is_created() const noexcept { return handle_ != 0; }

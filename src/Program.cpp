@@ -1,5 +1,7 @@
 #include "easygl/Program.hpp"
 #include "easygl/Shader.hpp"
+#include "platform/GlFunctions.hpp"
+#include <vector>
 
 namespace easygl
 {
@@ -32,69 +34,86 @@ namespace easygl
 
     void Program::create()
     {
-        // TODO: glCreateProgram
+        if (is_created()) return;
+        handle_ = platform::g_gl.CreateProgram();
     }
 
     void Program::destroy() noexcept
     {
         if (handle_ != 0)
         {
-            // TODO: glDeleteProgram(handle_)
+            platform::g_gl.DeleteProgram(handle_);
             handle_ = 0;
             linked_ = false;
         }
     }
 
-    void Program::attach(const Shader&)
+    void Program::attach(const Shader& shader)
     {
-        // TODO: glAttachShader
+        if (!is_created()) create();
+        platform::g_gl.AttachShader(handle_, shader.native_handle());
     }
 
-    void Program::detach(const Shader&)
+    void Program::detach(const Shader& shader)
     {
-        // TODO: glDetachShader
+        if (is_created())
+        {
+            platform::g_gl.DetachShader(handle_, shader.native_handle());
+        }
     }
 
     void Program::link()
     {
-        // TODO: glLinkProgram
+        if (!is_created()) return;
+        platform::g_gl.LinkProgram(handle_);
+
+        platform::GLint status = 0;
+        platform::g_gl.GetProgramiv(handle_, platform::GL_LINK_STATUS, &status);
+        linked_ = (status != 0);
     }
 
     void Program::use() const
     {
-        // TODO: glUseProgram
+        platform::g_gl.UseProgram(handle_);
     }
 
     std::string Program::info_log() const
     {
-        // TODO: glGetProgramInfoLog
-        return "";
+        if (!is_created()) return "";
+
+        platform::GLint length = 0;
+        platform::g_gl.GetProgramiv(handle_, platform::GL_INFO_LOG_LENGTH, &length);
+        if (length <= 0) return "";
+
+        std::vector<char> buffer(static_cast<std::size_t>(length));
+        platform::g_gl.GetProgramInfoLog(handle_, length, nullptr, buffer.data());
+        return std::string(buffer.data());
     }
 
-    int Program::uniform_location(const std::string&) const
+    int Program::uniform_location(const std::string& name) const
     {
-        // TODO: glGetUniformLocation
-        return -1;
+        if (!is_created()) return -1;
+        return platform::g_gl.GetUniformLocation(handle_, name.c_str());
     }
 
-    void Program::set_uniform(int, int)
+    void Program::set_uniform(int location, int value)
     {
-        // TODO: glUniform1i
+        platform::g_gl.Uniform1i(location, value);
     }
 
-    void Program::set_uniform(int, float)
+    void Program::set_uniform(int location, float value)
     {
-        // TODO: glUniform1f
+        platform::g_gl.Uniform1f(location, value);
     }
 
-    void Program::set_uniform(int, float, float, float)
+    void Program::set_uniform(int location, float x, float y, float z)
     {
-        // TODO: glUniform3f
+        platform::g_gl.Uniform3f(location, x, y, z);
     }
 
-    void Program::set_uniform_matrix4(int, const float*, bool)
+    void Program::set_uniform_matrix4(int location, const float* data, bool transpose)
     {
-        // TODO: glUniformMatrix4fv
+        platform::g_gl.UniformMatrix4fv(location, 1, transpose ? 1 : 0, data);
     }
 
     bool Program::is_linked() const noexcept { return linked_; }

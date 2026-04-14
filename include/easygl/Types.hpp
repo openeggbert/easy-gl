@@ -20,4 +20,15 @@ namespace easygl
      * This type is compatible with SDL_GL_GetProcAddress, glfwGetProcAddress, etc.
      */
     using GLGetProcAddressFn = void* (*)(const char* name);
+
+    enum class DataType
+    {
+        Float,
+        Byte,
+        UnsignedByte,
+        Short,
+        UnsignedShort,
+        Int,
+        UnsignedInt
+    };
 }
