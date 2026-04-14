@@ -31,7 +31,14 @@ namespace easygl::platform
 
         // Context info
         functions.GetString = load_func<PFNGLGETSTRINGPROC>(callback, "glGetString");
+        functions.GetStringi = load_func<PFNGLGETSTRINGIPROC>(callback, "glGetStringi");
         functions.GetIntegerv = load_func<PFNGLGETINTEGERVPROC>(callback, "glGetIntegerv");
+
+        // Check for bootstrap functions
+        if (!functions.GetString || !functions.GetIntegerv)
+        {
+            return false;
+        }
 
         // Shaders
         functions.CreateShader = load_func<PFNGLCREATESHADERPROC>(callback, "glCreateShader");
@@ -70,6 +77,41 @@ namespace easygl::platform
         functions.ClearColor = load_func<PFNGLCLEARCOLORPROC>(callback, "glClearColor");
         functions.Viewport = load_func<PFNGLVIEWPORTPROC>(callback, "glViewport");
         functions.DrawArrays = load_func<PFNGLDRAWARRAYSPROC>(callback, "glDrawArrays");
+
+        // Minimal validation for required functions for HelloTriangle
+        bool required_loaded = true;
+        required_loaded &= (functions.GenBuffers != nullptr);
+        required_loaded &= (functions.DeleteBuffers != nullptr);
+        required_loaded &= (functions.BindBuffer != nullptr);
+        required_loaded &= (functions.BufferData != nullptr);
+        
+        required_loaded &= (functions.CreateShader != nullptr);
+        required_loaded &= (functions.ShaderSource != nullptr);
+        required_loaded &= (functions.CompileShader != nullptr);
+        required_loaded &= (functions.GetShaderiv != nullptr);
+        
+        required_loaded &= (functions.CreateProgram != nullptr);
+        required_loaded &= (functions.AttachShader != nullptr);
+        required_loaded &= (functions.LinkProgram != nullptr);
+        required_loaded &= (functions.GetProgramiv != nullptr);
+        required_loaded &= (functions.UseProgram != nullptr);
+
+        // VAOs are required for core profiles and common GLES
+        required_loaded &= (functions.GenVertexArrays != nullptr);
+        required_loaded &= (functions.DeleteVertexArrays != nullptr);
+        required_loaded &= (functions.BindVertexArray != nullptr);
+        required_loaded &= (functions.EnableVertexAttribArray != nullptr);
+        required_loaded &= (functions.VertexAttribPointer != nullptr);
+
+        required_loaded &= (functions.Clear != nullptr);
+        required_loaded &= (functions.ClearColor != nullptr);
+        required_loaded &= (functions.Viewport != nullptr);
+        required_loaded &= (functions.DrawArrays != nullptr);
+
+        if (!required_loaded)
+        {
+            return false;
+        }
 
         functions.initialized = true;
         return true;

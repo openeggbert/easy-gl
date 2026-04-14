@@ -5,6 +5,10 @@ namespace easygl
     enum class Feature
     {
         VertexArrayObject,
+        Shader,
+        Program,
+        Buffer,
+        BasicRendering,
         DebugOutput,
         ComputeShader,
         GeometryShader,

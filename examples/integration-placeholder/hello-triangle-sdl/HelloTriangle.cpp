@@ -74,7 +74,9 @@ int main(int, char**)
     }
 
     // Optional vsync.
-    SDL_GL_SetSwapInterval(1);
+    if (!SDL_GL_SetSwapInterval(1)) {
+        std::cerr << "Warning: SDL_GL_SetSwapInterval failed: " << SDL_GetError() << '\n';
+    }
 
     // easy-gl initialization and main loop in a scope to ensure 
     // GL resources are destroyed before the context is destroyed.
@@ -105,12 +107,14 @@ int main(int, char**)
         vertexShader.compile_from_source(vertexShaderSource);
         if (!vertexShader.is_compiled()) {
             std::cerr << "Vertex Shader compilation failed:\n" << vertexShader.info_log() << '\n';
+            return 1;
         }
 
         easygl::Shader fragmentShader(easygl::ShaderStage::Fragment);
         fragmentShader.compile_from_source(fragmentShaderSource);
         if (!fragmentShader.is_compiled()) {
             std::cerr << "Fragment Shader compilation failed:\n" << fragmentShader.info_log() << '\n';
+            return 1;
         }
 
         easygl::Program shaderProgram;
@@ -119,6 +123,7 @@ int main(int, char**)
         shaderProgram.link();
         if (!shaderProgram.is_linked()) {
             std::cerr << "Program linking failed:\n" << shaderProgram.info_log() << '\n';
+            return 1;
         }
 
         easygl::VertexArray vao;

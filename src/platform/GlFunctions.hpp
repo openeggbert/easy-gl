@@ -21,9 +21,12 @@ namespace easygl::platform
     constexpr GLenum GL_VENDOR = 0x1F00;
     constexpr GLenum GL_RENDERER = 0x1F01;
     constexpr GLenum GL_VERSION = 0x1F02;
+    constexpr GLenum GL_EXTENSIONS = 0x1F03;
     constexpr GLenum GL_SHADING_LANGUAGE_VERSION = 0x8B8C;
     constexpr GLenum GL_MAJOR_VERSION = 0x821B;
     constexpr GLenum GL_MINOR_VERSION = 0x821C;
+    constexpr GLenum GL_NUM_EXTENSIONS = 0x821D;
+    constexpr GLenum GL_MAX_TEXTURE_SIZE = 0x0D33;
 
     constexpr GLenum GL_ARRAY_BUFFER = 0x8892;
     constexpr GLenum GL_ELEMENT_ARRAY_BUFFER = 0x8893;
@@ -70,6 +73,7 @@ namespace easygl::platform
     using PFNGLBINDBUFFERBASEPROC = void (*)(GLenum target, GLuint index, GLuint buffer);
 
     using PFNGLGETSTRINGPROC = const unsigned char* (*)(GLenum name);
+    using PFNGLGETSTRINGIPROC = const unsigned char* (*)(GLenum name, GLuint index);
     using PFNGLGETINTEGERVPROC = void (*)(GLenum pname, GLint* data);
 
     using PFNGLCREATESHADERPROC = GLuint (*)(GLenum type);
@@ -119,6 +123,7 @@ namespace easygl::platform
         PFNGLBINDBUFFERBASEPROC BindBufferBase = nullptr;
 
         PFNGLGETSTRINGPROC GetString = nullptr;
+        PFNGLGETSTRINGIPROC GetStringi = nullptr;
         PFNGLGETINTEGERVPROC GetIntegerv = nullptr;
 
         PFNGLCREATESHADERPROC CreateShader = nullptr;

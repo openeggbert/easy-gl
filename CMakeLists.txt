@@ -69,7 +69,7 @@ install(TARGETS easy-gl
         FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-if(BUILD_TESTING)
+if(EASYGL_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()

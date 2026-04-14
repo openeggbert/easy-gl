@@ -24,9 +24,14 @@ namespace easygl
         // Basic version-based detection
         if (is_opengl())
         {
-            set_feature(Feature::VertexArrayObject, is_at_least(3, 0));
-            set_feature(Feature::FramebufferObject, is_at_least(3, 0));
-            set_feature(Feature::UniformBufferObject, is_at_least(3, 1));
+            set_feature(Feature::VertexArrayObject, is_at_least(3, 0) || supports_extension("GL_ARB_vertex_array_object"));
+            set_feature(Feature::Shader, is_at_least(2, 0));
+            set_feature(Feature::Program, is_at_least(2, 0));
+            set_feature(Feature::Buffer, is_at_least(1, 5));
+            set_feature(Feature::BasicRendering, true);
+
+            set_feature(Feature::FramebufferObject, is_at_least(3, 0) || supports_extension("GL_ARB_framebuffer_object") || supports_extension("GL_EXT_framebuffer_object"));
+            set_feature(Feature::UniformBufferObject, is_at_least(3, 1) || supports_extension("GL_ARB_uniform_buffer_object"));
             set_feature(Feature::Texture3D, is_at_least(1, 2));
             set_feature(Feature::TextureFloat, is_at_least(3, 0));
             set_feature(Feature::TextureRG, is_at_least(3, 0));
@@ -34,7 +39,7 @@ namespace easygl
             set_feature(Feature::SamplerObject, is_at_least(3, 3));
             set_feature(Feature::GeometryShader, is_at_least(3, 2));
             set_feature(Feature::TessellationShader, is_at_least(4, 0));
-            set_feature(Feature::ComputeShader, is_at_least(4, 3));
+            set_feature(Feature::ComputeShader, is_at_least(4, 3) || supports_extension("GL_ARB_compute_shader"));
             set_feature(Feature::DirectStateAccess, is_at_least(4, 5));
             set_feature(Feature::DebugOutput, is_at_least(4, 3));
 
@@ -45,13 +50,18 @@ namespace easygl
         }
         else if (is_opengles())
         {
-            set_feature(Feature::VertexArrayObject, is_at_least(3, 0));
+            set_feature(Feature::VertexArrayObject, is_at_least(3, 0) || supports_extension("GL_OES_vertex_array_object"));
+            set_feature(Feature::Shader, is_at_least(2, 0));
+            set_feature(Feature::Program, is_at_least(2, 0));
+            set_feature(Feature::Buffer, is_at_least(2, 0));
+            set_feature(Feature::BasicRendering, true);
+
             set_feature(Feature::FramebufferObject, is_at_least(2, 0));
             set_feature(Feature::UniformBufferObject, is_at_least(3, 0));
-            set_feature(Feature::Texture3D, is_at_least(3, 0));
-            set_feature(Feature::TextureFloat, is_at_least(3, 0));
-            set_feature(Feature::TextureRG, is_at_least(3, 0));
-            set_feature(Feature::Instancing, is_at_least(3, 0));
+            set_feature(Feature::Texture3D, is_at_least(3, 0) || supports_extension("GL_OES_texture_3D"));
+            set_feature(Feature::TextureFloat, is_at_least(3, 0) || supports_extension("GL_OES_texture_float"));
+            set_feature(Feature::TextureRG, is_at_least(3, 0) || supports_extension("GL_EXT_texture_rg"));
+            set_feature(Feature::Instancing, is_at_least(3, 0) || supports_extension("GL_EXT_draw_instanced") || supports_extension("GL_NV_draw_instanced"));
             set_feature(Feature::SamplerObject, is_at_least(3, 0));
             set_feature(Feature::GeometryShader, is_at_least(3, 2));
             set_feature(Feature::TessellationShader, is_at_least(3, 2));
