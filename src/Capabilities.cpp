@@ -1,5 +1,6 @@
 #include "easygl/Capabilities.hpp"
 #include <algorithm>
+#include <utility>
 
 namespace easygl
 {
@@ -20,58 +21,53 @@ namespace easygl
 
     void Capabilities::detect_common_features()
     {
-        const int major = context_info_.major;
-        const int minor = context_info_.minor;
-        const bool is_gl = context_info_.is_opengl();
-        const bool is_gles = context_info_.is_opengles();
-
         // Basic version-based detection
-        if (is_gl)
+        if (is_opengl())
         {
-            set_feature(Feature::VertexArrayObject, major >= 3);
-            set_feature(Feature::FramebufferObject, major >= 3);
-            set_feature(Feature::UniformBufferObject, (major > 3) || (major == 3 && minor >= 1));
-            set_feature(Feature::Texture3D, (major > 1) || (major == 1 && minor >= 2));
-            set_feature(Feature::TextureFloat, major >= 3);
-            set_feature(Feature::TextureRG, major >= 3);
-            set_feature(Feature::Instancing, (major > 3) || (major == 3 && minor >= 1));
-            set_feature(Feature::SamplerObject, (major > 3) || (major == 3 && minor >= 3));
-            set_feature(Feature::GeometryShader, (major > 3) || (major == 3 && minor >= 2));
-            set_feature(Feature::TessellationShader, major >= 4);
-            set_feature(Feature::ComputeShader, (major > 4) || (major == 4 && minor >= 3));
-            set_feature(Feature::DirectStateAccess, (major > 4) || (major == 4 && minor >= 5));
-            set_feature(Feature::DebugOutput, (major > 4) || (major == 4 && minor >= 3));
+            set_feature(Feature::VertexArrayObject, is_at_least(3, 0));
+            set_feature(Feature::FramebufferObject, is_at_least(3, 0));
+            set_feature(Feature::UniformBufferObject, is_at_least(3, 1));
+            set_feature(Feature::Texture3D, is_at_least(1, 2));
+            set_feature(Feature::TextureFloat, is_at_least(3, 0));
+            set_feature(Feature::TextureRG, is_at_least(3, 0));
+            set_feature(Feature::Instancing, is_at_least(3, 1));
+            set_feature(Feature::SamplerObject, is_at_least(3, 3));
+            set_feature(Feature::GeometryShader, is_at_least(3, 2));
+            set_feature(Feature::TessellationShader, is_at_least(4, 0));
+            set_feature(Feature::ComputeShader, is_at_least(4, 3));
+            set_feature(Feature::DirectStateAccess, is_at_least(4, 5));
+            set_feature(Feature::DebugOutput, is_at_least(4, 3));
 
             // OpenGL Only
             set_feature(Feature::OpenGlOnlyImmediateMode, true);
             set_feature(Feature::OpenGlOnlyPolygonMode, true);
             set_feature(Feature::OpenGlOnlyLineWidthWide, true);
         }
-        else if (is_gles)
+        else if (is_opengles())
         {
-            set_feature(Feature::VertexArrayObject, major >= 3);
-            set_feature(Feature::FramebufferObject, major >= 2);
-            set_feature(Feature::UniformBufferObject, major >= 3);
-            set_feature(Feature::Texture3D, major >= 3);
-            set_feature(Feature::TextureFloat, major >= 3);
-            set_feature(Feature::TextureRG, major >= 3);
-            set_feature(Feature::Instancing, major >= 3);
-            set_feature(Feature::SamplerObject, major >= 3);
-            set_feature(Feature::GeometryShader, (major > 3) || (major == 3 && minor >= 2));
-            set_feature(Feature::TessellationShader, (major > 3) || (major == 3 && minor >= 2));
-            set_feature(Feature::ComputeShader, (major > 3) || (major == 3 && minor >= 1));
-            set_feature(Feature::DebugOutput, (major > 3) || (major == 3 && minor >= 2));
+            set_feature(Feature::VertexArrayObject, is_at_least(3, 0));
+            set_feature(Feature::FramebufferObject, is_at_least(2, 0));
+            set_feature(Feature::UniformBufferObject, is_at_least(3, 0));
+            set_feature(Feature::Texture3D, is_at_least(3, 0));
+            set_feature(Feature::TextureFloat, is_at_least(3, 0));
+            set_feature(Feature::TextureRG, is_at_least(3, 0));
+            set_feature(Feature::Instancing, is_at_least(3, 0));
+            set_feature(Feature::SamplerObject, is_at_least(3, 0));
+            set_feature(Feature::GeometryShader, is_at_least(3, 2));
+            set_feature(Feature::TessellationShader, is_at_least(3, 2));
+            set_feature(Feature::ComputeShader, is_at_least(3, 1));
+            set_feature(Feature::DebugOutput, is_at_least(3, 2));
 
-            // OpenGL Only
+            // OpenGL Only (features not in GLES)
             set_feature(Feature::OpenGlOnlyImmediateMode, false);
             set_feature(Feature::OpenGlOnlyPolygonMode, false);
             set_feature(Feature::OpenGlOnlyLineWidthWide, false);
         }
 
-        // Texture compression and anisotropic filtering are usually extension-based
-        // or available in newer versions.
-        // For now, these remain as placeholders or can be checked against extensions.
+        // Extension-based detection
         set_feature(Feature::AnisotropicFiltering, supports_extension("GL_EXT_texture_filter_anisotropic"));
+        set_feature(Feature::TextureCompression, supports_extension("GL_EXT_texture_compression_s3tc") || 
+                                               supports_extension("GL_KHR_texture_compression_astc_ldr"));
     }
 
     const ContextInfo& Capabilities::context_info() const noexcept
@@ -113,5 +109,12 @@ namespace easygl
     bool Capabilities::is_opengles() const noexcept
     {
         return context_info_.is_opengles();
+    }
+
+    bool Capabilities::is_at_least(int major, int minor) const noexcept
+    {
+        if (context_info_.major > major) return true;
+        if (context_info_.major == major && context_info_.minor >= minor) return true;
+        return false;
     }
 }

@@ -27,6 +27,7 @@ namespace easygl::platform
         functions.DeleteBuffers = load_func<PFNGLDELETEBUFFERSPROC>(callback, "glDeleteBuffers");
         functions.BindBuffer = load_func<PFNGLBINDBUFFERPROC>(callback, "glBindBuffer");
         functions.GetString = load_func<PFNGLGETSTRINGPROC>(callback, "glGetString");
+        functions.GetIntegerv = load_func<PFNGLGETINTEGERVPROC>(callback, "glGetIntegerv");
 
         functions.initialized = true;
         return true;

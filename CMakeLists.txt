@@ -25,7 +25,7 @@ set_target_properties(easy-gl PROPERTIES
     SOVERSION ${PROJECT_VERSION_MAJOR})
 
 target_sources(easy-gl
-        PRIVATE
+    PRIVATE
         src/Config.cpp
         src/ContextInfo.cpp
         src/Capabilities.cpp
@@ -39,10 +39,13 @@ target_sources(easy-gl
         src/platform/GlApiLoader.cpp
         src/platform/GlFunctions.cpp
         src/platform/GlFunctions.hpp
-        PUBLIC
-        FILE_SET HEADERS
-        BASE_DIRS include
-        FILES
+)
+
+target_sources(easy-gl
+    PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS include
+    FILES
         include/easygl/easygl.hpp
         include/easygl/Config.hpp
         include/easygl/Export.hpp

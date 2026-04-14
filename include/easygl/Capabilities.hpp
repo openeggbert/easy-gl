@@ -25,6 +25,7 @@ namespace easygl
         [[nodiscard]] int get_limit(const std::string& name) const;
         [[nodiscard]] bool is_opengl() const noexcept;
         [[nodiscard]] bool is_opengles() const noexcept;
+        [[nodiscard]] bool is_at_least(int major, int minor) const noexcept;
 
     private:
         ContextInfo context_info_{};

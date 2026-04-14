@@ -16,6 +16,7 @@ namespace easygl
         explicit Device(Config config);
 
         void initialize(GLGetProcAddressFn loader);
+        [[nodiscard]] bool is_initialized() const noexcept;
 
         [[nodiscard]] const Config& config() const noexcept;
         [[nodiscard]] const Capabilities& capabilities() const noexcept;
