@@ -28,12 +28,25 @@ namespace easygl::platform
     constexpr GLenum GL_NUM_EXTENSIONS = 0x821D;
     constexpr GLenum GL_MAX_TEXTURE_SIZE = 0x0D33;
 
+    constexpr GLenum GL_TEXTURE_2D = 0x0DE1;
+    constexpr GLenum GL_TEXTURE_MAG_FILTER = 0x2800;
+    constexpr GLenum GL_TEXTURE_MIN_FILTER = 0x2801;
+    constexpr GLenum GL_NEAREST = 0x2600;
+    constexpr GLenum GL_LINEAR = 0x2601;
+    constexpr GLenum GL_RGBA = 0x1908;
+    constexpr GLenum GL_BGRA = 0x80E1;
+
+    constexpr GLenum GL_BLEND = 0x0BE2;
+    constexpr GLenum GL_SRC_ALPHA = 0x0302;
+    constexpr GLenum GL_ONE_MINUS_SRC_ALPHA = 0x0303;
+
     constexpr GLenum GL_ARRAY_BUFFER = 0x8892;
     constexpr GLenum GL_ELEMENT_ARRAY_BUFFER = 0x8893;
     constexpr GLenum GL_UNIFORM_BUFFER = 0x8A11;
     constexpr GLenum GL_COPY_READ_BUFFER = 0x8F36;
     constexpr GLenum GL_COPY_WRITE_BUFFER = 0x8F37;
     constexpr GLenum GL_STATIC_DRAW = 0x88E4;
+    constexpr GLenum GL_DYNAMIC_DRAW = 0x88E8;
 
     constexpr GLenum GL_VERTEX_SHADER = 0x8B31;
     constexpr GLenum GL_FRAGMENT_SHADER = 0x8B30;
@@ -70,6 +83,7 @@ namespace easygl::platform
     using PFNGLDELETEBUFFERSPROC = void (*)(GLsizei n, const GLuint* buffers);
     using PFNGLBINDBUFFERPROC = void (*)(GLenum target, GLuint buffer);
     using PFNGLBUFFERDATAPROC = void (*)(GLenum target, GLsizeiptr size, const void* data, GLenum usage);
+    using PFNGLBUFFERSUBDATAPROC = void (*)(GLenum target, GLintptr offset, GLsizeiptr size, const void* data);
     using PFNGLBINDBUFFERBASEPROC = void (*)(GLenum target, GLuint index, GLuint buffer);
 
     using PFNGLGETSTRINGPROC = const unsigned char* (*)(GLenum name);
@@ -108,6 +122,17 @@ namespace easygl::platform
     using PFNGLCLEARCOLORPROC = void (*)(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
     using PFNGLVIEWPORTPROC = void (*)(GLint x, GLint y, GLsizei width, GLsizei height);
     using PFNGLDRAWARRAYSPROC = void (*)(GLenum mode, GLint first, GLsizei count);
+    using PFNGLDRAWELEMENTSPROC = void (*)(GLenum mode, GLsizei count, GLenum type, const void* indices);
+
+    using PFNGLGENTEXTURESPROC = void (*)(GLsizei n, GLuint* textures);
+    using PFNGLDELETETEXTURESPROC = void (*)(GLsizei n, const GLuint* textures);
+    using PFNGLBINDTEXTUREPROC = void (*)(GLenum target, GLuint texture);
+    using PFNGLTEXIMAGE2DPROC = void (*)(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void* pixels);
+    using PFNGLTEXPARAMETERIPROC = void (*)(GLenum target, GLenum pname, GLint param);
+
+    using PFNGLENABLEPROC = void (*)(GLenum cap);
+    using PFNGLDISABLEPROC = void (*)(GLenum cap);
+    using PFNGLBLENDFUNCPROC = void (*)(GLenum sfactor, GLenum dfactor);
 
     struct GlFunctions
     {
@@ -120,6 +145,7 @@ namespace easygl::platform
         PFNGLDELETEBUFFERSPROC DeleteBuffers = nullptr;
         PFNGLBINDBUFFERPROC BindBuffer = nullptr;
         PFNGLBUFFERDATAPROC BufferData = nullptr;
+        PFNGLBUFFERSUBDATAPROC BufferSubData = nullptr;
         PFNGLBINDBUFFERBASEPROC BindBufferBase = nullptr;
 
         PFNGLGETSTRINGPROC GetString = nullptr;
@@ -158,6 +184,17 @@ namespace easygl::platform
         PFNGLCLEARCOLORPROC ClearColor = nullptr;
         PFNGLVIEWPORTPROC Viewport = nullptr;
         PFNGLDRAWARRAYSPROC DrawArrays = nullptr;
+        PFNGLDRAWELEMENTSPROC DrawElements = nullptr;
+
+        PFNGLGENTEXTURESPROC GenTextures = nullptr;
+        PFNGLDELETETEXTURESPROC DeleteTextures = nullptr;
+        PFNGLBINDTEXTUREPROC BindTexture = nullptr;
+        PFNGLTEXIMAGE2DPROC TexImage2D = nullptr;
+        PFNGLTEXPARAMETERIPROC TexParameteri = nullptr;
+
+        PFNGLENABLEPROC Enable = nullptr;
+        PFNGLDISABLEPROC Disable = nullptr;
+        PFNGLBLENDFUNCPROC BlendFunc = nullptr;
     };
 
     bool initialize_gl_functions(GlFunctions& functions, GLGetProcAddressFn callback);

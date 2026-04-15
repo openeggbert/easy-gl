@@ -61,6 +61,11 @@ namespace easygl
         platform::g_gl.BindVertexArray(handle_);
     }
 
+    void VertexArray::unbind() const
+    {
+        platform::g_gl.BindVertexArray(0);
+    }
+
     void VertexArray::set_attribute_pointer(unsigned int index, int size, DataType type, bool normalized, std::size_t stride, const void* pointer)
     {
         platform::g_gl.VertexAttribPointer(index, size, to_gl(type), normalized ? 1 : 0, static_cast<platform::GLsizei>(stride), pointer);

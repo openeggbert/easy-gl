@@ -190,19 +190,80 @@ namespace easygl
         platform::g_gl.Viewport(x, y, width, height);
     }
 
-    void Device::draw_arrays(PrimitiveType primitive, int first, int count)
+    void Device::get_viewport(int& x, int& y, int& width, int& height) const
     {
-        platform::GLenum mode = 0;
+        platform::GLint viewport[4];
+        platform::g_gl.GetIntegerv(0x0BA2, viewport); // GL_VIEWPORT
+        x = viewport[0];
+        y = viewport[1];
+        width = viewport[2];
+        height = viewport[3];
+    }
+
+    void Device::set_blend_enabled(bool enabled)
+    {
+        if (enabled)
+            platform::g_gl.Enable(platform::GL_BLEND);
+        else
+            platform::g_gl.Disable(platform::GL_BLEND);
+    }
+
+    static platform::GLenum to_gl(BlendFactor factor)
+    {
+        switch (factor)
+        {
+            case BlendFactor::Zero: return 0;
+            case BlendFactor::One: return 1;
+            case BlendFactor::SrcAlpha: return platform::GL_SRC_ALPHA;
+            case BlendFactor::OneMinusSrcAlpha: return platform::GL_ONE_MINUS_SRC_ALPHA;
+            case BlendFactor::DstAlpha: return 0x0304; // GL_DST_ALPHA
+            case BlendFactor::OneMinusDstAlpha: return 0x0305; // GL_ONE_MINUS_DST_ALPHA
+            default: return 0;
+        }
+    }
+
+    void Device::set_blend_func(BlendFactor sfactor, BlendFactor dfactor)
+    {
+        platform::g_gl.BlendFunc(to_gl(sfactor), to_gl(dfactor));
+    }
+
+    static platform::GLenum to_gl(PrimitiveType primitive)
+    {
         switch (primitive)
         {
-            case PrimitiveType::Triangles:      mode = platform::GL_TRIANGLES; break;
-            case PrimitiveType::TriangleStrip: mode = platform::GL_TRIANGLE_STRIP; break;
-            case PrimitiveType::TriangleFan:   mode = platform::GL_TRIANGLE_FAN; break;
-            case PrimitiveType::Lines:          mode = platform::GL_LINES; break;
-            case PrimitiveType::LineStrip:      mode = platform::GL_LINE_STRIP; break;
-            case PrimitiveType::LineLoop:       mode = platform::GL_LINE_LOOP; break;
-            case PrimitiveType::Points:         mode = platform::GL_POINTS; break;
+            case PrimitiveType::Triangles:      return platform::GL_TRIANGLES;
+            case PrimitiveType::TriangleStrip: return platform::GL_TRIANGLE_STRIP;
+            case PrimitiveType::TriangleFan:   return platform::GL_TRIANGLE_FAN;
+            case PrimitiveType::Lines:          return platform::GL_LINES;
+            case PrimitiveType::LineStrip:      return platform::GL_LINE_STRIP;
+            case PrimitiveType::LineLoop:       return platform::GL_LINE_LOOP;
+            case PrimitiveType::Points:         return platform::GL_POINTS;
+            default: return 0;
         }
-        platform::g_gl.DrawArrays(mode, first, count);
+    }
+
+    void Device::draw_arrays(PrimitiveType primitive, int first, int count)
+    {
+        platform::g_gl.DrawArrays(to_gl(primitive), first, count);
+    }
+
+    static platform::GLenum to_gl(DataType type)
+    {
+        switch (type)
+        {
+            case DataType::Float: return platform::GL_FLOAT;
+            case DataType::Byte: return platform::GL_BYTE;
+            case DataType::UnsignedByte: return platform::GL_UNSIGNED_BYTE;
+            case DataType::Short: return platform::GL_SHORT;
+            case DataType::UnsignedShort: return platform::GL_UNSIGNED_SHORT;
+            case DataType::Int: return platform::GL_INT;
+            case DataType::UnsignedInt: return platform::GL_UNSIGNED_INT;
+            default: return 0;
+        }
+    }
+
+    void Device::draw_elements(PrimitiveType primitive, int count, DataType type, const void* indices)
+    {
+        platform::g_gl.DrawElements(to_gl(primitive), count, to_gl(type), indices);
     }
 }

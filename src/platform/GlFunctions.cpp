@@ -27,6 +27,7 @@ namespace easygl::platform
         functions.DeleteBuffers = load_func<PFNGLDELETEBUFFERSPROC>(callback, "glDeleteBuffers");
         functions.BindBuffer = load_func<PFNGLBINDBUFFERPROC>(callback, "glBindBuffer");
         functions.BufferData = load_func<PFNGLBUFFERDATAPROC>(callback, "glBufferData");
+        functions.BufferSubData = load_func<PFNGLBUFFERSUBDATAPROC>(callback, "glBufferSubData");
         functions.BindBufferBase = load_func<PFNGLBINDBUFFERBASEPROC>(callback, "glBindBufferBase");
 
         // Context info
@@ -77,6 +78,19 @@ namespace easygl::platform
         functions.ClearColor = load_func<PFNGLCLEARCOLORPROC>(callback, "glClearColor");
         functions.Viewport = load_func<PFNGLVIEWPORTPROC>(callback, "glViewport");
         functions.DrawArrays = load_func<PFNGLDRAWARRAYSPROC>(callback, "glDrawArrays");
+        functions.DrawElements = load_func<PFNGLDRAWELEMENTSPROC>(callback, "glDrawElements");
+
+        // Textures
+        functions.GenTextures = load_func<PFNGLGENTEXTURESPROC>(callback, "glGenTextures");
+        functions.DeleteTextures = load_func<PFNGLDELETETEXTURESPROC>(callback, "glDeleteTextures");
+        functions.BindTexture = load_func<PFNGLBINDTEXTUREPROC>(callback, "glBindTexture");
+        functions.TexImage2D = load_func<PFNGLTEXIMAGE2DPROC>(callback, "glTexImage2D");
+        functions.TexParameteri = load_func<PFNGLTEXPARAMETERIPROC>(callback, "glTexParameteri");
+
+        // Blending/States
+        functions.Enable = load_func<PFNGLENABLEPROC>(callback, "glEnable");
+        functions.Disable = load_func<PFNGLDISABLEPROC>(callback, "glDisable");
+        functions.BlendFunc = load_func<PFNGLBLENDFUNCPROC>(callback, "glBlendFunc");
 
         // Minimal validation for required functions for HelloTriangle
         bool required_loaded = true;

@@ -18,6 +18,7 @@ namespace easygl
         void create();
         void destroy() noexcept;
         void bind() const;
+        void unbind() const;
 
         void set_attribute_pointer(unsigned int index, int size, DataType type, bool normalized, std::size_t stride, const void* pointer);
         void enable_attribute(unsigned int index);

@@ -20,6 +20,16 @@ namespace easygl
         Points
     };
 
+    enum class BlendFactor
+    {
+        Zero,
+        One,
+        SrcAlpha,
+        OneMinusSrcAlpha,
+        DstAlpha,
+        OneMinusDstAlpha
+    };
+
     enum class ClearFlags : u32
     {
         None = 0,
@@ -52,7 +62,11 @@ namespace easygl
         void clear(ClearFlags flags);
         void set_clear_color(float r, float g, float b, float a);
         void set_viewport(int x, int y, int width, int height);
+        void get_viewport(int& x, int& y, int& width, int& height) const;
+        void set_blend_enabled(bool enabled);
+        void set_blend_func(BlendFactor sfactor, BlendFactor dfactor);
         void draw_arrays(PrimitiveType primitive, int first, int count);
+        void draw_elements(PrimitiveType primitive, int count, DataType type, const void* indices);
 
     private:
         Config config_{};
