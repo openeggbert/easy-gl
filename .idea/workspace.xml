@@ -31,9 +31,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eacc8ba5-7af4-4215-953f-f8653899c1e4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="eacc8ba5-7af4-4215-953f-f8653899c1e4" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -139,10 +137,10 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake Application.easy-gl-resource-smoke-tests" />
-      <item itemvalue="CMake Application.easy-gl-smoke-tests" />
       <item itemvalue="CMake Application.easy-gl" />
       <item itemvalue="CMake Application.hello-triangle-sdl" />
+      <item itemvalue="CMake Application.easy-gl-resource-smoke-tests" />
+      <item itemvalue="CMake Application.easy-gl-smoke-tests" />
       <item itemvalue="CTest Application.All CTest" />
     </list>
   </component>
@@ -157,7 +155,7 @@
       <option name="presentableId" value="Default" />
       <updated>1776183554540</updated>
       <workItem from="1776183556248" duration="12109000" />
-      <workItem from="1776266205429" duration="7000" />
+      <workItem from="1776266205429" duration="7941000" />
     </task>
     <servers />
   </component>
