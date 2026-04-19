@@ -66,20 +66,26 @@ namespace easygl
 
     void Buffer::set_data(const void* data, std::size_t size_in_bytes)
     {
-        // For simplicity, we bind to GL_ARRAY_BUFFER to set data if it's not bound elsewhere.
-        // A better implementation would use direct state access if available or remember the current binding.
-        // But the guidelines say: "Prefer minimal compilable stubs over speculative large implementations."
-        // And "Do not overengineer."
-        
-        // Let's assume the user has bound it or we just bind it to GL_ARRAY_BUFFER temporarily.
-        platform::g_gl.BindBuffer(platform::GL_ARRAY_BUFFER, handle_);
-        platform::g_gl.BufferData(platform::GL_ARRAY_BUFFER, static_cast<platform::GLsizeiptr>(size_in_bytes), data, platform::GL_STATIC_DRAW);
+        set_data(BufferTarget::Array, data, size_in_bytes);
+    }
+
+    void Buffer::set_data(BufferTarget target, const void* data, std::size_t size_in_bytes)
+    {
+        const auto gl_target = to_gl(target);
+        platform::g_gl.BindBuffer(gl_target, handle_);
+        platform::g_gl.BufferData(gl_target, static_cast<platform::GLsizeiptr>(size_in_bytes), data, platform::GL_STATIC_DRAW);
     }
 
     void Buffer::set_sub_data(const void* data, std::size_t size_in_bytes, std::size_t offset_in_bytes)
     {
-        platform::g_gl.BindBuffer(platform::GL_ARRAY_BUFFER, handle_);
-        platform::g_gl.BufferSubData(platform::GL_ARRAY_BUFFER, static_cast<platform::GLintptr>(offset_in_bytes), static_cast<platform::GLsizeiptr>(size_in_bytes), data);
+        set_sub_data(BufferTarget::Array, data, size_in_bytes, offset_in_bytes);
+    }
+
+    void Buffer::set_sub_data(BufferTarget target, const void* data, std::size_t size_in_bytes, std::size_t offset_in_bytes)
+    {
+        const auto gl_target = to_gl(target);
+        platform::g_gl.BindBuffer(gl_target, handle_);
+        platform::g_gl.BufferSubData(gl_target, static_cast<platform::GLintptr>(offset_in_bytes), static_cast<platform::GLsizeiptr>(size_in_bytes), data);
     }
 
     bool Buffer::is_created() const noexcept

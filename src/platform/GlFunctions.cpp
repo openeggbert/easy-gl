@@ -64,6 +64,7 @@ namespace easygl::platform
         functions.Uniform1i = load_func<PFNGLUNIFORM1IPROC>(callback, "glUniform1i");
         functions.Uniform1f = load_func<PFNGLUNIFORM1FPROC>(callback, "glUniform1f");
         functions.Uniform3f = load_func<PFNGLUNIFORM3FPROC>(callback, "glUniform3f");
+        functions.Uniform4f = load_func<PFNGLUNIFORM4FPROC>(callback, "glUniform4f");
         functions.UniformMatrix4fv = load_func<PFNGLUNIFORMMATRIX4FVPROC>(callback, "glUniformMatrix4fv");
 
         // Vertex Arrays

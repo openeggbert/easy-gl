@@ -1,8 +1,9 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <easygl/easygl.hpp>
+#include <cmath>
+#include <cstddef>
 #include <iostream>
-#include <vector>
 
 namespace
 {
@@ -11,16 +12,21 @@ namespace
 
     const char* vertexShaderSource = R"(#version 330 core
 layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aColor;
+out vec3 vertexColor;
 void main()
 {
     gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    vertexColor = aColor;
 })";
 
     const char* fragmentShaderSource = R"(#version 330 core
+in vec3 vertexColor;
+uniform vec4 uTint;
 out vec4 FragColor;
 void main()
 {
-    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+    FragColor = vec4(vertexColor, 1.0f) * uTint;
 })";
 }
 
@@ -98,31 +104,22 @@ int main(int, char**)
         std::cout << "GL_VERSION  = " << info.version_string << '\n';
 
         constexpr float vertices[] = {
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.0f,  0.5f, 0.0f
+            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+             0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+             0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f
         };
 
-        easygl::Shader vertexShader(easygl::ShaderStage::Vertex);
-        vertexShader.compile_from_source(vertexShaderSource);
-        if (!vertexShader.is_compiled()) {
-            std::cerr << "Vertex Shader compilation failed:\n" << vertexShader.info_log() << '\n';
-            return 1;
-        }
-
-        easygl::Shader fragmentShader(easygl::ShaderStage::Fragment);
-        fragmentShader.compile_from_source(fragmentShaderSource);
-        if (!fragmentShader.is_compiled()) {
-            std::cerr << "Fragment Shader compilation failed:\n" << fragmentShader.info_log() << '\n';
-            return 1;
-        }
-
         easygl::Program shaderProgram;
-        shaderProgram.attach(vertexShader);
-        shaderProgram.attach(fragmentShader);
-        shaderProgram.link();
-        if (!shaderProgram.is_linked()) {
-            std::cerr << "Program linking failed:\n" << shaderProgram.info_log() << '\n';
+        try {
+            shaderProgram = easygl::Program(vertexShaderSource, fragmentShaderSource);
+        } catch (const easygl::Exception& e) {
+            std::cerr << "Shader program creation failed:\n" << e.what() << '\n';
+            return 1;
+        }
+
+        const int tint_location = shaderProgram.uniform_location("uTint");
+        if (tint_location < 0) {
+            std::cerr << "Uniform uTint not found in shader program.\n";
             return 1;
         }
 
@@ -134,11 +131,11 @@ int main(int, char**)
 
         vao.bind();
         vbo.bind(easygl::BufferTarget::Array);
-        vbo.set_data(vertices, sizeof(vertices));
+        vbo.set_data(easygl::BufferTarget::Array, vertices, sizeof(vertices));
 
-        // Set up vertex attributes (layout)
-        vao.set_attribute_pointer(0, 3, easygl::DataType::Float, false, 3 * sizeof(float), nullptr);
-        vao.enable_attribute(0);
+        constexpr std::size_t stride = 6 * sizeof(float);
+        vao.set_attribute(easygl::VertexAttribute{0, 3, easygl::DataType::Float, false, stride, 0, true});
+        vao.set_attribute(easygl::VertexAttribute{1, 3, easygl::DataType::Float, false, stride, 3 * sizeof(float), true});
 
         int drawableWidth = 0;
         int drawableHeight = 0;
@@ -171,7 +168,11 @@ int main(int, char**)
             device.set_clear_color(0.2f, 0.3f, 0.3f, 1.0f);
             device.clear(easygl::ClearFlags::Color);
 
+            const float time_seconds = static_cast<float>(SDL_GetTicks()) / 1000.0f;
+            const float green = std::sin(time_seconds) * 0.5f + 0.5f;
+
             shaderProgram.use();
+            shaderProgram.set_uniform(tint_location, 0.7f, green, 1.0f, 1.0f);
             vao.bind();
             device.draw_arrays(easygl::PrimitiveType::Triangles, 0, 3);
 

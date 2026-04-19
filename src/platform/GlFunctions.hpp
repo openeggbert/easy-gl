@@ -110,6 +110,7 @@ namespace easygl::platform
     using PFNGLUNIFORM1IPROC = void (*)(GLint location, GLint v0);
     using PFNGLUNIFORM1FPROC = void (*)(GLint location, GLfloat v0);
     using PFNGLUNIFORM3FPROC = void (*)(GLint location, GLfloat v0, GLfloat v1, GLfloat v2);
+    using PFNGLUNIFORM4FPROC = void (*)(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
     using PFNGLUNIFORMMATRIX4FVPROC = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
 
     using PFNGLGENVERTEXARRAYSPROC = void (*)(GLsizei n, GLuint* arrays);
@@ -172,6 +173,7 @@ namespace easygl::platform
         PFNGLUNIFORM1IPROC Uniform1i = nullptr;
         PFNGLUNIFORM1FPROC Uniform1f = nullptr;
         PFNGLUNIFORM3FPROC Uniform3f = nullptr;
+        PFNGLUNIFORM4FPROC Uniform4f = nullptr;
         PFNGLUNIFORMMATRIX4FVPROC UniformMatrix4fv = nullptr;
 
         PFNGLGENVERTEXARRAYSPROC GenVertexArrays = nullptr;

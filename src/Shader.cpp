@@ -76,6 +76,14 @@ namespace easygl
         compiled_ = (status != 0);
     }
 
+    unsigned int Shader::release_native_handle() noexcept
+    {
+        const unsigned int released = handle_;
+        handle_ = 0;
+        compiled_ = false;
+        return released;
+    }
+
     std::string Shader::info_log() const
     {
         if (!is_created()) return "";

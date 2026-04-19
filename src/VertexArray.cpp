@@ -1,6 +1,8 @@
 #include "easygl/VertexArray.hpp"
 #include "platform/GlFunctions.hpp"
 
+#include <cstdint>
+
 namespace easygl
 {
     static platform::GLenum to_gl(DataType type)
@@ -64,6 +66,22 @@ namespace easygl
     void VertexArray::unbind() const
     {
         platform::g_gl.BindVertexArray(0);
+    }
+
+    void VertexArray::set_attribute(const VertexAttribute& attribute)
+    {
+        set_attribute_pointer(
+            attribute.index,
+            attribute.components,
+            attribute.type,
+            attribute.normalized,
+            attribute.stride_in_bytes,
+            reinterpret_cast<const void*>(static_cast<std::uintptr_t>(attribute.offset_in_bytes)));
+
+        if (attribute.enabled)
+        {
+            enable_attribute(attribute.index);
+        }
     }
 
     void VertexArray::set_attribute_pointer(unsigned int index, int size, DataType type, bool normalized, std::size_t stride, const void* pointer)
