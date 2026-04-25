@@ -85,6 +85,8 @@ namespace easygl::platform
         functions.GenTextures = load_func<PFNGLGENTEXTURESPROC>(callback, "glGenTextures");
         functions.DeleteTextures = load_func<PFNGLDELETETEXTURESPROC>(callback, "glDeleteTextures");
         functions.BindTexture = load_func<PFNGLBINDTEXTUREPROC>(callback, "glBindTexture");
+        functions.ActiveTexture = load_func<PFNGLACTIVETEXTUREPROC>(callback, "glActiveTexture");
+        functions.PixelStorei = load_func<PFNGLPIXELSTOREIPROC>(callback, "glPixelStorei");
         functions.TexImage2D = load_func<PFNGLTEXIMAGE2DPROC>(callback, "glTexImage2D");
         functions.TexParameteri = load_func<PFNGLTEXPARAMETERIPROC>(callback, "glTexParameteri");
 

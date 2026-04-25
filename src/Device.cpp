@@ -176,6 +176,11 @@ namespace easygl
         if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Color)) != 0) mask |= platform::GL_COLOR_BUFFER_BIT;
         if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Depth)) != 0) mask |= platform::GL_DEPTH_BUFFER_BIT;
         if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Stencil)) != 0) mask |= platform::GL_STENCIL_BUFFER_BIT;
+
+        if (platform::g_gl.Disable != nullptr)
+        {
+            platform::g_gl.Disable(platform::GL_SCISSOR_TEST);
+        }
         
         platform::g_gl.Clear(mask);
     }

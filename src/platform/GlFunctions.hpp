@@ -31,12 +31,18 @@ namespace easygl::platform
     constexpr GLenum GL_TEXTURE_2D = 0x0DE1;
     constexpr GLenum GL_TEXTURE_MAG_FILTER = 0x2800;
     constexpr GLenum GL_TEXTURE_MIN_FILTER = 0x2801;
+    constexpr GLenum GL_TEXTURE_WRAP_S = 0x2802;
+    constexpr GLenum GL_TEXTURE_WRAP_T = 0x2803;
     constexpr GLenum GL_NEAREST = 0x2600;
     constexpr GLenum GL_LINEAR = 0x2601;
+    constexpr GLenum GL_CLAMP_TO_EDGE = 0x812F;
     constexpr GLenum GL_RGBA = 0x1908;
     constexpr GLenum GL_BGRA = 0x80E1;
+    constexpr GLenum GL_TEXTURE0 = 0x84C0;
+    constexpr GLenum GL_UNPACK_ALIGNMENT = 0x0CF5;
 
     constexpr GLenum GL_BLEND = 0x0BE2;
+    constexpr GLenum GL_SCISSOR_TEST = 0x0C11;
     constexpr GLenum GL_SRC_ALPHA = 0x0302;
     constexpr GLenum GL_ONE_MINUS_SRC_ALPHA = 0x0303;
 
@@ -128,6 +134,8 @@ namespace easygl::platform
     using PFNGLGENTEXTURESPROC = void (*)(GLsizei n, GLuint* textures);
     using PFNGLDELETETEXTURESPROC = void (*)(GLsizei n, const GLuint* textures);
     using PFNGLBINDTEXTUREPROC = void (*)(GLenum target, GLuint texture);
+    using PFNGLACTIVETEXTUREPROC = void (*)(GLenum texture);
+    using PFNGLPIXELSTOREIPROC = void (*)(GLenum pname, GLint param);
     using PFNGLTEXIMAGE2DPROC = void (*)(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void* pixels);
     using PFNGLTEXPARAMETERIPROC = void (*)(GLenum target, GLenum pname, GLint param);
 
@@ -191,6 +199,8 @@ namespace easygl::platform
         PFNGLGENTEXTURESPROC GenTextures = nullptr;
         PFNGLDELETETEXTURESPROC DeleteTextures = nullptr;
         PFNGLBINDTEXTUREPROC BindTexture = nullptr;
+        PFNGLACTIVETEXTUREPROC ActiveTexture = nullptr;
+        PFNGLPIXELSTOREIPROC PixelStorei = nullptr;
         PFNGLTEXIMAGE2DPROC TexImage2D = nullptr;
         PFNGLTEXPARAMETERIPROC TexParameteri = nullptr;
 

@@ -13,6 +13,7 @@ namespace
         unsigned int next_shader = 10;
         unsigned int next_program = 100;
         unsigned int next_vertex_array = 200;
+        unsigned int next_texture = 300;
 
         int shader_compile_status = 1;
         int program_link_status = 1;
@@ -34,6 +35,14 @@ namespace
         int uniform4_calls = 0;
         int last_uniform_location = -1;
         float last_uniform4_values[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+
+        int pixel_store_calls = 0;
+        int pixel_store_alignment = -1;
+        int tex_wrap_s = -1;
+        int tex_wrap_t = -1;
+        int tex_min_filter = -1;
+        int tex_mag_filter = -1;
+        unsigned int last_active_texture = 0;
     };
 
     FakeGlState g_state;
@@ -226,10 +235,27 @@ namespace
         }
 
         if (n == "glGenTextures") {
-            return (void*)+[](int, unsigned int*) {};
+            return (void*)+[](int count, unsigned int* textures) {
+                for (int i = 0; i < count; ++i) {
+                    textures[i] = g_state.next_texture++;
+                }
+            };
         }
         if (n == "glDeleteTextures") {
             return (void*)+[](int, const unsigned int*) {};
+        }
+        if (n == "glActiveTexture") {
+            return (void*)+[](unsigned int texture) {
+                g_state.last_active_texture = texture;
+            };
+        }
+        if (n == "glPixelStorei") {
+            return (void*)+[](unsigned int pname, int param) {
+                if (pname == 0x0CF5) {
+                    ++g_state.pixel_store_calls;
+                    g_state.pixel_store_alignment = param;
+                }
+            };
         }
         if (n == "glBindTexture") {
             return (void*)+[](unsigned int, unsigned int) {};
@@ -238,7 +264,12 @@ namespace
             return (void*)+[](unsigned int, int, int, int, int, int, unsigned int, unsigned int, const void*) {};
         }
         if (n == "glTexParameteri") {
-            return (void*)+[](unsigned int, unsigned int, int) {};
+            return (void*)+[](unsigned int, unsigned int pname, int param) {
+                if (pname == 0x2800) g_state.tex_mag_filter = param;
+                if (pname == 0x2801) g_state.tex_min_filter = param;
+                if (pname == 0x2802) g_state.tex_wrap_s = param;
+                if (pname == 0x2803) g_state.tex_wrap_t = param;
+            };
         }
 
         if (n == "glEnable") {
@@ -283,6 +314,26 @@ namespace
         assert(g_state.last_vertex_attrib_stride == static_cast<int>(6 * sizeof(float)));
         assert(g_state.last_vertex_attrib_offset == 3 * sizeof(float));
         assert(g_state.last_enabled_attrib_index == 1);
+    }
+
+    void test_texture_upload_sets_unpack_alignment_wrap_and_unit0_binding()
+    {
+        reset_state();
+
+        easygl::Texture texture;
+        texture.create();
+
+        constexpr unsigned char pixel[4] = {255, 255, 255, 255};
+        texture.set_image_2d(easygl::TextureTarget::Texture2D, 0, 1, 1, pixel);
+        texture.bind(easygl::TextureTarget::Texture2D);
+
+        assert(g_state.pixel_store_calls == 1);
+        assert(g_state.pixel_store_alignment == 1);
+        assert(g_state.tex_min_filter == 0x2601);
+        assert(g_state.tex_mag_filter == 0x2601);
+        assert(g_state.tex_wrap_s == 0x812F);
+        assert(g_state.tex_wrap_t == 0x812F);
+        assert(g_state.last_active_texture == 0x84C0);
     }
 
     void test_program_owned_shaders_cleanup_after_link()
@@ -393,6 +444,7 @@ int main()
 
         test_buffer_upload_target();
         test_vertex_attribute_layout();
+        test_texture_upload_sets_unpack_alignment_wrap_and_unit0_binding();
         test_program_owned_shaders_cleanup_after_link();
         test_program_owned_shaders_cleanup_on_destroy_when_link_fails();
         test_program_compile_from_sources_and_uniform4();
