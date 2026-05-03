@@ -29,6 +29,37 @@ namespace easygl
         DstAlpha,
         OneMinusDstAlpha
     };
+    /**
+     * @brief Depth comparison function used by the depth test.
+     */
+    enum class CompareFunc
+    {
+        Never,
+        Less,
+        Equal,
+        LessEqual,
+        Greater,
+        NotEqual,
+        GreaterEqual,
+        Always
+    };
+    /**
+     * @brief Face used by face culling.
+     */
+    enum class CullFace
+    {
+        Front,
+        Back,
+        FrontAndBack
+    };
+    /**
+     * @brief Winding order considered "front" for face culling.
+     */
+    enum class FrontFace
+    {
+        Clockwise,
+        CounterClockwise
+    };
 
     enum class ClearFlags : u32
     {
@@ -65,6 +96,34 @@ namespace easygl
         void get_viewport(int& x, int& y, int& width, int& height) const;
         void set_blend_enabled(bool enabled);
         void set_blend_func(BlendFactor sfactor, BlendFactor dfactor);
+        /**
+         * @brief Enables or disables the depth test.
+         */
+        void set_depth_test_enabled(bool enabled);
+        /**
+         * @brief Enables or disables writing to the depth buffer.
+         */
+        void set_depth_mask(bool enabled);
+        /**
+         * @brief Sets the depth comparison function.
+         */
+        void set_depth_func(CompareFunc func);
+        /**
+         * @brief Sets the depth value used by depth-buffer clears.
+         */
+        void set_clear_depth(float depth);
+        /**
+         * @brief Enables or disables face culling.
+         */
+        void set_cull_face_enabled(bool enabled);
+        /**
+         * @brief Sets which face is culled.
+         */
+        void set_cull_face(CullFace face);
+        /**
+         * @brief Sets the winding order considered "front".
+         */
+        void set_front_face(FrontFace face);
         void draw_arrays(PrimitiveType primitive, int first, int count);
         void draw_elements(PrimitiveType primitive, int count, DataType type, const void* indices);
 

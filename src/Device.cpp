@@ -271,4 +271,77 @@ namespace easygl
     {
         platform::g_gl.DrawElements(to_gl(primitive), count, to_gl(type), indices);
     }
+
+    static platform::GLenum to_gl(CompareFunc f)
+    {
+        switch (f)
+        {
+            case CompareFunc::Never:        return platform::GL_NEVER;
+            case CompareFunc::Less:         return platform::GL_LESS;
+            case CompareFunc::Equal:        return platform::GL_EQUAL;
+            case CompareFunc::LessEqual:    return platform::GL_LEQUAL;
+            case CompareFunc::Greater:      return platform::GL_GREATER;
+            case CompareFunc::NotEqual:     return platform::GL_NOTEQUAL;
+            case CompareFunc::GreaterEqual: return platform::GL_GEQUAL;
+            case CompareFunc::Always:       return platform::GL_ALWAYS;
+            default: return platform::GL_LESS;
+        }
+    }
+
+    void Device::set_depth_test_enabled(bool enabled)
+    {
+        if (!platform::g_gl.Enable || !platform::g_gl.Disable) return;
+        if (enabled)
+            platform::g_gl.Enable(platform::GL_DEPTH_TEST);
+        else
+            platform::g_gl.Disable(platform::GL_DEPTH_TEST);
+    }
+
+    void Device::set_depth_mask(bool enabled)
+    {
+        if (platform::g_gl.DepthMask)
+            platform::g_gl.DepthMask(enabled ? 1 : 0);
+    }
+
+    void Device::set_depth_func(CompareFunc func)
+    {
+        if (platform::g_gl.DepthFunc)
+            platform::g_gl.DepthFunc(to_gl(func));
+    }
+
+    void Device::set_clear_depth(float depth)
+    {
+        if (platform::g_gl.ClearDepthf)
+            platform::g_gl.ClearDepthf(depth);
+        else if (platform::g_gl.ClearDepth)
+            platform::g_gl.ClearDepth(static_cast<double>(depth));
+    }
+
+    void Device::set_cull_face_enabled(bool enabled)
+    {
+        if (!platform::g_gl.Enable || !platform::g_gl.Disable) return;
+        if (enabled)
+            platform::g_gl.Enable(platform::GL_CULL_FACE);
+        else
+            platform::g_gl.Disable(platform::GL_CULL_FACE);
+    }
+
+    void Device::set_cull_face(CullFace face)
+    {
+        if (!platform::g_gl.CullFace) return;
+        platform::GLenum f = platform::GL_BACK;
+        switch (face)
+        {
+            case CullFace::Front:        f = platform::GL_FRONT; break;
+            case CullFace::Back:         f = platform::GL_BACK; break;
+            case CullFace::FrontAndBack: f = 0x0408; break; // GL_FRONT_AND_BACK
+        }
+        platform::g_gl.CullFace(f);
+    }
+
+    void Device::set_front_face(FrontFace face)
+    {
+        if (!platform::g_gl.FrontFace) return;
+        platform::g_gl.FrontFace(face == FrontFace::Clockwise ? platform::GL_CW : platform::GL_CCW);
+    }
 }

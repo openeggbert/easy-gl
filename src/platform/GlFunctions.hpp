@@ -46,6 +46,24 @@ namespace easygl::platform
     constexpr GLenum GL_SRC_ALPHA = 0x0302;
     constexpr GLenum GL_ONE_MINUS_SRC_ALPHA = 0x0303;
 
+    // Depth
+    constexpr GLenum GL_DEPTH_TEST = 0x0B71;
+    constexpr GLenum GL_NEVER    = 0x0200;
+    constexpr GLenum GL_LESS     = 0x0201;
+    constexpr GLenum GL_EQUAL    = 0x0202;
+    constexpr GLenum GL_LEQUAL   = 0x0203;
+    constexpr GLenum GL_GREATER  = 0x0204;
+    constexpr GLenum GL_NOTEQUAL = 0x0205;
+    constexpr GLenum GL_GEQUAL   = 0x0206;
+    constexpr GLenum GL_ALWAYS   = 0x0207;
+
+    // Culling
+    constexpr GLenum GL_CULL_FACE = 0x0B44;
+    constexpr GLenum GL_FRONT     = 0x0404;
+    constexpr GLenum GL_BACK      = 0x0405;
+    constexpr GLenum GL_CW        = 0x0900;
+    constexpr GLenum GL_CCW       = 0x0901;
+
     constexpr GLenum GL_ARRAY_BUFFER = 0x8892;
     constexpr GLenum GL_ELEMENT_ARRAY_BUFFER = 0x8893;
     constexpr GLenum GL_UNIFORM_BUFFER = 0x8A11;
@@ -142,6 +160,12 @@ namespace easygl::platform
     using PFNGLENABLEPROC = void (*)(GLenum cap);
     using PFNGLDISABLEPROC = void (*)(GLenum cap);
     using PFNGLBLENDFUNCPROC = void (*)(GLenum sfactor, GLenum dfactor);
+    using PFNGLDEPTHFUNCPROC = void (*)(GLenum func);
+    using PFNGLDEPTHMASKPROC = void (*)(GLboolean flag);
+    using PFNGLCLEARDEPTHPROC = void (*)(GLdouble depth);
+    using PFNGLCLEARDEPTHFPROC = void (*)(GLfloat depth);
+    using PFNGLCULLFACEPROC = void (*)(GLenum mode);
+    using PFNGLFRONTFACEPROC = void (*)(GLenum mode);
 
     struct GlFunctions
     {
@@ -207,6 +231,12 @@ namespace easygl::platform
         PFNGLENABLEPROC Enable = nullptr;
         PFNGLDISABLEPROC Disable = nullptr;
         PFNGLBLENDFUNCPROC BlendFunc = nullptr;
+        PFNGLDEPTHFUNCPROC DepthFunc = nullptr;
+        PFNGLDEPTHMASKPROC DepthMask = nullptr;
+        PFNGLCLEARDEPTHPROC ClearDepth = nullptr;
+        PFNGLCLEARDEPTHFPROC ClearDepthf = nullptr;
+        PFNGLCULLFACEPROC CullFace = nullptr;
+        PFNGLFRONTFACEPROC FrontFace = nullptr;
     };
 
     bool initialize_gl_functions(GlFunctions& functions, GLGetProcAddressFn callback);

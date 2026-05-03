@@ -94,6 +94,12 @@ namespace easygl::platform
         functions.Enable = load_func<PFNGLENABLEPROC>(callback, "glEnable");
         functions.Disable = load_func<PFNGLDISABLEPROC>(callback, "glDisable");
         functions.BlendFunc = load_func<PFNGLBLENDFUNCPROC>(callback, "glBlendFunc");
+        functions.DepthFunc = load_func<PFNGLDEPTHFUNCPROC>(callback, "glDepthFunc");
+        functions.DepthMask = load_func<PFNGLDEPTHMASKPROC>(callback, "glDepthMask");
+        functions.ClearDepth = load_func<PFNGLCLEARDEPTHPROC>(callback, "glClearDepth");
+        functions.ClearDepthf = load_func<PFNGLCLEARDEPTHFPROC>(callback, "glClearDepthf");
+        functions.CullFace = load_func<PFNGLCULLFACEPROC>(callback, "glCullFace");
+        functions.FrontFace = load_func<PFNGLFRONTFACEPROC>(callback, "glFrontFace");
 
         // Minimal validation for required functions for HelloTriangle
         bool required_loaded = true;
