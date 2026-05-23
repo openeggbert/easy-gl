@@ -1,5 +1,5 @@
 #include "easygl/Device.hpp"
-#include "platform/GlFunctions.hpp"
+#include <metagl/metagl.hpp>
 #include <utility>
 #include <stdexcept>
 
@@ -29,18 +29,17 @@ namespace easygl
 
         loader_ = loader;
 
-        // 1. Initialize internal GL function pointers (Bootstrap)
-        // We need at least glGetString to identify the context.
-        if (!platform::initialize_gl_functions(platform::g_gl, loader_))
+        // 1. Initialize meta-gl function pointers
+        if (!metagl::Initialize(loader_))
         {
             throw Exception("Failed to bootstrap GL functions.");
         }
 
         // 2. Query Context Information
-        const char* vendor_ptr = reinterpret_cast<const char*>(platform::g_gl.GetString(platform::GL_VENDOR));
-        const char* renderer_ptr = reinterpret_cast<const char*>(platform::g_gl.GetString(platform::GL_RENDERER));
-        const char* version_ptr = reinterpret_cast<const char*>(platform::g_gl.GetString(platform::GL_VERSION));
-        const char* sl_version_ptr = reinterpret_cast<const char*>(platform::g_gl.GetString(platform::GL_SHADING_LANGUAGE_VERSION));
+        const char* vendor_ptr    = metagl::glGetString(metagl::StringName::Vendor);
+        const char* renderer_ptr  = metagl::glGetString(metagl::StringName::Renderer);
+        const char* version_ptr   = metagl::glGetString(metagl::StringName::Version);
+        const char* sl_version_ptr = metagl::glGetString(metagl::StringName::ShadingLanguageVersion);
 
         std::string vendor = vendor_ptr ? vendor_ptr : "";
         std::string renderer = renderer_ptr ? renderer_ptr : "";
@@ -53,14 +52,11 @@ namespace easygl
             api = ApiKind::OpenGLES;
         }
 
-        platform::GLint major = 0;
-        platform::GLint minor = 0;
-        
-        // glGetIntegerv(GL_MAJOR_VERSION) is only for GL 3.0+ / GLES 3.0+
-        // For older versions we should ideally parse the version string.
-        // But for a minimal implementation, let's try glGetIntegerv and if it's 0, try parsing.
-        platform::g_gl.GetIntegerv(platform::GL_MAJOR_VERSION, &major);
-        platform::g_gl.GetIntegerv(platform::GL_MINOR_VERSION, &minor);
+        metagl::GLint major = 0;
+        metagl::GLint minor = 0;
+
+        metagl::glGetIntegerv(metagl::IntegerName::MajorVersion, &major);
+        metagl::glGetIntegerv(metagl::IntegerName::MinorVersion, &minor);
 
         if (major == 0)
         {
@@ -82,19 +78,19 @@ namespace easygl
         }
 
         std::vector<std::string> extensions;
-        if (platform::g_gl.GetStringi && major >= 3)
+        if (major >= 3)
         {
-            platform::GLint num_extensions = 0;
-            platform::g_gl.GetIntegerv(platform::GL_NUM_EXTENSIONS, &num_extensions);
+            metagl::GLint num_extensions = 0;
+            metagl::glGetIntegerv(metagl::IntegerName::NumExtensions, &num_extensions);
             for (int i = 0; i < num_extensions; ++i)
             {
-                const char* ext = reinterpret_cast<const char*>(platform::g_gl.GetStringi(platform::GL_EXTENSIONS, static_cast<platform::GLuint>(i)));
+                const char* ext = metagl::glGetStringi(metagl::StringName::Extensions, static_cast<metagl::GLuint>(i));
                 if (ext) extensions.push_back(ext);
             }
         }
-        else if (platform::g_gl.GetString)
+        else
         {
-            const char* ext_ptr = reinterpret_cast<const char*>(platform::g_gl.GetString(platform::GL_EXTENSIONS));
+            const char* ext_ptr = metagl::glGetString(metagl::StringName::Extensions);
             if (ext_ptr)
             {
                 std::string s(ext_ptr);
@@ -120,7 +116,7 @@ namespace easygl
         info.extensions = std::move(extensions);
 
         capabilities_.set_context_info(std::move(info));
-        
+
         // 3. Detect features based on version and extensions
         capabilities_.detect_common_features();
 
@@ -132,8 +128,8 @@ namespace easygl
         if (!capabilities_.supports(Feature::BasicRendering)) throw Exception("Basic rendering support is required.");
 
         // 5. Query Hardware Limits
-        platform::GLint max_texture_size = 0;
-        platform::g_gl.GetIntegerv(platform::GL_MAX_TEXTURE_SIZE, &max_texture_size);
+        metagl::GLint max_texture_size = 0;
+        metagl::glGetIntegerv(metagl::IntegerName::MaxTextureSize, &max_texture_size);
         capabilities_.set_limit("max_texture_size", max_texture_size);
 
         initialized_ = true;
@@ -172,33 +168,32 @@ namespace easygl
 
     void Device::clear(ClearFlags flags)
     {
-        platform::GLbitfield mask = 0;
-        if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Color)) != 0) mask |= platform::GL_COLOR_BUFFER_BIT;
-        if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Depth)) != 0) mask |= platform::GL_DEPTH_BUFFER_BIT;
-        if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Stencil)) != 0) mask |= platform::GL_STENCIL_BUFFER_BIT;
+        metagl::GLbitfield raw_mask = 0;
+        if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Color)) != 0)
+            raw_mask |= static_cast<metagl::GLbitfield>(metagl::ClearBufferBit::Color);
+        if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Depth)) != 0)
+            raw_mask |= static_cast<metagl::GLbitfield>(metagl::ClearBufferBit::Depth);
+        if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Stencil)) != 0)
+            raw_mask |= static_cast<metagl::GLbitfield>(metagl::ClearBufferBit::Stencil);
 
-        if (platform::g_gl.Disable != nullptr)
-        {
-            platform::g_gl.Disable(platform::GL_SCISSOR_TEST);
-        }
-        
-        platform::g_gl.Clear(mask);
+        metagl::glDisable(metagl::Capability::ScissorTest);
+        metagl::glClear(static_cast<metagl::ClearBufferBit>(raw_mask));
     }
 
     void Device::set_clear_color(float r, float g, float b, float a)
     {
-        platform::g_gl.ClearColor(r, g, b, a);
+        metagl::glClearColor(r, g, b, a);
     }
 
     void Device::set_viewport(int x, int y, int width, int height)
     {
-        platform::g_gl.Viewport(x, y, width, height);
+        metagl::glViewport(x, y, width, height);
     }
 
     void Device::get_viewport(int& x, int& y, int& width, int& height) const
     {
-        platform::GLint viewport[4];
-        platform::g_gl.GetIntegerv(0x0BA2, viewport); // GL_VIEWPORT
+        metagl::GLint viewport[4];
+        metagl::glGetIntegervRaw(0x0BA2 /* GL_VIEWPORT */, viewport);
         x = viewport[0];
         y = viewport[1];
         width = viewport[2];
@@ -208,140 +203,132 @@ namespace easygl
     void Device::set_blend_enabled(bool enabled)
     {
         if (enabled)
-            platform::g_gl.Enable(platform::GL_BLEND);
+            metagl::glEnable(metagl::Capability::Blend);
         else
-            platform::g_gl.Disable(platform::GL_BLEND);
+            metagl::glDisable(metagl::Capability::Blend);
     }
 
-    static platform::GLenum to_gl(BlendFactor factor)
+    static metagl::BlendFactor to_meta(BlendFactor factor)
     {
         switch (factor)
         {
-            case BlendFactor::Zero: return 0;
-            case BlendFactor::One: return 1;
-            case BlendFactor::SrcAlpha: return platform::GL_SRC_ALPHA;
-            case BlendFactor::OneMinusSrcAlpha: return platform::GL_ONE_MINUS_SRC_ALPHA;
-            case BlendFactor::DstAlpha: return 0x0304; // GL_DST_ALPHA
-            case BlendFactor::OneMinusDstAlpha: return 0x0305; // GL_ONE_MINUS_DST_ALPHA
-            default: return 0;
+            case BlendFactor::Zero:             return metagl::BlendFactor::Zero;
+            case BlendFactor::One:              return metagl::BlendFactor::One;
+            case BlendFactor::SrcAlpha:         return metagl::BlendFactor::SrcAlpha;
+            case BlendFactor::OneMinusSrcAlpha: return metagl::BlendFactor::OneMinusSrcAlpha;
+            case BlendFactor::DstAlpha:         return metagl::BlendFactor::DstAlpha;
+            case BlendFactor::OneMinusDstAlpha: return metagl::BlendFactor::OneMinusDstAlpha;
+            default:                            return metagl::BlendFactor::Zero;
         }
     }
 
     void Device::set_blend_func(BlendFactor sfactor, BlendFactor dfactor)
     {
-        platform::g_gl.BlendFunc(to_gl(sfactor), to_gl(dfactor));
+        metagl::glBlendFunc(to_meta(sfactor), to_meta(dfactor));
     }
 
-    static platform::GLenum to_gl(PrimitiveType primitive)
+    static metagl::PrimitiveType to_meta(PrimitiveType primitive)
     {
         switch (primitive)
         {
-            case PrimitiveType::Triangles:      return platform::GL_TRIANGLES;
-            case PrimitiveType::TriangleStrip: return platform::GL_TRIANGLE_STRIP;
-            case PrimitiveType::TriangleFan:   return platform::GL_TRIANGLE_FAN;
-            case PrimitiveType::Lines:          return platform::GL_LINES;
-            case PrimitiveType::LineStrip:      return platform::GL_LINE_STRIP;
-            case PrimitiveType::LineLoop:       return platform::GL_LINE_LOOP;
-            case PrimitiveType::Points:         return platform::GL_POINTS;
-            default: return 0;
+            case PrimitiveType::Triangles:     return metagl::PrimitiveType::Triangles;
+            case PrimitiveType::TriangleStrip: return metagl::PrimitiveType::TriangleStrip;
+            case PrimitiveType::TriangleFan:   return metagl::PrimitiveType::TriangleFan;
+            case PrimitiveType::Lines:         return metagl::PrimitiveType::Lines;
+            case PrimitiveType::LineStrip:     return metagl::PrimitiveType::LineStrip;
+            case PrimitiveType::LineLoop:      return metagl::PrimitiveType::LineLoop;
+            case PrimitiveType::Points:        return metagl::PrimitiveType::Points;
+            default:                           return metagl::PrimitiveType::Triangles;
         }
     }
 
     void Device::draw_arrays(PrimitiveType primitive, int first, int count)
     {
-        platform::g_gl.DrawArrays(to_gl(primitive), first, count);
+        metagl::glDrawArrays(to_meta(primitive), first, count);
     }
 
-    static platform::GLenum to_gl(DataType type)
+    static metagl::DataType to_meta(DataType type)
     {
         switch (type)
         {
-            case DataType::Float: return platform::GL_FLOAT;
-            case DataType::Byte: return platform::GL_BYTE;
-            case DataType::UnsignedByte: return platform::GL_UNSIGNED_BYTE;
-            case DataType::Short: return platform::GL_SHORT;
-            case DataType::UnsignedShort: return platform::GL_UNSIGNED_SHORT;
-            case DataType::Int: return platform::GL_INT;
-            case DataType::UnsignedInt: return platform::GL_UNSIGNED_INT;
-            default: return 0;
+            case DataType::Float:         return metagl::DataType::Float;
+            case DataType::Byte:          return metagl::DataType::Byte;
+            case DataType::UnsignedByte:  return metagl::DataType::UnsignedByte;
+            case DataType::Short:         return metagl::DataType::Short;
+            case DataType::UnsignedShort: return metagl::DataType::UnsignedShort;
+            case DataType::Int:           return metagl::DataType::Int;
+            case DataType::UnsignedInt:   return metagl::DataType::UnsignedInt;
+            default:                      return metagl::DataType::Float;
         }
     }
 
     void Device::draw_elements(PrimitiveType primitive, int count, DataType type, const void* indices)
     {
-        platform::g_gl.DrawElements(to_gl(primitive), count, to_gl(type), indices);
+        metagl::glDrawElements(to_meta(primitive), count, to_meta(type), indices);
     }
 
-    static platform::GLenum to_gl(CompareFunc f)
+    static metagl::CompareFunc to_meta(CompareFunc f)
     {
         switch (f)
         {
-            case CompareFunc::Never:        return platform::GL_NEVER;
-            case CompareFunc::Less:         return platform::GL_LESS;
-            case CompareFunc::Equal:        return platform::GL_EQUAL;
-            case CompareFunc::LessEqual:    return platform::GL_LEQUAL;
-            case CompareFunc::Greater:      return platform::GL_GREATER;
-            case CompareFunc::NotEqual:     return platform::GL_NOTEQUAL;
-            case CompareFunc::GreaterEqual: return platform::GL_GEQUAL;
-            case CompareFunc::Always:       return platform::GL_ALWAYS;
-            default: return platform::GL_LESS;
+            case CompareFunc::Never:        return metagl::CompareFunc::Never;
+            case CompareFunc::Less:         return metagl::CompareFunc::Less;
+            case CompareFunc::Equal:        return metagl::CompareFunc::Equal;
+            case CompareFunc::LessEqual:    return metagl::CompareFunc::LessEqual;
+            case CompareFunc::Greater:      return metagl::CompareFunc::Greater;
+            case CompareFunc::NotEqual:     return metagl::CompareFunc::NotEqual;
+            case CompareFunc::GreaterEqual: return metagl::CompareFunc::GreaterEqual;
+            case CompareFunc::Always:       return metagl::CompareFunc::Always;
+            default:                        return metagl::CompareFunc::Less;
         }
     }
 
     void Device::set_depth_test_enabled(bool enabled)
     {
-        if (!platform::g_gl.Enable || !platform::g_gl.Disable) return;
         if (enabled)
-            platform::g_gl.Enable(platform::GL_DEPTH_TEST);
+            metagl::glEnable(metagl::Capability::DepthTest);
         else
-            platform::g_gl.Disable(platform::GL_DEPTH_TEST);
+            metagl::glDisable(metagl::Capability::DepthTest);
     }
 
     void Device::set_depth_mask(bool enabled)
     {
-        if (platform::g_gl.DepthMask)
-            platform::g_gl.DepthMask(enabled ? 1 : 0);
+        metagl::glDepthMask(enabled ? 1 : 0);
     }
 
     void Device::set_depth_func(CompareFunc func)
     {
-        if (platform::g_gl.DepthFunc)
-            platform::g_gl.DepthFunc(to_gl(func));
+        metagl::glDepthFunc(to_meta(func));
     }
 
     void Device::set_clear_depth(float depth)
     {
-        if (platform::g_gl.ClearDepthf)
-            platform::g_gl.ClearDepthf(depth);
-        else if (platform::g_gl.ClearDepth)
-            platform::g_gl.ClearDepth(static_cast<double>(depth));
+        metagl::glClearDepthf(depth);
+        // Fallback to GlClearDepth is handled inside meta-gl if ClearDepthf is nullptr
     }
 
     void Device::set_cull_face_enabled(bool enabled)
     {
-        if (!platform::g_gl.Enable || !platform::g_gl.Disable) return;
         if (enabled)
-            platform::g_gl.Enable(platform::GL_CULL_FACE);
+            metagl::glEnable(metagl::Capability::CullFace);
         else
-            platform::g_gl.Disable(platform::GL_CULL_FACE);
+            metagl::glDisable(metagl::Capability::CullFace);
     }
 
     void Device::set_cull_face(CullFace face)
     {
-        if (!platform::g_gl.CullFace) return;
-        platform::GLenum f = platform::GL_BACK;
+        metagl::CullFace f = metagl::CullFace::Back;
         switch (face)
         {
-            case CullFace::Front:        f = platform::GL_FRONT; break;
-            case CullFace::Back:         f = platform::GL_BACK; break;
-            case CullFace::FrontAndBack: f = 0x0408; break; // GL_FRONT_AND_BACK
+            case CullFace::Front:        f = metagl::CullFace::Front; break;
+            case CullFace::Back:         f = metagl::CullFace::Back; break;
+            case CullFace::FrontAndBack: f = metagl::CullFace::FrontAndBack; break;
         }
-        platform::g_gl.CullFace(f);
+        metagl::glCullFace(f);
     }
 
     void Device::set_front_face(FrontFace face)
     {
-        if (!platform::g_gl.FrontFace) return;
-        platform::g_gl.FrontFace(face == FrontFace::Clockwise ? platform::GL_CW : platform::GL_CCW);
+        metagl::glFrontFace(face == FrontFace::Clockwise ? metagl::FrontFace::CW : metagl::FrontFace::CCW);
     }
 }

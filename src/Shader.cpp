@@ -1,20 +1,20 @@
 #include "easygl/Shader.hpp"
-#include "platform/GlFunctions.hpp"
+#include <metagl/metagl.hpp>
 #include <vector>
 
 namespace easygl
 {
-    static platform::GLenum to_gl(ShaderStage stage)
+    static metagl::ShaderType to_meta(ShaderStage stage)
     {
         switch (stage)
         {
-            case ShaderStage::Vertex:         return platform::GL_VERTEX_SHADER;
-            case ShaderStage::Fragment:       return platform::GL_FRAGMENT_SHADER;
-            case ShaderStage::Geometry:       return platform::GL_GEOMETRY_SHADER;
-            case ShaderStage::TessControl:    return platform::GL_TESS_CONTROL_SHADER;
-            case ShaderStage::TessEvaluation: return platform::GL_TESS_EVALUATION_SHADER;
-            case ShaderStage::Compute:        return platform::GL_COMPUTE_SHADER;
-            default: return 0;
+            case ShaderStage::Vertex:         return metagl::ShaderType::Vertex;
+            case ShaderStage::Fragment:       return metagl::ShaderType::Fragment;
+            case ShaderStage::Geometry:       return metagl::ShaderType::Geometry;
+            case ShaderStage::TessControl:    return metagl::ShaderType::TessControl;
+            case ShaderStage::TessEvaluation: return metagl::ShaderType::TessEvaluation;
+            case ShaderStage::Compute:        return metagl::ShaderType::Compute;
+            default:                          return metagl::ShaderType::Vertex;
         }
     }
 
@@ -50,14 +50,14 @@ namespace easygl
     void Shader::create()
     {
         if (is_created()) return;
-        handle_ = platform::g_gl.CreateShader(to_gl(stage_));
+        handle_ = metagl::glCreateShader(to_meta(stage_));
     }
 
     void Shader::destroy() noexcept
     {
         if (handle_ != 0)
         {
-            platform::g_gl.DeleteShader(handle_);
+            metagl::glDeleteShader(handle_);
             handle_ = 0;
             compiled_ = false;
         }
@@ -68,11 +68,11 @@ namespace easygl
         if (!is_created()) create();
 
         const char* src = source.c_str();
-        platform::g_gl.ShaderSource(handle_, 1, &src, nullptr);
-        platform::g_gl.CompileShader(handle_);
+        metagl::glShaderSource(handle_, 1, &src, nullptr);
+        metagl::glCompileShader(handle_);
 
-        platform::GLint status = 0;
-        platform::g_gl.GetShaderiv(handle_, platform::GL_COMPILE_STATUS, &status);
+        metagl::GLint status = 0;
+        metagl::glGetShaderiv(handle_, metagl::ShaderParameter::CompileStatus, &status);
         compiled_ = (status != 0);
     }
 
@@ -88,12 +88,12 @@ namespace easygl
     {
         if (!is_created()) return "";
 
-        platform::GLint length = 0;
-        platform::g_gl.GetShaderiv(handle_, platform::GL_INFO_LOG_LENGTH, &length);
+        metagl::GLint length = 0;
+        metagl::glGetShaderiv(handle_, metagl::ShaderParameter::InfoLogLength, &length);
         if (length <= 0) return "";
 
         std::vector<char> buffer(static_cast<std::size_t>(length));
-        platform::g_gl.GetShaderInfoLog(handle_, length, nullptr, buffer.data());
+        metagl::glGetShaderInfoLog(handle_, length, nullptr, buffer.data());
         return std::string(buffer.data());
     }
 

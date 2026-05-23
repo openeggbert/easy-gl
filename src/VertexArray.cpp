@@ -1,22 +1,22 @@
 #include "easygl/VertexArray.hpp"
-#include "platform/GlFunctions.hpp"
+#include <metagl/metagl.hpp>
 
 #include <cstdint>
 
 namespace easygl
 {
-    static platform::GLenum to_gl(DataType type)
+    static metagl::DataType to_meta(DataType type)
     {
         switch (type)
         {
-            case DataType::Float:         return platform::GL_FLOAT;
-            case DataType::Byte:          return platform::GL_BYTE;
-            case DataType::UnsignedByte:  return platform::GL_UNSIGNED_BYTE;
-            case DataType::Short:         return platform::GL_SHORT;
-            case DataType::UnsignedShort: return platform::GL_UNSIGNED_SHORT;
-            case DataType::Int:           return platform::GL_INT;
-            case DataType::UnsignedInt:   return platform::GL_UNSIGNED_INT;
-            default: return 0;
+            case DataType::Float:         return metagl::DataType::Float;
+            case DataType::Byte:          return metagl::DataType::Byte;
+            case DataType::UnsignedByte:  return metagl::DataType::UnsignedByte;
+            case DataType::Short:         return metagl::DataType::Short;
+            case DataType::UnsignedShort: return metagl::DataType::UnsignedShort;
+            case DataType::Int:           return metagl::DataType::Int;
+            case DataType::UnsignedInt:   return metagl::DataType::UnsignedInt;
+            default:                      return metagl::DataType::Float;
         }
     }
 
@@ -46,26 +46,26 @@ namespace easygl
     void VertexArray::create()
     {
         if (is_created()) return;
-        platform::g_gl.GenVertexArrays(1, &handle_);
+        metagl::glGenVertexArrays(1, &handle_);
     }
 
     void VertexArray::destroy() noexcept
     {
         if (is_created())
         {
-            platform::g_gl.DeleteVertexArrays(1, &handle_);
+            metagl::glDeleteVertexArrays(1, &handle_);
             handle_ = 0;
         }
     }
 
     void VertexArray::bind() const
     {
-        platform::g_gl.BindVertexArray(handle_);
+        metagl::glBindVertexArray(handle_);
     }
 
     void VertexArray::unbind() const
     {
-        platform::g_gl.BindVertexArray(0);
+        metagl::glBindVertexArray(0);
     }
 
     void VertexArray::set_attribute(const VertexAttribute& attribute)
@@ -86,12 +86,13 @@ namespace easygl
 
     void VertexArray::set_attribute_pointer(unsigned int index, int size, DataType type, bool normalized, std::size_t stride, const void* pointer)
     {
-        platform::g_gl.VertexAttribPointer(index, size, to_gl(type), normalized ? 1 : 0, static_cast<platform::GLsizei>(stride), pointer);
+        metagl::glVertexAttribPointer(index, size, to_meta(type), normalized ? 1 : 0,
+                                      static_cast<metagl::GLsizei>(stride), pointer);
     }
 
     void VertexArray::enable_attribute(unsigned int index)
     {
-        platform::g_gl.EnableVertexAttribArray(index);
+        metagl::glEnableVertexAttribArray(index);
     }
 
     bool VertexArray::is_created() const noexcept { return handle_ != 0; }

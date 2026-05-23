@@ -1,18 +1,18 @@
 #include "easygl/Buffer.hpp"
-#include "platform/GlFunctions.hpp"
+#include <metagl/metagl.hpp>
 
 namespace easygl
 {
-    static platform::GLenum to_gl(BufferTarget target)
+    static metagl::BufferTarget to_meta(BufferTarget target)
     {
         switch (target)
         {
-            case BufferTarget::Array:       return platform::GL_ARRAY_BUFFER;
-            case BufferTarget::ElementArray: return platform::GL_ELEMENT_ARRAY_BUFFER;
-            case BufferTarget::Uniform:      return platform::GL_UNIFORM_BUFFER;
-            case BufferTarget::CopyRead:     return platform::GL_COPY_READ_BUFFER;
-            case BufferTarget::CopyWrite:    return platform::GL_COPY_WRITE_BUFFER;
-            default: return 0;
+            case BufferTarget::Array:        return metagl::BufferTarget::Array;
+            case BufferTarget::ElementArray: return metagl::BufferTarget::ElementArray;
+            case BufferTarget::Uniform:      return metagl::BufferTarget::Uniform;
+            case BufferTarget::CopyRead:     return metagl::BufferTarget::CopyRead;
+            case BufferTarget::CopyWrite:    return metagl::BufferTarget::CopyWrite;
+            default:                         return metagl::BufferTarget::Array;
         }
     }
 
@@ -42,26 +42,26 @@ namespace easygl
     void Buffer::create()
     {
         if (is_created()) return;
-        platform::g_gl.GenBuffers(1, &handle_);
+        metagl::glGenBuffers(1, &handle_);
     }
 
     void Buffer::destroy() noexcept
     {
         if (is_created())
         {
-            platform::g_gl.DeleteBuffers(1, &handle_);
+            metagl::glDeleteBuffers(1, &handle_);
             handle_ = 0;
         }
     }
 
     void Buffer::bind(BufferTarget target) const
     {
-        platform::g_gl.BindBuffer(to_gl(target), handle_);
+        metagl::glBindBuffer(to_meta(target), handle_);
     }
 
     void Buffer::bind_base(BufferTarget target, unsigned int index) const
     {
-        platform::g_gl.BindBufferBase(to_gl(target), index, handle_);
+        metagl::glBindBufferBase(to_meta(target), index, handle_);
     }
 
     void Buffer::set_data(const void* data, std::size_t size_in_bytes)
@@ -71,9 +71,9 @@ namespace easygl
 
     void Buffer::set_data(BufferTarget target, const void* data, std::size_t size_in_bytes)
     {
-        const auto gl_target = to_gl(target);
-        platform::g_gl.BindBuffer(gl_target, handle_);
-        platform::g_gl.BufferData(gl_target, static_cast<platform::GLsizeiptr>(size_in_bytes), data, platform::GL_STATIC_DRAW);
+        const auto meta_target = to_meta(target);
+        metagl::glBindBuffer(meta_target, handle_);
+        metagl::glBufferData(meta_target, static_cast<metagl::GLsizeiptr>(size_in_bytes), data, metagl::BufferUsage::StaticDraw);
     }
 
     void Buffer::set_sub_data(const void* data, std::size_t size_in_bytes, std::size_t offset_in_bytes)
@@ -83,9 +83,12 @@ namespace easygl
 
     void Buffer::set_sub_data(BufferTarget target, const void* data, std::size_t size_in_bytes, std::size_t offset_in_bytes)
     {
-        const auto gl_target = to_gl(target);
-        platform::g_gl.BindBuffer(gl_target, handle_);
-        platform::g_gl.BufferSubData(gl_target, static_cast<platform::GLintptr>(offset_in_bytes), static_cast<platform::GLsizeiptr>(size_in_bytes), data);
+        const auto meta_target = to_meta(target);
+        metagl::glBindBuffer(meta_target, handle_);
+        metagl::glBufferSubData(meta_target,
+                                static_cast<metagl::GLintptr>(offset_in_bytes),
+                                static_cast<metagl::GLsizeiptr>(size_in_bytes),
+                                data);
     }
 
     bool Buffer::is_created() const noexcept

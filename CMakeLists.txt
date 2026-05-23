@@ -14,6 +14,8 @@ include(EasyGlOptions)
 include(EasyGlPlatform)
 include(EasyGlWarnings)
 
+add_subdirectory(../meta-gl meta-gl)
+
 add_library(easy-gl)
 add_library(easy-gl::easy-gl ALIAS easy-gl)
 
@@ -35,9 +37,6 @@ target_sources(easy-gl
         src/Program.cpp
         src/Texture.cpp
         src/VertexArray.cpp
-        src/platform/GlApiLoader.cpp
-        src/platform/GlFunctions.cpp
-        src/platform/GlFunctions.hpp
 )
 
 target_sources(easy-gl
@@ -62,6 +61,8 @@ target_sources(easy-gl
         include/easygl/VertexArray.hpp
         include/easygl/detail/NonCopyable.hpp
 )
+
+target_link_libraries(easy-gl PUBLIC meta-gl::meta-gl)
 
 easygl_apply_warnings(easy-gl)
 install(TARGETS easy-gl
