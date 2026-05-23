@@ -6,66 +6,21 @@
 #include "easygl/Export.hpp"
 #include "easygl/Feature.hpp"
 #include "easygl/Types.hpp"
+#include <metagl/metagl.hpp>
 
 namespace easygl
 {
-    enum class PrimitiveType
-    {
-        Triangles,
-        TriangleStrip,
-        TriangleFan,
-        Lines,
-        LineStrip,
-        LineLoop,
-        Points
-    };
-
-    enum class BlendFactor
-    {
-        Zero,
-        One,
-        SrcAlpha,
-        OneMinusSrcAlpha,
-        DstAlpha,
-        OneMinusDstAlpha
-    };
-    /**
-     * @brief Depth comparison function used by the depth test.
-     */
-    enum class CompareFunc
-    {
-        Never,
-        Less,
-        Equal,
-        LessEqual,
-        Greater,
-        NotEqual,
-        GreaterEqual,
-        Always
-    };
-    /**
-     * @brief Face used by face culling.
-     */
-    enum class CullFace
-    {
-        Front,
-        Back,
-        FrontAndBack
-    };
-    /**
-     * @brief Winding order considered "front" for face culling.
-     */
-    enum class FrontFace
-    {
-        Clockwise,
-        CounterClockwise
-    };
+    using PrimitiveType = metagl::PrimitiveType;
+    using BlendFactor   = metagl::BlendFactor;
+    using CompareFunc   = metagl::CompareFunc;
+    using CullFace      = metagl::CullFace;
+    using FrontFace     = metagl::FrontFace;
 
     enum class ClearFlags : u32
     {
-        None = 0,
-        Color = 1 << 0,
-        Depth = 1 << 1,
+        None    = 0,
+        Color   = 1 << 0,
+        Depth   = 1 << 1,
         Stencil = 1 << 2
     };
 

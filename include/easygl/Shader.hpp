@@ -3,23 +3,16 @@
 #include <string>
 #include "easygl/Export.hpp"
 #include "easygl/detail/NonCopyable.hpp"
+#include <metagl/metagl.hpp>
 
 namespace easygl
 {
-    enum class ShaderStage
-    {
-        Vertex,
-        Fragment,
-        Geometry,
-        TessControl,
-        TessEvaluation,
-        Compute
-    };
+    using ShaderType = metagl::ShaderType;
 
     class EASYGL_API Shader : public detail::NonCopyable
     {
     public:
-        explicit Shader(ShaderStage stage);
+        explicit Shader(ShaderType type);
         ~Shader();
 
         Shader(Shader&& other) noexcept;
@@ -31,13 +24,13 @@ namespace easygl
         [[nodiscard]] unsigned int release_native_handle() noexcept;
 
         [[nodiscard]] std::string info_log() const;
-        [[nodiscard]] ShaderStage stage() const noexcept;
+        [[nodiscard]] ShaderType shader_type() const noexcept;
         [[nodiscard]] bool is_compiled() const noexcept;
         [[nodiscard]] bool is_created() const noexcept;
         [[nodiscard]] unsigned int native_handle() const noexcept;
 
     private:
-        ShaderStage stage_;
+        ShaderType type_;
         unsigned int handle_ = 0;
         bool compiled_ = false;
     };

@@ -132,14 +132,14 @@ namespace easygl
     {
         destroy();
 
-        Shader vertex_shader(ShaderStage::Vertex);
+        Shader vertex_shader(metagl::ShaderType::Vertex);
         vertex_shader.compile_from_source(vertex_source);
         if (!vertex_shader.is_compiled())
         {
             throw Exception("Vertex shader compilation failed:\n" + vertex_shader.info_log());
         }
 
-        Shader fragment_shader(ShaderStage::Fragment);
+        Shader fragment_shader(metagl::ShaderType::Fragment);
         fragment_shader.compile_from_source(fragment_source);
         if (!fragment_shader.is_compiled())
         {

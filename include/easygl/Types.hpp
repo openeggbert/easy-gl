@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <metagl/metagl.hpp>
 
 namespace easygl
 {
@@ -16,19 +17,10 @@ namespace easygl
 
     /**
      * @brief A function pointer type that loads OpenGL function pointers.
-     * 
+     *
      * This type is compatible with SDL_GL_GetProcAddress, glfwGetProcAddress, etc.
      */
-    using GLGetProcAddressFn = void* (*)(const char* name);
+    using GLGetProcAddressFn = metagl::GlGetProcAddressFn;
 
-    enum class DataType
-    {
-        Float,
-        Byte,
-        UnsignedByte,
-        Short,
-        UnsignedShort,
-        Int,
-        UnsignedInt
-    };
+    using DataType = metagl::DataType;
 }

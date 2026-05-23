@@ -2,15 +2,11 @@
 
 #include "easygl/Export.hpp"
 #include "easygl/detail/NonCopyable.hpp"
+#include <metagl/metagl.hpp>
 
 namespace easygl
 {
-    enum class TextureTarget
-    {
-        Texture2D,
-        Texture3D,
-        CubeMap
-    };
+    using TextureTarget = metagl::TextureTarget;
 
     class EASYGL_API Texture : public detail::NonCopyable
     {

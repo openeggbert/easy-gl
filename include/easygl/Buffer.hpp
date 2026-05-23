@@ -2,19 +2,12 @@
 
 #include <cstddef>
 #include "easygl/Export.hpp"
-
 #include "easygl/detail/NonCopyable.hpp"
+#include <metagl/metagl.hpp>
 
 namespace easygl
 {
-    enum class BufferTarget
-    {
-        Array,
-        ElementArray,
-        Uniform,
-        CopyRead,
-        CopyWrite
-    };
+    using BufferTarget = metagl::BufferTarget;
 
     class EASYGL_API Buffer : public detail::NonCopyable
     {

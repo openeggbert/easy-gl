@@ -340,9 +340,9 @@ namespace
     {
         reset_state();
 
-        easygl::Shader vertex_shader(easygl::ShaderStage::Vertex);
+        easygl::Shader vertex_shader(metagl::ShaderType::Vertex);
         vertex_shader.create();
-        easygl::Shader fragment_shader(easygl::ShaderStage::Fragment);
+        easygl::Shader fragment_shader(metagl::ShaderType::Fragment);
         fragment_shader.create();
 
         easygl::Program program;
@@ -363,7 +363,7 @@ namespace
         reset_state();
         g_state.program_link_status = 0;
 
-        easygl::Shader vertex_shader(easygl::ShaderStage::Vertex);
+        easygl::Shader vertex_shader(metagl::ShaderType::Vertex);
         vertex_shader.create();
 
         easygl::Program program;

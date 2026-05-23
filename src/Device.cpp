@@ -208,79 +208,19 @@ namespace easygl
             metagl::glDisable(metagl::Capability::Blend);
     }
 
-    static metagl::BlendFactor to_meta(BlendFactor factor)
-    {
-        switch (factor)
-        {
-            case BlendFactor::Zero:             return metagl::BlendFactor::Zero;
-            case BlendFactor::One:              return metagl::BlendFactor::One;
-            case BlendFactor::SrcAlpha:         return metagl::BlendFactor::SrcAlpha;
-            case BlendFactor::OneMinusSrcAlpha: return metagl::BlendFactor::OneMinusSrcAlpha;
-            case BlendFactor::DstAlpha:         return metagl::BlendFactor::DstAlpha;
-            case BlendFactor::OneMinusDstAlpha: return metagl::BlendFactor::OneMinusDstAlpha;
-            default:                            return metagl::BlendFactor::Zero;
-        }
-    }
-
     void Device::set_blend_func(BlendFactor sfactor, BlendFactor dfactor)
     {
-        metagl::glBlendFunc(to_meta(sfactor), to_meta(dfactor));
-    }
-
-    static metagl::PrimitiveType to_meta(PrimitiveType primitive)
-    {
-        switch (primitive)
-        {
-            case PrimitiveType::Triangles:     return metagl::PrimitiveType::Triangles;
-            case PrimitiveType::TriangleStrip: return metagl::PrimitiveType::TriangleStrip;
-            case PrimitiveType::TriangleFan:   return metagl::PrimitiveType::TriangleFan;
-            case PrimitiveType::Lines:         return metagl::PrimitiveType::Lines;
-            case PrimitiveType::LineStrip:     return metagl::PrimitiveType::LineStrip;
-            case PrimitiveType::LineLoop:      return metagl::PrimitiveType::LineLoop;
-            case PrimitiveType::Points:        return metagl::PrimitiveType::Points;
-            default:                           return metagl::PrimitiveType::Triangles;
-        }
+        metagl::glBlendFunc(sfactor, dfactor);
     }
 
     void Device::draw_arrays(PrimitiveType primitive, int first, int count)
     {
-        metagl::glDrawArrays(to_meta(primitive), first, count);
-    }
-
-    static metagl::DataType to_meta(DataType type)
-    {
-        switch (type)
-        {
-            case DataType::Float:         return metagl::DataType::Float;
-            case DataType::Byte:          return metagl::DataType::Byte;
-            case DataType::UnsignedByte:  return metagl::DataType::UnsignedByte;
-            case DataType::Short:         return metagl::DataType::Short;
-            case DataType::UnsignedShort: return metagl::DataType::UnsignedShort;
-            case DataType::Int:           return metagl::DataType::Int;
-            case DataType::UnsignedInt:   return metagl::DataType::UnsignedInt;
-            default:                      return metagl::DataType::Float;
-        }
+        metagl::glDrawArrays(primitive, first, count);
     }
 
     void Device::draw_elements(PrimitiveType primitive, int count, DataType type, const void* indices)
     {
-        metagl::glDrawElements(to_meta(primitive), count, to_meta(type), indices);
-    }
-
-    static metagl::CompareFunc to_meta(CompareFunc f)
-    {
-        switch (f)
-        {
-            case CompareFunc::Never:        return metagl::CompareFunc::Never;
-            case CompareFunc::Less:         return metagl::CompareFunc::Less;
-            case CompareFunc::Equal:        return metagl::CompareFunc::Equal;
-            case CompareFunc::LessEqual:    return metagl::CompareFunc::LessEqual;
-            case CompareFunc::Greater:      return metagl::CompareFunc::Greater;
-            case CompareFunc::NotEqual:     return metagl::CompareFunc::NotEqual;
-            case CompareFunc::GreaterEqual: return metagl::CompareFunc::GreaterEqual;
-            case CompareFunc::Always:       return metagl::CompareFunc::Always;
-            default:                        return metagl::CompareFunc::Less;
-        }
+        metagl::glDrawElements(primitive, count, type, indices);
     }
 
     void Device::set_depth_test_enabled(bool enabled)
@@ -298,13 +238,12 @@ namespace easygl
 
     void Device::set_depth_func(CompareFunc func)
     {
-        metagl::glDepthFunc(to_meta(func));
+        metagl::glDepthFunc(func);
     }
 
     void Device::set_clear_depth(float depth)
     {
         metagl::glClearDepthf(depth);
-        // Fallback to GlClearDepth is handled inside meta-gl if ClearDepthf is nullptr
     }
 
     void Device::set_cull_face_enabled(bool enabled)
@@ -317,18 +256,11 @@ namespace easygl
 
     void Device::set_cull_face(CullFace face)
     {
-        metagl::CullFace f = metagl::CullFace::Back;
-        switch (face)
-        {
-            case CullFace::Front:        f = metagl::CullFace::Front; break;
-            case CullFace::Back:         f = metagl::CullFace::Back; break;
-            case CullFace::FrontAndBack: f = metagl::CullFace::FrontAndBack; break;
-        }
-        metagl::glCullFace(f);
+        metagl::glCullFace(face);
     }
 
     void Device::set_front_face(FrontFace face)
     {
-        metagl::glFrontFace(face == FrontFace::Clockwise ? metagl::FrontFace::CW : metagl::FrontFace::CCW);
+        metagl::glFrontFace(face);
     }
 }

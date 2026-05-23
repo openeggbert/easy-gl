@@ -5,21 +5,6 @@
 
 namespace easygl
 {
-    static metagl::DataType to_meta(DataType type)
-    {
-        switch (type)
-        {
-            case DataType::Float:         return metagl::DataType::Float;
-            case DataType::Byte:          return metagl::DataType::Byte;
-            case DataType::UnsignedByte:  return metagl::DataType::UnsignedByte;
-            case DataType::Short:         return metagl::DataType::Short;
-            case DataType::UnsignedShort: return metagl::DataType::UnsignedShort;
-            case DataType::Int:           return metagl::DataType::Int;
-            case DataType::UnsignedInt:   return metagl::DataType::UnsignedInt;
-            default:                      return metagl::DataType::Float;
-        }
-    }
-
     VertexArray::VertexArray() = default;
     VertexArray::~VertexArray()
     {
@@ -86,7 +71,7 @@ namespace easygl
 
     void VertexArray::set_attribute_pointer(unsigned int index, int size, DataType type, bool normalized, std::size_t stride, const void* pointer)
     {
-        metagl::glVertexAttribPointer(index, size, to_meta(type), normalized ? 1 : 0,
+        metagl::glVertexAttribPointer(index, size, type, normalized ? 1 : 0,
                                       static_cast<metagl::GLsizei>(stride), pointer);
     }
 

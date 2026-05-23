@@ -4,28 +4,14 @@
 
 namespace easygl
 {
-    static metagl::ShaderType to_meta(ShaderStage stage)
-    {
-        switch (stage)
-        {
-            case ShaderStage::Vertex:         return metagl::ShaderType::Vertex;
-            case ShaderStage::Fragment:       return metagl::ShaderType::Fragment;
-            case ShaderStage::Geometry:       return metagl::ShaderType::Geometry;
-            case ShaderStage::TessControl:    return metagl::ShaderType::TessControl;
-            case ShaderStage::TessEvaluation: return metagl::ShaderType::TessEvaluation;
-            case ShaderStage::Compute:        return metagl::ShaderType::Compute;
-            default:                          return metagl::ShaderType::Vertex;
-        }
-    }
-
-    Shader::Shader(ShaderStage stage) : stage_(stage) {}
+    Shader::Shader(ShaderType type) : type_(type) {}
     Shader::~Shader()
     {
         destroy();
     }
 
     Shader::Shader(Shader&& other) noexcept
-        : stage_(other.stage_)
+        : type_(other.type_)
         , handle_(other.handle_)
         , compiled_(other.compiled_)
     {
@@ -38,7 +24,7 @@ namespace easygl
         if (this != &other)
         {
             destroy();
-            stage_ = other.stage_;
+            type_ = other.type_;
             handle_ = other.handle_;
             compiled_ = other.compiled_;
             other.handle_ = 0;
@@ -50,7 +36,7 @@ namespace easygl
     void Shader::create()
     {
         if (is_created()) return;
-        handle_ = metagl::glCreateShader(to_meta(stage_));
+        handle_ = metagl::glCreateShader(type_);
     }
 
     void Shader::destroy() noexcept
@@ -97,7 +83,7 @@ namespace easygl
         return std::string(buffer.data());
     }
 
-    ShaderStage Shader::stage() const noexcept { return stage_; }
+    ShaderType Shader::shader_type() const noexcept { return type_; }
     bool Shader::is_compiled() const noexcept { return compiled_; }
     bool Shader::is_created() const noexcept { return handle_ != 0; }
     unsigned int Shader::native_handle() const noexcept { return handle_; }
