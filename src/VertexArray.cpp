@@ -71,8 +71,7 @@ namespace easygl
 
     void VertexArray::set_attribute_pointer(unsigned int index, int size, DataType type, bool normalized, std::size_t stride, const void* pointer)
     {
-        metagl::glVertexAttribPointer(index, size, type, normalized ? 1 : 0,
-                                      static_cast<metagl::GLsizei>(stride), pointer);
+        metagl::glVertexAttribPointer(index, size, type, normalized ? 1 : 0, stride, pointer);
     }
 
     void VertexArray::enable_attribute(unsigned int index)

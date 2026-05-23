@@ -57,7 +57,7 @@ namespace easygl
         metagl::glShaderSource(handle_, 1, &src, nullptr);
         metagl::glCompileShader(handle_);
 
-        metagl::GLint status = 0;
+        int status = 0;
         metagl::glGetShaderiv(handle_, metagl::ShaderParameter::CompileStatus, &status);
         compiled_ = (status != 0);
     }
@@ -74,7 +74,7 @@ namespace easygl
     {
         if (!is_created()) return "";
 
-        metagl::GLint length = 0;
+        int length = 0;
         metagl::glGetShaderiv(handle_, metagl::ShaderParameter::InfoLogLength, &length);
         if (length <= 0) return "";
 

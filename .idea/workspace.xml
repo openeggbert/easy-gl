@@ -22,6 +22,7 @@
       <config projectName="easy-gl" targetName="easy-gl" />
       <config projectName="easy-gl" targetName="easy-gl-resource-smoke-tests" />
       <config projectName="easy-gl" targetName="easy-gl-smoke-tests" />
+      <config projectName="easy-gl" targetName="meta-gl" />
       <config projectName="easy-gl" targetName="hello-triangle-sdl" />
     </generated>
   </component>
@@ -33,6 +34,19 @@
   <component name="ChangeListManager">
     <list default="true" id="eacc8ba5-7af4-4215-953f-f8653899c1e4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Buffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Buffer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Device.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Device.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Program.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Program.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Shader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Shader.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Texture.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Texture.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/VertexArray.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/VertexArray.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/platform/GlApiLoader.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/platform/GlFunctions.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/platform/GlFunctions.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../meta-gl/include/metagl/Enums.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../meta-gl/include/metagl/Enums.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../meta-gl/include/metagl/Functions.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../meta-gl/include/metagl/Functions.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../meta-gl/include/metagl/Types.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../meta-gl/include/metagl/Types.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../meta-gl/src/Functions.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../meta-gl/src/Functions.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +57,7 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="72" />
+    <option name="cachedIndexableFilesCount" value="79" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
@@ -117,6 +131,11 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.hello-triangle-sdl">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="easy-gl-resource-smoke-tests" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="easy-gl" TARGET_NAME="easy-gl-resource-smoke-tests" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="easy-gl" RUN_TARGET_NAME="easy-gl-resource-smoke-tests">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -137,6 +156,11 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="meta-gl" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="easy-gl" TARGET_NAME="meta-gl" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="All CTest" type="CTestRunConfiguration" factoryName="CTestRun" PROGRAM_PARAMS="--extra-verbose" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$CMakeCurrentLocalGenerationDir$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_PATH="$CTestCurrentExecutableName$" EXPLICIT_BUILD_TARGET_NAME="all" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -146,6 +170,7 @@
     <list>
       <item itemvalue="CMake Application.easy-gl-resource-smoke-tests" />
       <item itemvalue="CMake Application.easy-gl-smoke-tests" />
+      <item itemvalue="CMake Application.meta-gl" />
       <item itemvalue="CMake Application.easy-gl" />
       <item itemvalue="CMake Application.hello-triangle-sdl" />
       <item itemvalue="CTest Application.All CTest" />
@@ -170,6 +195,7 @@
       <workItem from="1779470813322" duration="42000" />
       <workItem from="1779471169760" duration="791000" />
       <workItem from="1779472377735" duration="107000" />
+      <workItem from="1779537888157" duration="1018000" />
     </task>
     <servers />
   </component>

@@ -51,10 +51,10 @@ namespace easygl
     {
         metagl::glBindTexture(metagl::TextureTarget::Texture2D, handle_);
 
-        metagl::glPixelStorei(0x0CF5 /* GL_UNPACK_ALIGNMENT */, 1);
+        metagl::glPixelStoreParam(metagl::PixelStoreParam::UnpackAlignment, 1);
 
         metagl::glTexImage2D(metagl::TextureTarget::Texture2D, level,
-                             static_cast<metagl::GLint>(0x1908) /* GL_RGBA */,
+                             metagl::PixelFormat::Rgba,
                              width, height, 0,
                              metagl::PixelFormat::Rgba, metagl::PixelType::UnsignedByte, data);
 

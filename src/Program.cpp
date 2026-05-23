@@ -8,6 +8,7 @@
 
 namespace easygl
 {
+    using namespace metagl;
     Program::Program() = default;
 
     Program::Program(const std::string& vertex_source, const std::string& fragment_source)
@@ -113,7 +114,7 @@ namespace easygl
         if (!is_created()) return;
         metagl::glLinkProgram(handle_);
 
-        metagl::GLint status = 0;
+        int status = 0;
         metagl::glGetProgramiv(handle_, metagl::ProgramParameter::LinkStatus, &status);
         linked_ = (status != 0);
 
@@ -167,7 +168,7 @@ namespace easygl
     {
         if (!is_created()) return "";
 
-        metagl::GLint length = 0;
+        int length = 0;
         metagl::glGetProgramiv(handle_, metagl::ProgramParameter::InfoLogLength, &length);
         if (length <= 0) return "";
 

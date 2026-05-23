@@ -52,8 +52,8 @@ namespace easygl
             api = ApiKind::OpenGLES;
         }
 
-        metagl::GLint major = 0;
-        metagl::GLint minor = 0;
+        int major = 0;
+        int minor = 0;
 
         metagl::glGetIntegerv(metagl::IntegerName::MajorVersion, &major);
         metagl::glGetIntegerv(metagl::IntegerName::MinorVersion, &minor);
@@ -80,11 +80,11 @@ namespace easygl
         std::vector<std::string> extensions;
         if (major >= 3)
         {
-            metagl::GLint num_extensions = 0;
+            int num_extensions = 0;
             metagl::glGetIntegerv(metagl::IntegerName::NumExtensions, &num_extensions);
             for (int i = 0; i < num_extensions; ++i)
             {
-                const char* ext = metagl::glGetStringi(metagl::StringName::Extensions, static_cast<metagl::GLuint>(i));
+                const char* ext = metagl::glGetStringi(metagl::StringName::Extensions, static_cast<unsigned int>(i));
                 if (ext) extensions.push_back(ext);
             }
         }
@@ -128,7 +128,7 @@ namespace easygl
         if (!capabilities_.supports(Feature::BasicRendering)) throw Exception("Basic rendering support is required.");
 
         // 5. Query Hardware Limits
-        metagl::GLint max_texture_size = 0;
+        int max_texture_size = 0;
         metagl::glGetIntegerv(metagl::IntegerName::MaxTextureSize, &max_texture_size);
         capabilities_.set_limit("max_texture_size", max_texture_size);
 
@@ -168,16 +168,16 @@ namespace easygl
 
     void Device::clear(ClearFlags flags)
     {
-        metagl::GLbitfield raw_mask = 0;
+        metagl::ClearBufferBit mask = static_cast<metagl::ClearBufferBit>(0);
         if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Color)) != 0)
-            raw_mask |= static_cast<metagl::GLbitfield>(metagl::ClearBufferBit::Color);
+            mask = mask | metagl::ClearBufferBit::Color;
         if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Depth)) != 0)
-            raw_mask |= static_cast<metagl::GLbitfield>(metagl::ClearBufferBit::Depth);
+            mask = mask | metagl::ClearBufferBit::Depth;
         if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Stencil)) != 0)
-            raw_mask |= static_cast<metagl::GLbitfield>(metagl::ClearBufferBit::Stencil);
+            mask = mask | metagl::ClearBufferBit::Stencil;
 
         metagl::glDisable(metagl::Capability::ScissorTest);
-        metagl::glClear(static_cast<metagl::ClearBufferBit>(raw_mask));
+        metagl::glClear(mask);
     }
 
     void Device::set_clear_color(float r, float g, float b, float a)
@@ -192,8 +192,8 @@ namespace easygl
 
     void Device::get_viewport(int& x, int& y, int& width, int& height) const
     {
-        metagl::GLint viewport[4];
-        metagl::glGetIntegervRaw(0x0BA2 /* GL_VIEWPORT */, viewport);
+        int viewport[4];
+        metagl::glGetIntegerv(metagl::IntegerName::Viewport, viewport);
         x = viewport[0];
         y = viewport[1];
         width = viewport[2];

@@ -59,7 +59,7 @@ namespace easygl
     void Buffer::set_data(BufferTarget target, const void* data, std::size_t size_in_bytes)
     {
         metagl::glBindBuffer(target, handle_);
-        metagl::glBufferData(target, static_cast<metagl::GLsizeiptr>(size_in_bytes), data, metagl::BufferUsage::StaticDraw);
+        metagl::glBufferData(target, static_cast<std::ptrdiff_t>(size_in_bytes), data, metagl::BufferUsage::StaticDraw);
     }
 
     void Buffer::set_sub_data(const void* data, std::size_t size_in_bytes, std::size_t offset_in_bytes)
@@ -71,8 +71,8 @@ namespace easygl
     {
         metagl::glBindBuffer(target, handle_);
         metagl::glBufferSubData(target,
-                                static_cast<metagl::GLintptr>(offset_in_bytes),
-                                static_cast<metagl::GLsizeiptr>(size_in_bytes),
+                                static_cast<std::ptrdiff_t>(offset_in_bytes),
+                                static_cast<std::ptrdiff_t>(size_in_bytes),
                                 data);
     }
 
