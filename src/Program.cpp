@@ -8,7 +8,6 @@
 
 namespace easygl
 {
-    using namespace metagl;
     Program::Program() = default;
 
     Program::Program(const std::string& vertex_source, const std::string& fragment_source)

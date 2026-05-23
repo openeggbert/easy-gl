@@ -34,19 +34,8 @@
   <component name="ChangeListManager">
     <list default="true" id="eacc8ba5-7af4-4215-953f-f8653899c1e4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Buffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Buffer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Device.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Device.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Program.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Program.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Shader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Shader.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Texture.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Texture.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/VertexArray.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/VertexArray.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/platform/GlApiLoader.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/platform/GlFunctions.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/platform/GlFunctions.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../meta-gl/include/metagl/Enums.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../meta-gl/include/metagl/Enums.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../meta-gl/include/metagl/Functions.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../meta-gl/include/metagl/Functions.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../meta-gl/include/metagl/Types.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../meta-gl/include/metagl/Types.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../meta-gl/src/Functions.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../meta-gl/src/Functions.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +58,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../meta-gl" />
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="nfW8gnjK" />
@@ -130,7 +119,7 @@
       <recent name="$PROJECT_DIR$/src/detail" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.hello-triangle-sdl">
+  <component name="RunManager" selected="CMake Application.easy-gl">
     <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -195,7 +184,7 @@
       <workItem from="1779470813322" duration="42000" />
       <workItem from="1779471169760" duration="791000" />
       <workItem from="1779472377735" duration="107000" />
-      <workItem from="1779537888157" duration="1018000" />
+      <workItem from="1779537888157" duration="4248000" />
     </task>
     <servers />
   </component>
