@@ -20,7 +20,7 @@ add_library(easy-gl)
 add_library(easy-gl::easy-gl ALIAS easy-gl)
 
 set_target_properties(easy-gl PROPERTIES
-    CXX_STANDARD 20
+    CXX_STANDARD 23
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
     VERSION ${PROJECT_VERSION}
