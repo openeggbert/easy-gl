@@ -43,7 +43,7 @@ namespace easygl
 
     void Texture::bind(TextureTarget /*target*/) const
     {
-        metagl::glActiveTexture(0); // GL_TEXTURE0
+        metagl::glActiveTexture(metagl::TextureUnit::Texture0);
         metagl::glBindTexture(metagl::TextureTarget::Texture2D, handle_);
     }
 
@@ -51,17 +51,17 @@ namespace easygl
     {
         metagl::glBindTexture(metagl::TextureTarget::Texture2D, handle_);
 
-        metagl::glPixelStoreParam(metagl::PixelStoreParam::UnpackAlignment, 1);
+        metagl::glPixelStorei(metagl::PixelStoreParam::UnpackAlignment, 1);
 
         metagl::glTexImage2D(metagl::TextureTarget::Texture2D, level,
-                             metagl::PixelFormat::Rgba,
+                             metagl::InternalFormat::Rgba,
                              width, height, 0,
                              metagl::PixelFormat::Rgba, metagl::PixelType::UnsignedByte, data);
 
-        metagl::glTexParameteriFilter(metagl::TextureTarget::Texture2D, metagl::TextureParameter::MinFilter, metagl::TextureFilter::Linear);
-        metagl::glTexParameteriFilter(metagl::TextureTarget::Texture2D, metagl::TextureParameter::MagFilter, metagl::TextureFilter::Linear);
-        metagl::glTexParameteriWrap(metagl::TextureTarget::Texture2D, metagl::TextureParameter::WrapS, metagl::TextureWrap::ClampToEdge);
-        metagl::glTexParameteriWrap(metagl::TextureTarget::Texture2D, metagl::TextureParameter::WrapT, metagl::TextureWrap::ClampToEdge);
+        metagl::glTexParameteri(metagl::TextureTarget::Texture2D, metagl::TextureParameter::MinFilter, static_cast<GLint>(metagl::TextureFilter::Linear));
+        metagl::glTexParameteri(metagl::TextureTarget::Texture2D, metagl::TextureParameter::MagFilter, static_cast<GLint>(metagl::TextureFilter::Linear));
+        metagl::glTexParameteri(metagl::TextureTarget::Texture2D, metagl::TextureParameter::WrapS, static_cast<GLint>(metagl::TextureWrap::ClampToEdge));
+        metagl::glTexParameteri(metagl::TextureTarget::Texture2D, metagl::TextureParameter::WrapT, static_cast<GLint>(metagl::TextureWrap::ClampToEdge));
     }
 
     bool Texture::is_created() const noexcept { return handle_ != 0; }

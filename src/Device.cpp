@@ -36,10 +36,10 @@ namespace easygl
         }
 
         // 2. Query Context Information
-        const char* vendor_ptr    = metagl::glGetString(metagl::StringName::Vendor);
-        const char* renderer_ptr  = metagl::glGetString(metagl::StringName::Renderer);
-        const char* version_ptr   = metagl::glGetString(metagl::StringName::Version);
-        const char* sl_version_ptr = metagl::glGetString(metagl::StringName::ShadingLanguageVersion);
+        const char* vendor_ptr    = reinterpret_cast<const char*>(metagl::glGetString(metagl::StringName::Vendor));
+        const char* renderer_ptr  = reinterpret_cast<const char*>(metagl::glGetString(metagl::StringName::Renderer));
+        const char* version_ptr   = reinterpret_cast<const char*>(metagl::glGetString(metagl::StringName::Version));
+        const char* sl_version_ptr = reinterpret_cast<const char*>(metagl::glGetString(metagl::StringName::ShadingLanguageVersion));
 
         std::string vendor = vendor_ptr ? vendor_ptr : "";
         std::string renderer = renderer_ptr ? renderer_ptr : "";
@@ -55,8 +55,8 @@ namespace easygl
         int major = 0;
         int minor = 0;
 
-        metagl::glGetIntegerv(metagl::IntegerName::MajorVersion, &major);
-        metagl::glGetIntegerv(metagl::IntegerName::MinorVersion, &minor);
+        metagl::glGetIntegerv(metagl::GetParameter::MajorVersion, &major);
+        metagl::glGetIntegerv(metagl::GetParameter::MinorVersion, &minor);
 
         if (major == 0)
         {
@@ -81,16 +81,16 @@ namespace easygl
         if (major >= 3)
         {
             int num_extensions = 0;
-            metagl::glGetIntegerv(metagl::IntegerName::NumExtensions, &num_extensions);
+            metagl::glGetIntegerv(metagl::GetParameter::NumExtensions, &num_extensions);
             for (int i = 0; i < num_extensions; ++i)
             {
-                const char* ext = metagl::glGetStringi(metagl::StringName::Extensions, static_cast<unsigned int>(i));
+                const char* ext = reinterpret_cast<const char*>(metagl::glGetStringi(metagl::StringName::Extensions, static_cast<unsigned int>(i)));
                 if (ext) extensions.push_back(ext);
             }
         }
         else
         {
-            const char* ext_ptr = metagl::glGetString(metagl::StringName::Extensions);
+            const char* ext_ptr = reinterpret_cast<const char*>(metagl::glGetString(metagl::StringName::Extensions));
             if (ext_ptr)
             {
                 std::string s(ext_ptr);
@@ -129,7 +129,7 @@ namespace easygl
 
         // 5. Query Hardware Limits
         int max_texture_size = 0;
-        metagl::glGetIntegerv(metagl::IntegerName::MaxTextureSize, &max_texture_size);
+        metagl::glGetIntegerv(metagl::GetParameter::MaxTextureSize, &max_texture_size);
         capabilities_.set_limit("max_texture_size", max_texture_size);
 
         initialized_ = true;
@@ -193,7 +193,7 @@ namespace easygl
     void Device::get_viewport(int& x, int& y, int& width, int& height) const
     {
         int viewport[4];
-        metagl::glGetIntegerv(metagl::IntegerName::Viewport, viewport);
+        metagl::glGetIntegerv(metagl::GetParameter::Viewport, viewport);
         x = viewport[0];
         y = viewport[1];
         width = viewport[2];

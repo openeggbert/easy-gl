@@ -282,7 +282,7 @@ namespace
             return (void*)+[](unsigned int, unsigned int) {};
         }
 
-        return nullptr;
+        return reinterpret_cast<void*>(0xDEADBEEF);
     }
 
     void test_buffer_upload_target()

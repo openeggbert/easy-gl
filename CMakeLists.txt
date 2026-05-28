@@ -64,6 +64,8 @@ target_sources(easy-gl
 
 target_link_libraries(easy-gl PUBLIC meta-gl::meta-gl)
 
+target_compile_features(easy-gl PUBLIC cxx_std_23)
+
 easygl_apply_warnings(easy-gl)
 install(TARGETS easy-gl
         EXPORT easy-gl-targets

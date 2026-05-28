@@ -1,4 +1,9 @@
-find_package(SDL3 REQUIRED)
+find_package(SDL3 QUIET)
+
+if(NOT SDL3_FOUND)
+    message(STATUS "SDL3 not found; skipping hello-triangle-sdl example")
+    return()
+endif()
 
 add_executable(hello-triangle-sdl
         HelloTriangle.cpp
