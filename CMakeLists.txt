@@ -37,6 +37,7 @@ target_sources(easy-gl
         src/Program.cpp
         src/Texture.cpp
         src/VertexArray.cpp
+        src/ResourceRegistry.cpp
 )
 
 target_sources(easy-gl
@@ -60,6 +61,8 @@ target_sources(easy-gl
         include/easygl/Texture.hpp
         include/easygl/VertexArray.hpp
         include/easygl/detail/NonCopyable.hpp
+        include/easygl/RecoverableResource.hpp
+        include/easygl/ResourceRegistry.hpp
 )
 
 target_link_libraries(easy-gl PUBLIC meta-gl::meta-gl)

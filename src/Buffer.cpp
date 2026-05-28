@@ -11,8 +11,10 @@ namespace easygl
 
     Buffer::Buffer(Buffer&& other) noexcept
         : handle_(other.handle_)
+        , generation_(other.generation_)
     {
         other.handle_ = 0;
+        other.generation_ = 0;
     }
 
     Buffer& Buffer::operator=(Buffer&& other) noexcept
@@ -21,7 +23,9 @@ namespace easygl
         {
             destroy();
             handle_ = other.handle_;
+            generation_ = other.generation_;
             other.handle_ = 0;
+            other.generation_ = 0;
         }
         return *this;
     }
@@ -30,6 +34,7 @@ namespace easygl
     {
         if (is_created()) return;
         metagl::glGenBuffers(1, &handle_);
+        generation_ = metagl::GetContextGeneration();
     }
 
     void Buffer::destroy() noexcept
@@ -85,4 +90,9 @@ namespace easygl
     {
         return handle_;
     }
+    bool Buffer::is_valid_for_current_generation() const noexcept
+    {
+        return handle_ != 0 && generation_ == metagl::GetContextGeneration();
+    }
+    std::uint64_t Buffer::creation_generation() const noexcept { return generation_; }
 }

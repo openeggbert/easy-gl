@@ -8,6 +8,8 @@
 #include "easygl/Exception.hpp"
 #include "easygl/Feature.hpp"
 #include "easygl/Program.hpp"
+#include "easygl/RecoverableResource.hpp"
+#include "easygl/ResourceRegistry.hpp"
 #include "easygl/Shader.hpp"
 #include "easygl/Texture.hpp"
 #include "easygl/Types.hpp"

@@ -14,9 +14,11 @@ namespace easygl
         : type_(other.type_)
         , handle_(other.handle_)
         , compiled_(other.compiled_)
+        , generation_(other.generation_)
     {
         other.handle_ = 0;
         other.compiled_ = false;
+        other.generation_ = 0;
     }
 
     Shader& Shader::operator=(Shader&& other) noexcept
@@ -27,8 +29,10 @@ namespace easygl
             type_ = other.type_;
             handle_ = other.handle_;
             compiled_ = other.compiled_;
+            generation_ = other.generation_;
             other.handle_ = 0;
             other.compiled_ = false;
+            other.generation_ = 0;
         }
         return *this;
     }
@@ -37,6 +41,7 @@ namespace easygl
     {
         if (is_created()) return;
         handle_ = metagl::glCreateShader(type_);
+        generation_ = metagl::GetContextGeneration();
     }
 
     void Shader::destroy() noexcept
@@ -87,4 +92,9 @@ namespace easygl
     bool Shader::is_compiled() const noexcept { return compiled_; }
     bool Shader::is_created() const noexcept { return handle_ != 0; }
     unsigned int Shader::native_handle() const noexcept { return handle_; }
+    bool Shader::is_valid_for_current_generation() const noexcept
+    {
+        return handle_ != 0 && generation_ == metagl::GetContextGeneration();
+    }
+    std::uint64_t Shader::creation_generation() const noexcept { return generation_; }
 }

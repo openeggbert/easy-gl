@@ -4,6 +4,8 @@
 #include "easygl/detail/NonCopyable.hpp"
 #include <metagl/metagl.hpp>
 
+#include <cstdint>
+
 namespace easygl
 {
     using TextureTarget = metagl::TextureTarget;
@@ -25,7 +27,13 @@ namespace easygl
         [[nodiscard]] bool is_created() const noexcept;
         [[nodiscard]] unsigned int native_handle() const noexcept;
 
+        /// Returns true if this handle was created in the current context generation.
+        /// A mismatched generation means the handle is stale after context loss/restore.
+        [[nodiscard]] bool is_valid_for_current_generation() const noexcept;
+        [[nodiscard]] std::uint64_t creation_generation() const noexcept;
+
     private:
         unsigned int handle_ = 0;
+        std::uint64_t generation_ = 0; ///< metagl context generation at creation time
     };
 }

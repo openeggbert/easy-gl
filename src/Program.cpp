@@ -24,10 +24,12 @@ namespace easygl
         : handle_(other.handle_)
         , linked_(other.linked_)
         , owned_shader_handles_(std::move(other.owned_shader_handles_))
+        , generation_(other.generation_)
     {
         other.handle_ = 0;
         other.linked_ = false;
         other.owned_shader_handles_.clear();
+        other.generation_ = 0;
     }
 
     Program& Program::operator=(Program&& other) noexcept
@@ -38,9 +40,11 @@ namespace easygl
             handle_ = other.handle_;
             linked_ = other.linked_;
             owned_shader_handles_ = std::move(other.owned_shader_handles_);
+            generation_ = other.generation_;
             other.handle_ = 0;
             other.linked_ = false;
             other.owned_shader_handles_.clear();
+            other.generation_ = 0;
         }
         return *this;
     }
@@ -49,6 +53,7 @@ namespace easygl
     {
         if (is_created()) return;
         handle_ = metagl::glCreateProgram();
+        generation_ = metagl::GetContextGeneration();
     }
 
     void Program::destroy() noexcept
@@ -210,4 +215,9 @@ namespace easygl
     bool Program::is_linked() const noexcept { return linked_; }
     bool Program::is_created() const noexcept { return handle_ != 0; }
     unsigned int Program::native_handle() const noexcept { return handle_; }
+    bool Program::is_valid_for_current_generation() const noexcept
+    {
+        return handle_ != 0 && generation_ == metagl::GetContextGeneration();
+    }
+    std::uint64_t Program::creation_generation() const noexcept { return generation_; }
 }

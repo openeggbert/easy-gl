@@ -1,5 +1,6 @@
 #pragma once
 #include <cstddef>
+#include <cstdint>
 #include "easygl/Export.hpp"
 #include "easygl/Types.hpp"
 #include "easygl/detail/NonCopyable.hpp"
@@ -37,8 +38,11 @@ namespace easygl
 
         [[nodiscard]] bool is_created() const noexcept;
         [[nodiscard]] unsigned int native_handle() const noexcept;
+        [[nodiscard]] bool is_valid_for_current_generation() const noexcept;
+        [[nodiscard]] std::uint64_t creation_generation() const noexcept;
 
     private:
         unsigned int handle_ = 0;
+        std::uint64_t generation_ = 0;
     };
 }
