@@ -33,15 +33,19 @@ namespace easygl
         void unbind() const;
 
         void set_attribute(const VertexAttribute& attribute);
-        void set_attribute_pointer(unsigned int index, int size, DataType type, bool normalized, std::size_t stride, const void* pointer);
+        void set_attribute_pointer(unsigned int index, int size, DataType type,
+                                   bool normalized, std::size_t stride, const void* pointer);
+        void set_attribute_i_pointer(unsigned int index, int size, DataType type,
+                                     std::size_t stride, const void* pointer);
         void enable_attribute(unsigned int index);
+        void disable_attribute(unsigned int index);
+        void set_attribute_divisor(unsigned int index, unsigned int divisor);
 
         [[nodiscard]] bool is_created() const noexcept;
         [[nodiscard]] unsigned int native_handle() const noexcept;
         [[nodiscard]] bool is_valid_for_current_generation() const noexcept;
         [[nodiscard]] std::uint64_t creation_generation() const noexcept;
 
-        /// Zero the GL handle and generation without calling any gl* function.
         void reset_handle_no_gl() noexcept;
 
     private:

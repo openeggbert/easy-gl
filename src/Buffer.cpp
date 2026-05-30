@@ -56,15 +56,25 @@ namespace easygl
         metagl::glBindBufferBase(target, index, handle_);
     }
 
+    void Buffer::bind_range(BufferTarget target, unsigned int index, std::ptrdiff_t offset, std::ptrdiff_t size) const
+    {
+        metagl::glBindBufferRange(target, index, handle_, offset, size);
+    }
+
     void Buffer::set_data(const void* data, std::size_t size_in_bytes)
     {
-        set_data(BufferTarget::Array, data, size_in_bytes);
+        set_data(BufferTarget::Array, data, size_in_bytes, BufferUsage::StaticDraw);
     }
 
     void Buffer::set_data(BufferTarget target, const void* data, std::size_t size_in_bytes)
     {
+        set_data(target, data, size_in_bytes, BufferUsage::StaticDraw);
+    }
+
+    void Buffer::set_data(BufferTarget target, const void* data, std::size_t size_in_bytes, BufferUsage usage)
+    {
         metagl::glBindBuffer(target, handle_);
-        metagl::glBufferData(target, static_cast<std::ptrdiff_t>(size_in_bytes), data, metagl::BufferUsage::StaticDraw);
+        metagl::glBufferData(target, static_cast<std::ptrdiff_t>(size_in_bytes), data, usage);
     }
 
     void Buffer::set_sub_data(const void* data, std::size_t size_in_bytes, std::size_t offset_in_bytes)
@@ -81,19 +91,45 @@ namespace easygl
                                 data);
     }
 
+    void* Buffer::map_range(BufferTarget target, std::ptrdiff_t offset, std::ptrdiff_t length, MapBufferAccessMask access)
+    {
+        metagl::glBindBuffer(target, handle_);
+        return metagl::glMapBufferRange(target, offset, length, access);
+    }
+
+    void Buffer::flush_mapped_range(BufferTarget target, std::ptrdiff_t offset, std::ptrdiff_t length)
+    {
+        metagl::glFlushMappedBufferRange(target, offset, length);
+    }
+
+    bool Buffer::unmap(BufferTarget target)
+    {
+        return metagl::glUnmapBuffer(target) != 0;
+    }
+
+    void Buffer::copy_sub_data(BufferTarget read_target, BufferTarget write_target,
+                                std::ptrdiff_t read_offset, std::ptrdiff_t write_offset,
+                                std::ptrdiff_t size)
+    {
+        metagl::glCopyBufferSubData(read_target, write_target, read_offset, write_offset, size);
+    }
+
     bool Buffer::is_created() const noexcept
     {
         return handle_ != 0;
     }
+
     void Buffer::reset_handle_no_gl() noexcept { handle_ = 0; generation_ = 0; }
 
     unsigned int Buffer::native_handle() const noexcept
     {
         return handle_;
     }
+
     bool Buffer::is_valid_for_current_generation() const noexcept
     {
         return handle_ != 0 && generation_ == metagl::GetContextGeneration();
     }
+
     std::uint64_t Buffer::creation_generation() const noexcept { return generation_; }
 }

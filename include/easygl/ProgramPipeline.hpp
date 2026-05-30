@@ -8,33 +8,35 @@
 
 namespace easygl
 {
-
-    class EASYGL_API Shader : public detail::NonCopyable
+    class EASYGL_API ProgramPipeline : public detail::NonCopyable
     {
     public:
-        explicit Shader(ShaderType type);
-        ~Shader();
+        ProgramPipeline();
+        ~ProgramPipeline();
 
-        Shader(Shader&& other) noexcept;
-        Shader& operator=(Shader&& other) noexcept;
+        ProgramPipeline(ProgramPipeline&& other) noexcept;
+        ProgramPipeline& operator=(ProgramPipeline&& other) noexcept;
 
         void create();
         void destroy() noexcept;
-        void compile_from_source(const std::string& source);
-        [[nodiscard]] unsigned int release_native_handle() noexcept;
+        void bind() const;
+        static void unbind();
+
+        void use_stages(ShaderStageMask stages, unsigned int program);
+        void set_active_shader_program(unsigned int program);
+        void validate() const;
 
         [[nodiscard]] std::string info_log() const;
-        [[nodiscard]] ShaderType shader_type() const noexcept;
-        [[nodiscard]] bool is_compiled() const noexcept;
+
         [[nodiscard]] bool is_created() const noexcept;
         [[nodiscard]] unsigned int native_handle() const noexcept;
         [[nodiscard]] bool is_valid_for_current_generation() const noexcept;
         [[nodiscard]] std::uint64_t creation_generation() const noexcept;
 
+        void reset_handle_no_gl() noexcept;
+
     private:
-        ShaderType type_;
         unsigned int handle_ = 0;
-        bool compiled_ = false;
         std::uint64_t generation_ = 0;
     };
 }

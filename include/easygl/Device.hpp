@@ -6,16 +6,12 @@
 #include "easygl/Export.hpp"
 #include "easygl/Feature.hpp"
 #include "easygl/Types.hpp"
-#include <metagl/metagl.hpp>
+
+#include <cstddef>
+#include <span>
 
 namespace easygl
 {
-    using PrimitiveType = metagl::PrimitiveType;
-    using BlendFactor   = metagl::BlendFactor;
-    using CompareFunc   = metagl::CompareFunc;
-    using CullFace      = metagl::CullFace;
-    using FrontFace     = metagl::FrontFace;
-
     enum class ClearFlags : u32
     {
         None    = 0,
@@ -44,43 +40,99 @@ namespace easygl
         [[nodiscard]] bool supports(Feature feature) const;
         void require(Feature feature) const;
 
-        // Commands
+        // ---- Clear ----
         void clear(ClearFlags flags);
+        void clear_bufferfv(ClearBuffer buffer, int drawbuffer, const float* value);
+        void clear_bufferiv(ClearBuffer buffer, int drawbuffer, const int* value);
+        void clear_bufferuiv(ClearBuffer buffer, int drawbuffer, const unsigned int* value);
+        void clear_bufferfi(int drawbuffer, float depth, int stencil);
         void set_clear_color(float r, float g, float b, float a);
+        void set_clear_depth(float depth);
+        void set_clear_stencil(int value);
+
+        // ---- Viewport / scissor ----
         void set_viewport(int x, int y, int width, int height);
         void get_viewport(int& x, int& y, int& width, int& height) const;
+        void set_scissor_test_enabled(bool enabled);
+        void set_scissor(int x, int y, int width, int height);
+
+        // ---- Blend ----
         void set_blend_enabled(bool enabled);
         void set_blend_func(BlendFactor sfactor, BlendFactor dfactor);
-        /**
-         * @brief Enables or disables the depth test.
-         */
+        void set_blend_func_separate(BlendFactor src_rgb, BlendFactor dst_rgb,
+                                     BlendFactor src_alpha, BlendFactor dst_alpha);
+        void set_blend_equation(BlendEquation mode);
+        void set_blend_equation_separate(BlendEquation mode_rgb, BlendEquation mode_alpha);
+        void set_blend_color(float r, float g, float b, float a);
+
+        // ---- Depth ----
         void set_depth_test_enabled(bool enabled);
-        /**
-         * @brief Enables or disables writing to the depth buffer.
-         */
         void set_depth_mask(bool enabled);
-        /**
-         * @brief Sets the depth comparison function.
-         */
         void set_depth_func(CompareFunc func);
-        /**
-         * @brief Sets the depth value used by depth-buffer clears.
-         */
-        void set_clear_depth(float depth);
-        /**
-         * @brief Enables or disables face culling.
-         */
+        void set_depth_range(float near_val, float far_val);
+
+        // ---- Stencil ----
+        void set_stencil_test_enabled(bool enabled);
+        void set_stencil_func(CompareFunc func, int ref, unsigned int mask);
+        void set_stencil_func_separate(CullFace face, CompareFunc func, int ref, unsigned int mask);
+        void set_stencil_op(StencilOp sfail, StencilOp dpfail, StencilOp dppass);
+        void set_stencil_op_separate(CullFace face, StencilOp sfail, StencilOp dpfail, StencilOp dppass);
+        void set_stencil_mask(unsigned int mask);
+        void set_stencil_mask_separate(CullFace face, unsigned int mask);
+
+        // ---- Cull face ----
         void set_cull_face_enabled(bool enabled);
-        /**
-         * @brief Sets which face is culled.
-         */
         void set_cull_face(CullFace face);
-        /**
-         * @brief Sets the winding order considered "front".
-         */
         void set_front_face(FrontFace face);
+
+        // ---- Polygon / line ----
+        void set_polygon_offset_fill_enabled(bool enabled);
+        void set_polygon_offset(float factor, float units);
+        void set_line_width(float width);
+
+        // ---- Color mask ----
+        void set_color_mask(bool r, bool g, bool b, bool a);
+
+        // ---- Sample ----
+        void set_sample_coverage(float value, bool invert);
+        void set_sample_alpha_to_coverage_enabled(bool enabled);
+        void set_rasterizer_discard_enabled(bool enabled);
+
+        // ---- Pixel ----
+        void set_pixel_store(PixelStoreParam pname, int value);
+        void read_pixels(int x, int y, int width, int height,
+                         PixelFormat format, PixelType type, void* pixels);
+        void set_read_buffer(ReadBuffer src);
+        void set_draw_buffers(std::span<const DrawBuffer> buffers);
+
+        // ---- Draw calls ----
         void draw_arrays(PrimitiveType primitive, int first, int count);
+        void draw_arrays_instanced(PrimitiveType primitive, int first, int count, int instance_count);
         void draw_elements(PrimitiveType primitive, int count, DataType type, const void* indices);
+        void draw_elements_instanced(PrimitiveType primitive, int count, DataType type,
+                                     const void* indices, int instance_count);
+
+        // ---- Compute ----
+        void dispatch_compute(unsigned int num_groups_x, unsigned int num_groups_y, unsigned int num_groups_z);
+        void memory_barrier(MemoryBarrierMask barriers);
+        void memory_barrier_by_region(MemoryBarrierMask barriers);
+
+        // ---- Tessellation ----
+        void set_patch_vertices(int count);
+
+        // ---- Debug ----
+        void set_debug_output_enabled(bool enabled);
+        void set_debug_output_synchronous_enabled(bool enabled);
+        void push_debug_group(DebugSource source, unsigned int id, const char* message);
+        void pop_debug_group();
+        void object_label(DebugObjectLabel identifier, unsigned int name, const char* label);
+
+        // ---- State / misc ----
+        void set_hint(HintTarget target, HintMode mode);
+        void finish();
+        void flush();
+        [[nodiscard]] ErrorCode get_error();
+        [[nodiscard]] GraphicsResetStatus get_graphics_reset_status();
 
     private:
         Config config_{};

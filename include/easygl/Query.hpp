@@ -1,40 +1,39 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
 #include "easygl/Export.hpp"
 #include "easygl/Types.hpp"
 #include "easygl/detail/NonCopyable.hpp"
 
 namespace easygl
 {
-
-    class EASYGL_API Shader : public detail::NonCopyable
+    class EASYGL_API Query : public detail::NonCopyable
     {
     public:
-        explicit Shader(ShaderType type);
-        ~Shader();
+        Query();
+        ~Query();
 
-        Shader(Shader&& other) noexcept;
-        Shader& operator=(Shader&& other) noexcept;
+        Query(Query&& other) noexcept;
+        Query& operator=(Query&& other) noexcept;
 
         void create();
         void destroy() noexcept;
-        void compile_from_source(const std::string& source);
-        [[nodiscard]] unsigned int release_native_handle() noexcept;
 
-        [[nodiscard]] std::string info_log() const;
-        [[nodiscard]] ShaderType shader_type() const noexcept;
-        [[nodiscard]] bool is_compiled() const noexcept;
+        void begin(QueryTarget target) const;
+        void end(QueryTarget target) const;
+
+        [[nodiscard]] bool is_result_available() const;
+        [[nodiscard]] unsigned int result() const;
+
         [[nodiscard]] bool is_created() const noexcept;
         [[nodiscard]] unsigned int native_handle() const noexcept;
         [[nodiscard]] bool is_valid_for_current_generation() const noexcept;
         [[nodiscard]] std::uint64_t creation_generation() const noexcept;
 
+        void reset_handle_no_gl() noexcept;
+
     private:
-        ShaderType type_;
         unsigned int handle_ = 0;
-        bool compiled_ = false;
         std::uint64_t generation_ = 0;
     };
 }

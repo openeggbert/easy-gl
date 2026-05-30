@@ -69,19 +69,36 @@ namespace easygl
             reinterpret_cast<const void*>(static_cast<std::uintptr_t>(attribute.offset_in_bytes)));
 
         if (attribute.enabled)
-        {
             enable_attribute(attribute.index);
-        }
     }
 
-    void VertexArray::set_attribute_pointer(unsigned int index, int size, DataType type, bool normalized, std::size_t stride, const void* pointer)
+    void VertexArray::set_attribute_pointer(unsigned int index, int size, DataType type,
+                                             bool normalized, std::size_t stride, const void* pointer)
     {
-        metagl::glVertexAttribPointer(index, size, type, normalized ? 1 : 0, static_cast<metagl::GLsizei>(stride), pointer);
+        metagl::glVertexAttribPointer(index, size, type, normalized ? 1 : 0,
+                                      static_cast<metagl::GLsizei>(stride), pointer);
+    }
+
+    void VertexArray::set_attribute_i_pointer(unsigned int index, int size, DataType type,
+                                               std::size_t stride, const void* pointer)
+    {
+        metagl::glVertexAttribIPointer(index, size, type,
+                                       static_cast<metagl::GLsizei>(stride), pointer);
     }
 
     void VertexArray::enable_attribute(unsigned int index)
     {
         metagl::glEnableVertexAttribArray(index);
+    }
+
+    void VertexArray::disable_attribute(unsigned int index)
+    {
+        metagl::glDisableVertexAttribArray(index);
+    }
+
+    void VertexArray::set_attribute_divisor(unsigned int index, unsigned int divisor)
+    {
+        metagl::glVertexAttribDivisor(index, divisor);
     }
 
     bool VertexArray::is_created() const noexcept { return handle_ != 0; }

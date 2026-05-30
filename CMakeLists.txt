@@ -33,9 +33,16 @@ target_sources(easy-gl
         src/Capabilities.cpp
         src/Device.cpp
         src/Buffer.cpp
-        src/Shader.cpp
+        src/Framebuffer.cpp
+        src/ProgramPipeline.cpp
         src/Program.cpp
+        src/Query.cpp
+        src/Renderbuffer.cpp
+        src/Sampler.cpp
+        src/Shader.cpp
+        src/Sync.cpp
         src/Texture.cpp
+        src/TransformFeedback.cpp
         src/VertexArray.cpp
         src/ResourceRegistry.cpp
 )
@@ -56,9 +63,16 @@ target_sources(easy-gl
         include/easygl/Feature.hpp
         include/easygl/Device.hpp
         include/easygl/Buffer.hpp
-        include/easygl/Shader.hpp
+        include/easygl/Framebuffer.hpp
+        include/easygl/ProgramPipeline.hpp
         include/easygl/Program.hpp
+        include/easygl/Query.hpp
+        include/easygl/Renderbuffer.hpp
+        include/easygl/Sampler.hpp
+        include/easygl/Shader.hpp
+        include/easygl/Sync.hpp
         include/easygl/Texture.hpp
+        include/easygl/TransformFeedback.hpp
         include/easygl/VertexArray.hpp
         include/easygl/detail/NonCopyable.hpp
         include/easygl/RecoverableResource.hpp
