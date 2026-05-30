@@ -70,6 +70,7 @@ namespace easygl
     }
 
     bool Texture::is_created() const noexcept { return handle_ != 0; }
+    void Texture::reset_handle_no_gl() noexcept { handle_ = 0; generation_ = 0; }
     unsigned int Texture::native_handle() const noexcept { return handle_; }
     bool Texture::is_valid_for_current_generation() const noexcept
     {

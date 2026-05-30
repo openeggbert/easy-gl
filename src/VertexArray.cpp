@@ -85,6 +85,7 @@ namespace easygl
     }
 
     bool VertexArray::is_created() const noexcept { return handle_ != 0; }
+    void VertexArray::reset_handle_no_gl() noexcept { handle_ = 0; generation_ = 0; }
     unsigned int VertexArray::native_handle() const noexcept { return handle_; }
     bool VertexArray::is_valid_for_current_generation() const noexcept
     {

@@ -32,6 +32,10 @@ namespace easygl
         [[nodiscard]] bool is_valid_for_current_generation() const noexcept;
         [[nodiscard]] std::uint64_t creation_generation() const noexcept;
 
+        /// Zero the GL handle and generation without calling any gl* function.
+        /// Use this inside RecoverableResource::release_gl_handle_only() after context loss.
+        void reset_handle_no_gl() noexcept;
+
     private:
         unsigned int handle_ = 0;
         std::uint64_t generation_ = 0; ///< metagl context generation at creation time

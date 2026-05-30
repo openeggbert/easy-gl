@@ -85,6 +85,7 @@ namespace easygl
     {
         return handle_ != 0;
     }
+    void Buffer::reset_handle_no_gl() noexcept { handle_ = 0; generation_ = 0; }
 
     unsigned int Buffer::native_handle() const noexcept
     {

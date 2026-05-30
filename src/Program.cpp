@@ -214,6 +214,13 @@ namespace easygl
 
     bool Program::is_linked() const noexcept { return linked_; }
     bool Program::is_created() const noexcept { return handle_ != 0; }
+    void Program::reset_handle_no_gl() noexcept
+    {
+        handle_ = 0;
+        generation_ = 0;
+        linked_ = false;
+        owned_shader_handles_.clear();
+    }
     unsigned int Program::native_handle() const noexcept { return handle_; }
     bool Program::is_valid_for_current_generation() const noexcept
     {

@@ -42,6 +42,10 @@ namespace easygl
         [[nodiscard]] bool is_valid_for_current_generation() const noexcept;
         [[nodiscard]] std::uint64_t creation_generation() const noexcept;
 
+        /// Zero the GL handle, generation, and owned shader handles without calling
+        /// any gl* function. Use inside RecoverableResource::release_gl_handle_only().
+        void reset_handle_no_gl() noexcept;
+
     private:
         unsigned int handle_ = 0;
         bool linked_ = false;
