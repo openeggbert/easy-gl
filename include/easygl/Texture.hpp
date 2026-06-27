@@ -10,6 +10,8 @@
 
 namespace easygl
 {
+    class Buffer;
+
     class EASYGL_API Texture : public detail::NonCopyable, public detail::GenerationTracked
     {
     public:
@@ -67,6 +69,10 @@ namespace easygl
                                      std::size_t image_size, const void* data);
 
         void generate_mipmap(TextureTarget target);
+
+        void set_buffer(TextureTarget target, InternalFormat internal_format, const Buffer& buffer);
+        void set_buffer_range(TextureTarget target, InternalFormat internal_format,
+                              const Buffer& buffer, std::ptrdiff_t offset, std::ptrdiff_t size);
 
         void copy_image_2d(TextureTarget target, int level, InternalFormat internal_format,
                            int x, int y, int width, int height);

@@ -1,4 +1,5 @@
 #include "easygl/Texture.hpp"
+#include "easygl/Buffer.hpp"
 #include <metagl/metagl.hpp>
 
 namespace easygl
@@ -194,6 +195,18 @@ namespace easygl
     void Texture::generate_mipmap(TextureTarget target)
     {
         metagl::glGenerateMipmap(target);
+    }
+
+    void Texture::set_buffer(TextureTarget target, InternalFormat internal_format, const Buffer& buffer)
+    {
+        metagl::glTexBuffer(target, internal_format, metagl::BufferId{buffer.native_handle()});
+    }
+
+    void Texture::set_buffer_range(TextureTarget target, InternalFormat internal_format,
+                                    const Buffer& buffer, std::ptrdiff_t offset, std::ptrdiff_t size)
+    {
+        metagl::glTexBufferRange(target, internal_format, metagl::BufferId{buffer.native_handle()},
+                                  static_cast<GLintptr>(offset), static_cast<GLsizeiptr>(size));
     }
 
     void Texture::bind_image(unsigned int unit, int level, bool layered, int layer,
