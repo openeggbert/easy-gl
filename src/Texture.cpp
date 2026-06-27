@@ -180,5 +180,27 @@ namespace easygl
         return tex;
     }
 
+    void Texture::copy_image_2d(TextureTarget target, int level, InternalFormat internal_format,
+                                 int x, int y, int width, int height)
+    {
+        metagl::glCopyTexImage2D(target, level, internal_format, x, y, width, height, 0);
+    }
+
+    void Texture::copy_sub_image_2d(TextureTarget target, int level,
+                                     int xoff, int yoff, int x, int y, int width, int height)
+    {
+        metagl::glCopyTexSubImage2D(target, level, xoff, yoff, x, y, width, height);
+    }
+
+    void Texture::copy_image_sub_data(const Texture& src, TextureTarget src_target, int src_level,
+                                       int sx, int sy, int sz,
+                                       const Texture& dst, TextureTarget dst_target, int dst_level,
+                                       int dx, int dy, int dz, int width, int height, int depth)
+    {
+        metagl::glCopyImageSubData(src.native_handle(), src_target, src_level, sx, sy, sz,
+                                    dst.native_handle(), dst_target, dst_level, dx, dy, dz,
+                                    width, height, depth);
+    }
+
 }
 namespace easygl { bool Texture::is_valid_gl_object() const { return is_created() && metagl::glIsTexture(metagl::TextureId{handle_}); } }

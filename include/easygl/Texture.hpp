@@ -59,6 +59,15 @@ namespace easygl
 
         void generate_mipmap(TextureTarget target);
 
+        void copy_image_2d(TextureTarget target, int level, InternalFormat internal_format,
+                           int x, int y, int width, int height);
+        void copy_sub_image_2d(TextureTarget target, int level,
+                               int xoff, int yoff, int x, int y, int width, int height);
+        static void copy_image_sub_data(const Texture& src, TextureTarget src_target, int src_level,
+                                         int sx, int sy, int sz,
+                                         const Texture& dst, TextureTarget dst_target, int dst_level,
+                                         int dx, int dy, int dz, int width, int height, int depth);
+
         [[nodiscard]] bool is_valid_gl_object() const;
 
         void bind_image(unsigned int unit, int level, bool layered, int layer,
