@@ -370,8 +370,8 @@ static void test_context_events()
         int& lost;
         int& restored;
         Listener(int& l, int& r) : lost(l), restored(r) {}
-        void on_context_lost()     override { ++lost; }
-        void on_context_restored() override { ++restored; }
+        void OnContextLost()     override { ++lost; }
+        void OnContextRestored() override { ++restored; }
     };
 
     Listener listener(lost_count, restored_count);
@@ -423,12 +423,12 @@ static void test_resource_registry_context_lost()
     registry.add(&r2);
 
     // Simulate context lost.
-    registry.on_context_lost();
+    registry.OnContextLost();
     assert(release_count == 2 && "Both resources should have been released");
     assert(recreate_count == 0 && "No recreation on context lost");
 
     // Simulate context restored.
-    registry.on_context_restored();
+    registry.OnContextRestored();
     assert(recreate_count == 2 && "Both resources should have been recreated");
 
     std::cout << "  [PASS] test_resource_registry_context_lost\n";

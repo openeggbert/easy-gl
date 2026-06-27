@@ -39,7 +39,7 @@ namespace easygl
         }
     }
 
-    void ResourceRegistry::on_context_lost()
+    void ResourceRegistry::OnContextLost()
     {
         // Context is lost: do not call gl* functions.
         // Release GPU handles without issuing any GL calls.
@@ -47,7 +47,7 @@ namespace easygl
             if (r) r->release_gl_handle_only();
     }
 
-    void ResourceRegistry::on_context_restored()
+    void ResourceRegistry::OnContextRestored()
     {
         // Context has been restored and function pointers reloaded.
         // Recreate all GPU resources.

@@ -43,11 +43,11 @@ namespace easygl
         /// Called by meta-gl when the context is lost.
         /// Calls release_gl_handle_only() on every registered resource so that
         /// stale GL handles are discarded without issuing gl* calls.
-        void on_context_lost() override;
+        void OnContextLost() override;
 
         /// Called by meta-gl after the context has been restored.
         /// Calls recreate_gl_resource() on every registered resource.
-        void on_context_restored() override;
+        void OnContextRestored() override;
 
     private:
         std::vector<RecoverableResource*> resources_{};
