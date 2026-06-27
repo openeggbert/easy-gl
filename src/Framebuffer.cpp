@@ -136,5 +136,17 @@ namespace easygl
                                    mask, filter);
     }
 
+    void Framebuffer::blit_to(const Framebuffer& dst,
+                               int src_x0, int src_y0, int src_x1, int src_y1,
+                               int dst_x0, int dst_y0, int dst_x1, int dst_y1,
+                               ClearBufferBit mask, BlitFilter filter) const
+    {
+        bind(FramebufferTarget::ReadFramebuffer);
+        dst.bind(FramebufferTarget::DrawFramebuffer);
+        blit(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter);
+        unbind(FramebufferTarget::ReadFramebuffer);
+        unbind(FramebufferTarget::DrawFramebuffer);
+    }
+
 }
 namespace easygl { bool Framebuffer::is_valid_gl_object() const { return is_created() && metagl::glIsFramebuffer(metagl::FramebufferId{handle_}); } }

@@ -47,6 +47,10 @@ namespace easygl
         static void blit(int src_x0, int src_y0, int src_x1, int src_y1,
                          int dst_x0, int dst_y0, int dst_x1, int dst_y1,
                          ClearBufferBit mask, BlitFilter filter);
+        void blit_to(const Framebuffer& dst,
+                     int src_x0, int src_y0, int src_x1, int src_y1,
+                     int dst_x0, int dst_y0, int dst_x1, int dst_y1,
+                     ClearBufferBit mask, BlitFilter filter) const;
 
         static Framebuffer create_color_depth(const Texture& color, const Renderbuffer& depth);
 
