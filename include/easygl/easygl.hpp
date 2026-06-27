@@ -15,6 +15,7 @@
 #include "easygl/Renderbuffer.hpp"
 #include "easygl/ResourceRegistry.hpp"
 #include "easygl/Sampler.hpp"
+#include "easygl/ScopedBind.hpp"
 #include "easygl/Shader.hpp"
 #include "easygl/Sync.hpp"
 #include "easygl/Texture.hpp"
