@@ -69,4 +69,44 @@ namespace easygl
         metagl::glSamplerParameterf(metagl::SamplerId{handle_}, pname, value);
     }
 
+    Sampler Sampler::create_linear_clamp()
+    {
+        Sampler s; s.create();
+        s.set_parameter(SamplerParameter::MinFilter, static_cast<int>(metagl::TextureMinFilter::Linear));
+        s.set_parameter(SamplerParameter::MagFilter, static_cast<int>(metagl::TextureMagFilter::Linear));
+        s.set_parameter(SamplerParameter::WrapS,     static_cast<int>(metagl::TextureWrapMode::ClampToEdge));
+        s.set_parameter(SamplerParameter::WrapT,     static_cast<int>(metagl::TextureWrapMode::ClampToEdge));
+        return s;
+    }
+
+    Sampler Sampler::create_nearest_clamp()
+    {
+        Sampler s; s.create();
+        s.set_parameter(SamplerParameter::MinFilter, static_cast<int>(metagl::TextureMinFilter::Nearest));
+        s.set_parameter(SamplerParameter::MagFilter, static_cast<int>(metagl::TextureMagFilter::Nearest));
+        s.set_parameter(SamplerParameter::WrapS,     static_cast<int>(metagl::TextureWrapMode::ClampToEdge));
+        s.set_parameter(SamplerParameter::WrapT,     static_cast<int>(metagl::TextureWrapMode::ClampToEdge));
+        return s;
+    }
+
+    Sampler Sampler::create_linear_repeat()
+    {
+        Sampler s; s.create();
+        s.set_parameter(SamplerParameter::MinFilter, static_cast<int>(metagl::TextureMinFilter::Linear));
+        s.set_parameter(SamplerParameter::MagFilter, static_cast<int>(metagl::TextureMagFilter::Linear));
+        s.set_parameter(SamplerParameter::WrapS,     static_cast<int>(metagl::TextureWrapMode::Repeat));
+        s.set_parameter(SamplerParameter::WrapT,     static_cast<int>(metagl::TextureWrapMode::Repeat));
+        return s;
+    }
+
+    Sampler Sampler::create_mipmap_linear()
+    {
+        Sampler s; s.create();
+        s.set_parameter(SamplerParameter::MinFilter, static_cast<int>(metagl::TextureMinFilter::LinearMipmapLinear));
+        s.set_parameter(SamplerParameter::MagFilter, static_cast<int>(metagl::TextureMagFilter::Linear));
+        s.set_parameter(SamplerParameter::WrapS,     static_cast<int>(metagl::TextureWrapMode::Repeat));
+        s.set_parameter(SamplerParameter::WrapT,     static_cast<int>(metagl::TextureWrapMode::Repeat));
+        return s;
+    }
+
 }
