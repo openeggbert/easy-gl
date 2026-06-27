@@ -70,6 +70,26 @@ namespace easygl
         metagl::glTexParameterf(target, pname, value);
     }
 
+    void Texture::set_parameter_fv(TextureTarget target, TextureParameter pname, const float* values)
+    {
+        metagl::glTexParameterfv(target, pname, values);
+    }
+
+    void Texture::set_parameter_iv(TextureTarget target, TextureParameter pname, const int* values)
+    {
+        metagl::glTexParameteriv(target, pname, values);
+    }
+
+    void Texture::set_parameter_iiv(TextureTarget target, TextureParameter pname, const int* values)
+    {
+        metagl::glTexParameterIiv(target, pname, values);
+    }
+
+    void Texture::set_parameter_iuiv(TextureTarget target, TextureParameter pname, const unsigned int* values)
+    {
+        metagl::glTexParameterIuiv(target, pname, values);
+    }
+
     void Texture::set_image_2d(TextureTarget target, int level, int width, int height, const void* data)
     {
         metagl::glBindTexture(target, metagl::TextureId{handle_});
