@@ -9,6 +9,9 @@
 
 #include <cstddef>
 #include <span>
+#include <string>
+#include <string_view>
+#include <metagl/metagl.hpp>
 
 namespace easygl
 {
@@ -145,6 +148,12 @@ namespace easygl
         void push_debug_group(DebugSource source, unsigned int id, const char* message);
         void pop_debug_group();
         void object_label(DebugObjectLabel identifier, unsigned int name, const char* label);
+        void set_debug_callback(metagl::GLDEBUGPROC callback, void* user_param = nullptr);
+        void set_debug_message_control(DebugSource source, DebugType type, DebugSeverity severity,
+                                       std::span<const unsigned int> ids, bool enabled);
+        void insert_debug_message(DebugSource source, DebugType type, unsigned int id,
+                                  DebugSeverity severity, std::string_view message);
+        [[nodiscard]] std::string get_object_label(DebugObjectLabel identifier, unsigned int name) const;
 
         // ---- State / misc ----
         void set_hint(HintTarget target, HintMode mode);

@@ -515,6 +515,37 @@ namespace easygl
         metagl::glObjectLabel(identifier, name, -1, label);
     }
 
+    void Device::set_debug_callback(metagl::GLDEBUGPROC callback, void* user_param)
+    {
+        metagl::glDebugMessageCallback(callback, user_param);
+    }
+
+    void Device::set_debug_message_control(DebugSource source, DebugType type, DebugSeverity severity,
+                                            std::span<const unsigned int> ids, bool enabled)
+    {
+        metagl::glDebugMessageControl(source, type, severity,
+                                       static_cast<GLsizei>(ids.size()),
+                                       reinterpret_cast<const GLuint*>(ids.data()),
+                                       enabled ? GL_TRUE : GL_FALSE);
+    }
+
+    void Device::insert_debug_message(DebugSource source, DebugType type, unsigned int id,
+                                       DebugSeverity severity, std::string_view message)
+    {
+        metagl::glDebugMessageInsert(source, type, id, severity,
+                                      static_cast<GLsizei>(message.size()), message.data());
+    }
+
+    std::string Device::get_object_label(DebugObjectLabel identifier, unsigned int name) const
+    {
+        GLsizei length = 0;
+        metagl::glGetObjectLabel(identifier, name, 0, &length, nullptr);
+        if (length <= 0) return "";
+        std::string label(static_cast<std::size_t>(length), '\0');
+        metagl::glGetObjectLabel(identifier, name, length + 1, nullptr, label.data());
+        return label;
+    }
+
     // ---- State / misc ----
 
     void Device::set_hint(HintTarget target, HintMode mode)
