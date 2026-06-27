@@ -8,6 +8,8 @@
 
 namespace easygl
 {
+    class Buffer;
+
     struct EASYGL_API VertexAttribute
     {
         unsigned int index = 0;
@@ -43,6 +45,16 @@ namespace easygl
         void enable_attribute(unsigned int index);
         void disable_attribute(unsigned int index);
         void set_attribute_divisor(unsigned int index, unsigned int divisor);
+
+        // Separate vertex format (ES 3.1+)
+        void set_attribute_format(unsigned int attrib_index, int size, DataType type,
+                                   bool normalized, unsigned int relative_offset);
+        void set_attribute_i_format(unsigned int attrib_index, int size, DataType type,
+                                    unsigned int relative_offset);
+        void set_attribute_binding(unsigned int attrib_index, unsigned int binding_index);
+        void bind_vertex_buffer(unsigned int binding_index, const Buffer& buffer,
+                                std::ptrdiff_t offset, std::size_t stride);
+        void set_binding_divisor(unsigned int binding_index, unsigned int divisor);
 
     };
 }

@@ -1,4 +1,5 @@
 #include "easygl/VertexArray.hpp"
+#include "easygl/Buffer.hpp"
 #include <metagl/metagl.hpp>
 
 #include <cstdint>
@@ -102,6 +103,36 @@ namespace easygl
     void VertexArray::set_attribute_divisor(unsigned int index, unsigned int divisor)
     {
         metagl::glVertexAttribDivisor(metagl::AttribLocation{index}, divisor);
+    }
+
+    void VertexArray::set_attribute_format(unsigned int attrib_index, int size, DataType type,
+                                            bool normalized, unsigned int relative_offset)
+    {
+        metagl::glVertexAttribFormat(metagl::AttribLocation{attrib_index}, size, type,
+                                      normalized ? GL_TRUE : GL_FALSE, relative_offset);
+    }
+
+    void VertexArray::set_attribute_i_format(unsigned int attrib_index, int size, DataType type,
+                                              unsigned int relative_offset)
+    {
+        metagl::glVertexAttribIFormat(metagl::AttribLocation{attrib_index}, size, type, relative_offset);
+    }
+
+    void VertexArray::set_attribute_binding(unsigned int attrib_index, unsigned int binding_index)
+    {
+        metagl::glVertexAttribBinding(metagl::AttribLocation{attrib_index}, binding_index);
+    }
+
+    void VertexArray::bind_vertex_buffer(unsigned int binding_index, const Buffer& buffer,
+                                          std::ptrdiff_t offset, std::size_t stride)
+    {
+        metagl::glBindVertexBuffer(binding_index, metagl::BufferId{buffer.native_handle()},
+                                    static_cast<GLintptr>(offset), static_cast<GLsizei>(stride));
+    }
+
+    void VertexArray::set_binding_divisor(unsigned int binding_index, unsigned int divisor)
+    {
+        metagl::glVertexBindingDivisor(binding_index, divisor);
     }
 
 }
