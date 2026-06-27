@@ -1,6 +1,7 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <span>
 #include <string>
 #include <vector>
@@ -73,7 +74,7 @@ namespace easygl
         void set_uniform_matrix4x3(int location, const float* data, bool transpose = false);
 
         // Uniform blocks
-        [[nodiscard]] unsigned int uniform_block_index(const std::string& name) const;
+        [[nodiscard]] std::optional<unsigned int> uniform_block_index(const std::string& name) const;
         void set_uniform_block_binding(unsigned int block_index, unsigned int binding_point);
 
         [[nodiscard]] bool is_linked() const noexcept;

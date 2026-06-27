@@ -31,7 +31,7 @@ namespace easygl
         static void pause();
         static void resume();
 
-        static void set_varyings(unsigned int program,
+        static void set_varyings(const Program& program,
                                   std::span<const char* const> varyings,
                                   TransformFeedbackBufferMode buffer_mode);
 

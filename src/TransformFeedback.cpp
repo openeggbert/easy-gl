@@ -1,4 +1,5 @@
 #include "easygl/TransformFeedback.hpp"
+#include "easygl/Program.hpp"
 #include <metagl/metagl.hpp>
 
 namespace easygl
@@ -79,11 +80,11 @@ namespace easygl
         metagl::glResumeTransformFeedback();
     }
 
-    void TransformFeedback::set_varyings(unsigned int program,
+    void TransformFeedback::set_varyings(const Program& program,
                                           std::span<const char* const> varyings,
                                           TransformFeedbackBufferMode buffer_mode)
     {
-        metagl::glTransformFeedbackVaryings(metagl::ProgramId{program},
+        metagl::glTransformFeedbackVaryings(metagl::ProgramId{program.native_handle()},
                                              static_cast<GLsizei>(varyings.size()),
                                              varyings.data(), buffer_mode);
     }

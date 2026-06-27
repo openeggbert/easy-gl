@@ -9,6 +9,8 @@
 
 namespace easygl
 {
+    class Texture;
+    class Renderbuffer;
     class EASYGL_API Framebuffer : public detail::NonCopyable, public detail::GenerationTracked
     {
     public:
@@ -24,11 +26,11 @@ namespace easygl
         static void unbind(FramebufferTarget target = FramebufferTarget::Framebuffer);
 
         void attach_texture_2d(FramebufferTarget target, FramebufferAttachment attachment,
-                                TextureTarget tex_target, unsigned int texture, int level);
+                                TextureTarget tex_target, const Texture& texture, int level);
         void attach_texture_layer(FramebufferTarget target, FramebufferAttachment attachment,
-                                   unsigned int texture, int level, int layer);
+                                   const Texture& texture, int level, int layer);
         void attach_renderbuffer(FramebufferTarget target, FramebufferAttachment attachment,
-                                  unsigned int renderbuffer);
+                                  const Renderbuffer& renderbuffer);
 
         [[nodiscard]] FramebufferStatus check_status(FramebufferTarget target = FramebufferTarget::Framebuffer) const;
         [[nodiscard]] bool is_complete(FramebufferTarget target = FramebufferTarget::Framebuffer) const;

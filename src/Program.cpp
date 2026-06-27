@@ -3,6 +3,7 @@
 #include "easygl/Shader.hpp"
 #include <metagl/metagl.hpp>
 #include <algorithm>
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -263,10 +264,12 @@ namespace easygl
         metagl::glUniformMatrix4x3fv(metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data);
     }
 
-    unsigned int Program::uniform_block_index(const std::string& name) const
+    std::optional<unsigned int> Program::uniform_block_index(const std::string& name) const
     {
-        if (!is_created()) return GL_INVALID_INDEX;
-        return metagl::glGetUniformBlockIndex(metagl::ProgramId{handle_}, name.c_str());
+        if (!is_created()) return std::nullopt;
+        const unsigned int idx = metagl::glGetUniformBlockIndex(metagl::ProgramId{handle_}, name.c_str());
+        if (idx == GL_INVALID_INDEX) return std::nullopt;
+        return idx;
     }
 
     void Program::set_uniform_block_binding(unsigned int block_index, unsigned int binding_point)

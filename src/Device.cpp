@@ -135,7 +135,6 @@ namespace easygl
         if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Color))   != 0) mask = mask | metagl::ClearBufferBit::Color;
         if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Depth))   != 0) mask = mask | metagl::ClearBufferBit::Depth;
         if ((static_cast<u32>(flags) & static_cast<u32>(ClearFlags::Stencil)) != 0) mask = mask | metagl::ClearBufferBit::Stencil;
-        metagl::glDisable(metagl::Capability::ScissorTest);
         metagl::glClear(mask);
     }
 

@@ -5,8 +5,6 @@
 #include "easygl/Types.hpp"
 #include "easygl/detail/NonCopyable.hpp"
 
-struct __GLsync;
-
 namespace easygl
 {
     class EASYGL_API Sync : public detail::NonCopyable
@@ -25,11 +23,11 @@ namespace easygl
         void server_wait(std::uint64_t timeout_ns);
 
         [[nodiscard]] bool is_created() const noexcept;
-        [[nodiscard]] __GLsync* native_handle() const noexcept;
+        [[nodiscard]] metagl::GLsync native_handle() const noexcept;
 
         void reset_handle_no_gl() noexcept;
 
     private:
-        __GLsync* sync_ = nullptr;
+        metagl::GLsync sync_ = nullptr;
     };
 }

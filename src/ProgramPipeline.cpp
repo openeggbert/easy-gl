@@ -1,4 +1,5 @@
 #include "easygl/ProgramPipeline.hpp"
+#include "easygl/Program.hpp"
 #include <metagl/metagl.hpp>
 #include <vector>
 
@@ -60,14 +61,16 @@ namespace easygl
         metagl::glBindProgramPipeline(metagl::ProgramPipelineId{0});
     }
 
-    void ProgramPipeline::use_stages(ShaderStageMask stages, unsigned int program)
+    void ProgramPipeline::use_stages(ShaderStageMask stages, const Program& program)
     {
-        metagl::glUseProgramStages(metagl::ProgramPipelineId{handle_}, stages, metagl::ProgramId{program});
+        metagl::glUseProgramStages(metagl::ProgramPipelineId{handle_}, stages,
+                                    metagl::ProgramId{program.native_handle()});
     }
 
-    void ProgramPipeline::set_active_shader_program(unsigned int program)
+    void ProgramPipeline::set_active_shader_program(const Program& program)
     {
-        metagl::glActiveShaderProgram(metagl::ProgramPipelineId{handle_}, metagl::ProgramId{program});
+        metagl::glActiveShaderProgram(metagl::ProgramPipelineId{handle_},
+                                       metagl::ProgramId{program.native_handle()});
     }
 
     void ProgramPipeline::validate() const

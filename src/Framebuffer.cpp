@@ -1,4 +1,6 @@
 #include "easygl/Framebuffer.hpp"
+#include "easygl/Texture.hpp"
+#include "easygl/Renderbuffer.hpp"
 #include <metagl/metagl.hpp>
 
 namespace easygl
@@ -60,22 +62,25 @@ namespace easygl
     }
 
     void Framebuffer::attach_texture_2d(FramebufferTarget target, FramebufferAttachment attachment,
-                                         TextureTarget tex_target, unsigned int texture, int level)
+                                         TextureTarget tex_target, const Texture& texture, int level)
     {
-        metagl::glFramebufferTexture2D(target, attachment, tex_target, metagl::TextureId{texture}, level);
+        metagl::glFramebufferTexture2D(target, attachment, tex_target,
+                                        metagl::TextureId{texture.native_handle()}, level);
     }
 
     void Framebuffer::attach_texture_layer(FramebufferTarget target, FramebufferAttachment attachment,
-                                            unsigned int texture, int level, int layer)
+                                            const Texture& texture, int level, int layer)
     {
-        metagl::glFramebufferTextureLayer(target, attachment, metagl::TextureId{texture}, level, layer);
+        metagl::glFramebufferTextureLayer(target, attachment,
+                                           metagl::TextureId{texture.native_handle()}, level, layer);
     }
 
     void Framebuffer::attach_renderbuffer(FramebufferTarget target, FramebufferAttachment attachment,
-                                           unsigned int renderbuffer)
+                                           const Renderbuffer& renderbuffer)
     {
         metagl::glFramebufferRenderbuffer(target, attachment,
-                                          metagl::RenderbufferTarget::Renderbuffer, metagl::RenderbufferId{renderbuffer});
+                                          metagl::RenderbufferTarget::Renderbuffer,
+                                          metagl::RenderbufferId{renderbuffer.native_handle()});
     }
 
     FramebufferStatus Framebuffer::check_status(FramebufferTarget target) const

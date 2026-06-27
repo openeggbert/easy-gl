@@ -9,6 +9,8 @@
 
 namespace easygl
 {
+    class Program;
+
     class EASYGL_API ProgramPipeline : public detail::NonCopyable, public detail::GenerationTracked
     {
     public:
@@ -23,8 +25,8 @@ namespace easygl
         void bind() const;
         static void unbind();
 
-        void use_stages(ShaderStageMask stages, unsigned int program);
-        void set_active_shader_program(unsigned int program);
+        void use_stages(ShaderStageMask stages, const Program& program);
+        void set_active_shader_program(const Program& program);
         void validate() const;
 
         [[nodiscard]] std::string info_log() const;

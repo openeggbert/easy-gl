@@ -53,5 +53,5 @@ namespace easygl
 
     bool Sync::is_created() const noexcept { return sync_ != nullptr; }
     void Sync::reset_handle_no_gl() noexcept { sync_ = nullptr; }
-    __GLsync* Sync::native_handle() const noexcept { return sync_; }
+    metagl::GLsync Sync::native_handle() const noexcept { return sync_; }
 }
