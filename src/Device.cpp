@@ -470,6 +470,12 @@ namespace easygl
         metagl::glDrawRangeElements(primitive, start, end, static_cast<GLsizei>(count), type, indices);
     }
 
+    void Device::draw_elements_base_vertex(PrimitiveType primitive, int count, DataType type,
+                                            const void* indices, int base_vertex)
+    {
+        metagl::glDrawElementsBaseVertex(primitive, static_cast<GLsizei>(count), type, indices, base_vertex);
+    }
+
     // ---- Compute ----
 
     void Device::dispatch_compute(unsigned int num_groups_x, unsigned int num_groups_y, unsigned int num_groups_z)

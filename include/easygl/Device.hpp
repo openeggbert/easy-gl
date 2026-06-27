@@ -136,6 +136,8 @@ namespace easygl
         void draw_elements_indirect(PrimitiveType primitive, DataType type, const void* indirect);
         void draw_range_elements(PrimitiveType primitive, unsigned int start, unsigned int end,
                                  int count, DataType type, const void* indices);
+        void draw_elements_base_vertex(PrimitiveType primitive, int count, DataType type,
+                                       const void* indices, int base_vertex);
 
         // ---- Compute ----
         void dispatch_compute(unsigned int num_groups_x, unsigned int num_groups_y, unsigned int num_groups_z);
