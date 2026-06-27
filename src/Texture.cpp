@@ -10,9 +10,9 @@ namespace easygl
     }
 
     Texture::Texture(Texture&& other) noexcept
-        : handle_(other.handle_)
-        , generation_(other.generation_)
     {
+        handle_ = other.handle_;
+        generation_ = other.generation_;
         other.handle_ = 0;
         other.generation_ = 0;
     }
@@ -33,7 +33,9 @@ namespace easygl
     void Texture::create()
     {
         if (is_created()) return;
-        metagl::glGenTextures(1, &handle_);
+        metagl::TextureId tid{};
+        metagl::glGenTextures(1, &tid);
+        handle_ = tid.value;
         generation_ = metagl::GetContextGeneration();
     }
 
@@ -41,20 +43,21 @@ namespace easygl
     {
         if (is_created())
         {
-            metagl::glDeleteTextures(1, &handle_);
+            metagl::TextureId tid{handle_};
+            metagl::glDeleteTextures(1, &tid);
             handle_ = 0;
         }
     }
 
     void Texture::bind(TextureTarget target) const
     {
-        metagl::glBindTexture(target, handle_);
+        metagl::glBindTexture(target, metagl::TextureId{handle_});
     }
 
     void Texture::active_bind(TextureUnit unit, TextureTarget target) const
     {
         metagl::glActiveTexture(unit);
-        metagl::glBindTexture(target, handle_);
+        metagl::glBindTexture(target, metagl::TextureId{handle_});
     }
 
     void Texture::set_parameter(TextureTarget target, TextureParameter pname, int value)
@@ -69,16 +72,16 @@ namespace easygl
 
     void Texture::set_image_2d(TextureTarget target, int level, int width, int height, const void* data)
     {
-        metagl::glBindTexture(target, handle_);
+        metagl::glBindTexture(target, metagl::TextureId{handle_});
         metagl::glPixelStorei(metagl::PixelStoreParam::UnpackAlignment, 1);
         metagl::glTexImage2D(target, level,
                              metagl::InternalFormat::Rgba,
                              width, height, 0,
                              metagl::PixelFormat::Rgba, metagl::PixelType::UnsignedByte, data);
-        metagl::glTexParameteri(target, metagl::TextureParameter::MinFilter, static_cast<GLint>(metagl::TextureFilter::Linear));
-        metagl::glTexParameteri(target, metagl::TextureParameter::MagFilter, static_cast<GLint>(metagl::TextureFilter::Linear));
-        metagl::glTexParameteri(target, metagl::TextureParameter::WrapS, static_cast<GLint>(metagl::TextureWrap::ClampToEdge));
-        metagl::glTexParameteri(target, metagl::TextureParameter::WrapT, static_cast<GLint>(metagl::TextureWrap::ClampToEdge));
+        metagl::glTexParameteri(target, metagl::TextureParameter::MinFilter, static_cast<GLint>(metagl::TextureMinFilter::Linear));
+        metagl::glTexParameteri(target, metagl::TextureParameter::MagFilter, static_cast<GLint>(metagl::TextureMagFilter::Linear));
+        metagl::glTexParameteri(target, metagl::TextureParameter::WrapS, static_cast<GLint>(metagl::TextureWrapMode::ClampToEdge));
+        metagl::glTexParameteri(target, metagl::TextureParameter::WrapT, static_cast<GLint>(metagl::TextureWrapMode::ClampToEdge));
     }
 
     void Texture::set_image_2d(TextureTarget target, int level,
@@ -152,15 +155,7 @@ namespace easygl
     void Texture::bind_image(unsigned int unit, int level, bool layered, int layer,
                               ImageAccess access, InternalFormat format)
     {
-        metagl::glBindImageTexture(unit, handle_, level, layered ? 1 : 0, layer, access, format);
+        metagl::glBindImageTexture(unit, metagl::TextureId{handle_}, level, layered ? 1 : 0, layer, access, format);
     }
 
-    bool Texture::is_created() const noexcept { return handle_ != 0; }
-    void Texture::reset_handle_no_gl() noexcept { handle_ = 0; generation_ = 0; }
-    unsigned int Texture::native_handle() const noexcept { return handle_; }
-    bool Texture::is_valid_for_current_generation() const noexcept
-    {
-        return handle_ != 0 && generation_ == metagl::GetContextGeneration();
-    }
-    std::uint64_t Texture::creation_generation() const noexcept { return generation_; }
 }

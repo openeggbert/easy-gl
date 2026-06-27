@@ -12,10 +12,10 @@ namespace easygl
 
     Shader::Shader(Shader&& other) noexcept
         : type_(other.type_)
-        , handle_(other.handle_)
         , compiled_(other.compiled_)
-        , generation_(other.generation_)
     {
+        handle_ = other.handle_;
+        generation_ = other.generation_;
         other.handle_ = 0;
         other.compiled_ = false;
         other.generation_ = 0;
@@ -40,7 +40,8 @@ namespace easygl
     void Shader::create()
     {
         if (is_created()) return;
-        handle_ = metagl::glCreateShader(type_);
+        metagl::ShaderId sid = metagl::glCreateShader(type_);
+        handle_ = sid.value;
         generation_ = metagl::GetContextGeneration();
     }
 
@@ -48,7 +49,7 @@ namespace easygl
     {
         if (handle_ != 0)
         {
-            metagl::glDeleteShader(handle_);
+            metagl::glDeleteShader(metagl::ShaderId{handle_});
             handle_ = 0;
             compiled_ = false;
         }
@@ -59,11 +60,11 @@ namespace easygl
         if (!is_created()) create();
 
         const char* src = source.c_str();
-        metagl::glShaderSource(handle_, 1, &src, nullptr);
-        metagl::glCompileShader(handle_);
+        metagl::glShaderSource(metagl::ShaderId{handle_}, 1, &src, nullptr);
+        metagl::glCompileShader(metagl::ShaderId{handle_});
 
         int status = 0;
-        metagl::glGetShaderiv(handle_, metagl::ShaderParameter::CompileStatus, &status);
+        metagl::glGetShaderiv(metagl::ShaderId{handle_}, metagl::ShaderParameter::CompileStatus, &status);
         compiled_ = (status != 0);
     }
 
@@ -80,21 +81,14 @@ namespace easygl
         if (!is_created()) return "";
 
         int length = 0;
-        metagl::glGetShaderiv(handle_, metagl::ShaderParameter::InfoLogLength, &length);
+        metagl::glGetShaderiv(metagl::ShaderId{handle_}, metagl::ShaderParameter::InfoLogLength, &length);
         if (length <= 0) return "";
 
         std::vector<char> buffer(static_cast<std::size_t>(length));
-        metagl::glGetShaderInfoLog(handle_, length, nullptr, buffer.data());
+        metagl::glGetShaderInfoLog(metagl::ShaderId{handle_}, length, nullptr, buffer.data());
         return std::string(buffer.data());
     }
 
     ShaderType Shader::shader_type() const noexcept { return type_; }
     bool Shader::is_compiled() const noexcept { return compiled_; }
-    bool Shader::is_created() const noexcept { return handle_ != 0; }
-    unsigned int Shader::native_handle() const noexcept { return handle_; }
-    bool Shader::is_valid_for_current_generation() const noexcept
-    {
-        return handle_ != 0 && generation_ == metagl::GetContextGeneration();
-    }
-    std::uint64_t Shader::creation_generation() const noexcept { return generation_; }
 }

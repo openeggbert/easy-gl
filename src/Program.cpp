@@ -21,11 +21,11 @@ namespace easygl
     }
 
     Program::Program(Program&& other) noexcept
-        : handle_(other.handle_)
-        , linked_(other.linked_)
+        : linked_(other.linked_)
         , owned_shader_handles_(std::move(other.owned_shader_handles_))
-        , generation_(other.generation_)
     {
+        handle_ = other.handle_;
+        generation_ = other.generation_;
         other.handle_ = 0;
         other.linked_ = false;
         other.owned_shader_handles_.clear();
@@ -52,7 +52,8 @@ namespace easygl
     void Program::create()
     {
         if (is_created()) return;
-        handle_ = metagl::glCreateProgram();
+        metagl::ProgramId pid = metagl::glCreateProgram();
+        handle_ = pid.value;
         generation_ = metagl::GetContextGeneration();
     }
 
@@ -62,20 +63,20 @@ namespace easygl
         {
             for (const auto shader_handle : owned_shader_handles_)
             {
-                metagl::glDetachShader(handle_, shader_handle);
-                metagl::glDeleteShader(shader_handle);
+                metagl::glDetachShader(metagl::ProgramId{handle_}, metagl::ShaderId{shader_handle});
+                metagl::glDeleteShader(metagl::ShaderId{shader_handle});
             }
         }
         else
         {
             for (const auto shader_handle : owned_shader_handles_)
-                metagl::glDeleteShader(shader_handle);
+                metagl::glDeleteShader(metagl::ShaderId{shader_handle});
         }
         owned_shader_handles_.clear();
 
         if (handle_ != 0)
         {
-            metagl::glDeleteProgram(handle_);
+            metagl::glDeleteProgram(metagl::ProgramId{handle_});
             handle_ = 0;
         }
 
@@ -85,7 +86,7 @@ namespace easygl
     void Program::attach(const Shader& shader)
     {
         if (!is_created()) create();
-        metagl::glAttachShader(handle_, shader.native_handle());
+        metagl::glAttachShader(metagl::ProgramId{handle_}, metagl::ShaderId{shader.native_handle()});
     }
 
     void Program::attach_owned(Shader& shader)
@@ -101,24 +102,24 @@ namespace easygl
     void Program::detach(const Shader& shader)
     {
         if (is_created())
-            metagl::glDetachShader(handle_, shader.native_handle());
+            metagl::glDetachShader(metagl::ProgramId{handle_}, metagl::ShaderId{shader.native_handle()});
     }
 
     void Program::link()
     {
         if (!is_created()) return;
-        metagl::glLinkProgram(handle_);
+        metagl::glLinkProgram(metagl::ProgramId{handle_});
 
         int status = 0;
-        metagl::glGetProgramiv(handle_, metagl::ProgramParameter::LinkStatus, &status);
+        metagl::glGetProgramiv(metagl::ProgramId{handle_}, metagl::ProgramParameter::LinkStatus, &status);
         linked_ = (status != 0);
 
         if (linked_)
         {
             for (const auto shader_handle : owned_shader_handles_)
             {
-                metagl::glDetachShader(handle_, shader_handle);
-                metagl::glDeleteShader(shader_handle);
+                metagl::glDetachShader(metagl::ProgramId{handle_}, metagl::ShaderId{shader_handle});
+                metagl::glDeleteShader(metagl::ShaderId{shader_handle});
             }
             owned_shader_handles_.clear();
         }
@@ -152,13 +153,13 @@ namespace easygl
 
     void Program::use() const
     {
-        metagl::glUseProgram(handle_);
+        metagl::glUseProgram(metagl::ProgramId{handle_});
     }
 
     void Program::validate() const
     {
         if (is_created())
-            metagl::glValidateProgram(handle_);
+            metagl::glValidateProgram(metagl::ProgramId{handle_});
     }
 
     std::string Program::info_log() const
@@ -166,114 +167,114 @@ namespace easygl
         if (!is_created()) return "";
 
         int length = 0;
-        metagl::glGetProgramiv(handle_, metagl::ProgramParameter::InfoLogLength, &length);
+        metagl::glGetProgramiv(metagl::ProgramId{handle_}, metagl::ProgramParameter::InfoLogLength, &length);
         if (length <= 0) return "";
 
         std::vector<char> buffer(static_cast<std::size_t>(length));
-        metagl::glGetProgramInfoLog(handle_, length, nullptr, buffer.data());
+        metagl::glGetProgramInfoLog(metagl::ProgramId{handle_}, length, nullptr, buffer.data());
         return std::string(buffer.data());
     }
 
     int Program::attrib_location(const std::string& name) const
     {
         if (!is_created()) return -1;
-        return metagl::glGetAttribLocation(handle_, name.c_str());
+        return static_cast<int>(metagl::glGetAttribLocation(metagl::ProgramId{handle_}, name.c_str()).value);
     }
 
     void Program::bind_attrib_location(unsigned int index, const std::string& name)
     {
         if (!is_created()) create();
-        metagl::glBindAttribLocation(handle_, index, name.c_str());
+        metagl::glBindAttribLocation(metagl::ProgramId{handle_}, metagl::AttribLocation{index}, name.c_str());
     }
 
     int Program::uniform_location(const std::string& name) const
     {
         if (!is_created()) return -1;
-        return metagl::glGetUniformLocation(handle_, name.c_str());
+        return metagl::glGetUniformLocation(metagl::ProgramId{handle_}, name.c_str()).value;
     }
 
     // float
-    void Program::set_uniform(int location, float value)               { metagl::glUniform1f(location, value); }
-    void Program::set_uniform(int location, float x, float y)          { metagl::glUniform2f(location, x, y); }
-    void Program::set_uniform(int location, float x, float y, float z) { metagl::glUniform3f(location, x, y, z); }
-    void Program::set_uniform(int location, float x, float y, float z, float w) { metagl::glUniform4f(location, x, y, z, w); }
+    void Program::set_uniform(int location, float value)               { metagl::glUniform1f(metagl::UniformLocation{location}, value); }
+    void Program::set_uniform(int location, float x, float y)          { metagl::glUniform2f(metagl::UniformLocation{location}, x, y); }
+    void Program::set_uniform(int location, float x, float y, float z) { metagl::glUniform3f(metagl::UniformLocation{location}, x, y, z); }
+    void Program::set_uniform(int location, float x, float y, float z, float w) { metagl::glUniform4f(metagl::UniformLocation{location}, x, y, z, w); }
 
     void Program::set_uniform_fv(int location, std::span<const float> values, int components)
     {
+        const auto loc = metagl::UniformLocation{location};
         const auto count = static_cast<GLsizei>(values.size() / static_cast<std::size_t>(components));
         switch (components)
         {
-            case 1: metagl::glUniform1fv(location, count, values.data()); break;
-            case 2: metagl::glUniform2fv(location, count, values.data()); break;
-            case 3: metagl::glUniform3fv(location, count, values.data()); break;
-            case 4: metagl::glUniform4fv(location, count, values.data()); break;
+            case 1: metagl::glUniform1fv(loc, count, values.data()); break;
+            case 2: metagl::glUniform2fv(loc, count, values.data()); break;
+            case 3: metagl::glUniform3fv(loc, count, values.data()); break;
+            case 4: metagl::glUniform4fv(loc, count, values.data()); break;
             default: break;
         }
     }
 
     // int
-    void Program::set_uniform(int location, int value)                { metagl::glUniform1i(location, value); }
-    void Program::set_uniform(int location, int x, int y)             { metagl::glUniform2i(location, x, y); }
-    void Program::set_uniform(int location, int x, int y, int z)      { metagl::glUniform3i(location, x, y, z); }
-    void Program::set_uniform(int location, int x, int y, int z, int w) { metagl::glUniform4i(location, x, y, z, w); }
+    void Program::set_uniform(int location, int value)                { metagl::glUniform1i(metagl::UniformLocation{location}, value); }
+    void Program::set_uniform(int location, int x, int y)             { metagl::glUniform2i(metagl::UniformLocation{location}, x, y); }
+    void Program::set_uniform(int location, int x, int y, int z)      { metagl::glUniform3i(metagl::UniformLocation{location}, x, y, z); }
+    void Program::set_uniform(int location, int x, int y, int z, int w) { metagl::glUniform4i(metagl::UniformLocation{location}, x, y, z, w); }
 
     // unsigned int
-    void Program::set_uniform(int location, unsigned int value)                        { metagl::glUniform1ui(location, value); }
-    void Program::set_uniform(int location, unsigned int x, unsigned int y)             { metagl::glUniform2ui(location, x, y); }
-    void Program::set_uniform(int location, unsigned int x, unsigned int y, unsigned int z) { metagl::glUniform3ui(location, x, y, z); }
-    void Program::set_uniform(int location, unsigned int x, unsigned int y, unsigned int z, unsigned int w) { metagl::glUniform4ui(location, x, y, z, w); }
+    void Program::set_uniform(int location, unsigned int value)                        { metagl::glUniform1ui(metagl::UniformLocation{location}, value); }
+    void Program::set_uniform(int location, unsigned int x, unsigned int y)             { metagl::glUniform2ui(metagl::UniformLocation{location}, x, y); }
+    void Program::set_uniform(int location, unsigned int x, unsigned int y, unsigned int z) { metagl::glUniform3ui(metagl::UniformLocation{location}, x, y, z); }
+    void Program::set_uniform(int location, unsigned int x, unsigned int y, unsigned int z, unsigned int w) { metagl::glUniform4ui(metagl::UniformLocation{location}, x, y, z, w); }
 
     // matrices
     void Program::set_uniform_matrix2(int location, const float* data, bool transpose)
     {
-        metagl::glUniformMatrix2fv(location, 1, transpose ? 1 : 0, data);
+        metagl::glUniformMatrix2fv(metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data);
     }
     void Program::set_uniform_matrix3(int location, const float* data, bool transpose)
     {
-        metagl::glUniformMatrix3fv(location, 1, transpose ? 1 : 0, data);
+        metagl::glUniformMatrix3fv(metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data);
     }
     void Program::set_uniform_matrix4(int location, const float* data, bool transpose)
     {
-        metagl::glUniformMatrix4fv(location, 1, transpose ? 1 : 0, data);
+        metagl::glUniformMatrix4fv(metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data);
     }
     void Program::set_uniform_matrix2x3(int location, const float* data, bool transpose)
     {
-        metagl::glUniformMatrix2x3fv(location, 1, transpose ? 1 : 0, data);
+        metagl::glUniformMatrix2x3fv(metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data);
     }
     void Program::set_uniform_matrix3x2(int location, const float* data, bool transpose)
     {
-        metagl::glUniformMatrix3x2fv(location, 1, transpose ? 1 : 0, data);
+        metagl::glUniformMatrix3x2fv(metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data);
     }
     void Program::set_uniform_matrix2x4(int location, const float* data, bool transpose)
     {
-        metagl::glUniformMatrix2x4fv(location, 1, transpose ? 1 : 0, data);
+        metagl::glUniformMatrix2x4fv(metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data);
     }
     void Program::set_uniform_matrix4x2(int location, const float* data, bool transpose)
     {
-        metagl::glUniformMatrix4x2fv(location, 1, transpose ? 1 : 0, data);
+        metagl::glUniformMatrix4x2fv(metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data);
     }
     void Program::set_uniform_matrix3x4(int location, const float* data, bool transpose)
     {
-        metagl::glUniformMatrix3x4fv(location, 1, transpose ? 1 : 0, data);
+        metagl::glUniformMatrix3x4fv(metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data);
     }
     void Program::set_uniform_matrix4x3(int location, const float* data, bool transpose)
     {
-        metagl::glUniformMatrix4x3fv(location, 1, transpose ? 1 : 0, data);
+        metagl::glUniformMatrix4x3fv(metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data);
     }
 
     unsigned int Program::uniform_block_index(const std::string& name) const
     {
         if (!is_created()) return GL_INVALID_INDEX;
-        return metagl::glGetUniformBlockIndex(handle_, name.c_str());
+        return metagl::glGetUniformBlockIndex(metagl::ProgramId{handle_}, name.c_str());
     }
 
     void Program::set_uniform_block_binding(unsigned int block_index, unsigned int binding_point)
     {
-        metagl::glUniformBlockBinding(handle_, block_index, binding_point);
+        metagl::glUniformBlockBinding(metagl::ProgramId{handle_}, block_index, binding_point);
     }
 
     bool Program::is_linked() const noexcept { return linked_; }
-    bool Program::is_created() const noexcept { return handle_ != 0; }
 
     void Program::reset_handle_no_gl() noexcept
     {
@@ -282,13 +283,4 @@ namespace easygl
         linked_ = false;
         owned_shader_handles_.clear();
     }
-
-    unsigned int Program::native_handle() const noexcept { return handle_; }
-
-    bool Program::is_valid_for_current_generation() const noexcept
-    {
-        return handle_ != 0 && generation_ == metagl::GetContextGeneration();
-    }
-
-    std::uint64_t Program::creation_generation() const noexcept { return generation_; }
 }

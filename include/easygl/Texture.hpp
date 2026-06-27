@@ -2,6 +2,7 @@
 
 #include "easygl/Export.hpp"
 #include "easygl/Types.hpp"
+#include "easygl/detail/GenerationTracked.hpp"
 #include "easygl/detail/NonCopyable.hpp"
 
 #include <cstddef>
@@ -9,7 +10,7 @@
 
 namespace easygl
 {
-    class EASYGL_API Texture : public detail::NonCopyable
+    class EASYGL_API Texture : public detail::NonCopyable, public detail::GenerationTracked
     {
     public:
         Texture();
@@ -61,15 +62,5 @@ namespace easygl
         void bind_image(unsigned int unit, int level, bool layered, int layer,
                         ImageAccess access, InternalFormat format);
 
-        [[nodiscard]] bool is_created() const noexcept;
-        [[nodiscard]] unsigned int native_handle() const noexcept;
-        [[nodiscard]] bool is_valid_for_current_generation() const noexcept;
-        [[nodiscard]] std::uint64_t creation_generation() const noexcept;
-
-        void reset_handle_no_gl() noexcept;
-
-    private:
-        unsigned int handle_ = 0;
-        std::uint64_t generation_ = 0;
     };
 }

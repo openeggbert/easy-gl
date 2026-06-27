@@ -10,9 +10,9 @@ namespace easygl
     }
 
     Framebuffer::Framebuffer(Framebuffer&& other) noexcept
-        : handle_(other.handle_)
-        , generation_(other.generation_)
     {
+        handle_ = other.handle_;
+        generation_ = other.generation_;
         other.handle_ = 0;
         other.generation_ = 0;
     }
@@ -33,7 +33,9 @@ namespace easygl
     void Framebuffer::create()
     {
         if (is_created()) return;
-        metagl::glGenFramebuffers(1, &handle_);
+        metagl::FramebufferId fid{};
+        metagl::glGenFramebuffers(1, &fid);
+        handle_ = fid.value;
         generation_ = metagl::GetContextGeneration();
     }
 
@@ -41,38 +43,39 @@ namespace easygl
     {
         if (is_created())
         {
-            metagl::glDeleteFramebuffers(1, &handle_);
+            metagl::FramebufferId fid{handle_};
+            metagl::glDeleteFramebuffers(1, &fid);
             handle_ = 0;
         }
     }
 
     void Framebuffer::bind(FramebufferTarget target) const
     {
-        metagl::glBindFramebuffer(target, handle_);
+        metagl::glBindFramebuffer(target, metagl::FramebufferId{handle_});
     }
 
     void Framebuffer::unbind(FramebufferTarget target)
     {
-        metagl::glBindFramebuffer(target, 0);
+        metagl::glBindFramebuffer(target, metagl::FramebufferId{0});
     }
 
     void Framebuffer::attach_texture_2d(FramebufferTarget target, FramebufferAttachment attachment,
                                          TextureTarget tex_target, unsigned int texture, int level)
     {
-        metagl::glFramebufferTexture2D(target, attachment, tex_target, texture, level);
+        metagl::glFramebufferTexture2D(target, attachment, tex_target, metagl::TextureId{texture}, level);
     }
 
     void Framebuffer::attach_texture_layer(FramebufferTarget target, FramebufferAttachment attachment,
                                             unsigned int texture, int level, int layer)
     {
-        metagl::glFramebufferTextureLayer(target, attachment, texture, level, layer);
+        metagl::glFramebufferTextureLayer(target, attachment, metagl::TextureId{texture}, level, layer);
     }
 
     void Framebuffer::attach_renderbuffer(FramebufferTarget target, FramebufferAttachment attachment,
                                            unsigned int renderbuffer)
     {
         metagl::glFramebufferRenderbuffer(target, attachment,
-                                          metagl::RenderbufferTarget::Renderbuffer, renderbuffer);
+                                          metagl::RenderbufferTarget::Renderbuffer, metagl::RenderbufferId{renderbuffer});
     }
 
     FramebufferStatus Framebuffer::check_status(FramebufferTarget target) const
@@ -102,19 +105,11 @@ namespace easygl
 
     void Framebuffer::blit(int src_x0, int src_y0, int src_x1, int src_y1,
                             int dst_x0, int dst_y0, int dst_x1, int dst_y1,
-                            ClearBufferBit mask, TextureFilter filter)
+                            ClearBufferBit mask, BlitFilter filter)
     {
         metagl::glBlitFramebuffer(src_x0, src_y0, src_x1, src_y1,
                                    dst_x0, dst_y0, dst_x1, dst_y1,
                                    mask, filter);
     }
 
-    bool Framebuffer::is_created() const noexcept { return handle_ != 0; }
-    void Framebuffer::reset_handle_no_gl() noexcept { handle_ = 0; generation_ = 0; }
-    unsigned int Framebuffer::native_handle() const noexcept { return handle_; }
-    bool Framebuffer::is_valid_for_current_generation() const noexcept
-    {
-        return handle_ != 0 && generation_ == metagl::GetContextGeneration();
-    }
-    std::uint64_t Framebuffer::creation_generation() const noexcept { return generation_; }
 }

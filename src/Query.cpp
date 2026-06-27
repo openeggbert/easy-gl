@@ -10,9 +10,9 @@ namespace easygl
     }
 
     Query::Query(Query&& other) noexcept
-        : handle_(other.handle_)
-        , generation_(other.generation_)
     {
+        handle_ = other.handle_;
+        generation_ = other.generation_;
         other.handle_ = 0;
         other.generation_ = 0;
     }
@@ -33,7 +33,9 @@ namespace easygl
     void Query::create()
     {
         if (is_created()) return;
-        metagl::glGenQueries(1, &handle_);
+        metagl::QueryId qid{};
+        metagl::glGenQueries(1, &qid);
+        handle_ = qid.value;
         generation_ = metagl::GetContextGeneration();
     }
 
@@ -41,14 +43,15 @@ namespace easygl
     {
         if (is_created())
         {
-            metagl::glDeleteQueries(1, &handle_);
+            metagl::QueryId qid{handle_};
+            metagl::glDeleteQueries(1, &qid);
             handle_ = 0;
         }
     }
 
     void Query::begin(QueryTarget target) const
     {
-        metagl::glBeginQuery(target, handle_);
+        metagl::glBeginQuery(target, metagl::QueryId{handle_});
     }
 
     void Query::end(QueryTarget target) const
@@ -59,23 +62,15 @@ namespace easygl
     bool Query::is_result_available() const
     {
         unsigned int available = 0;
-        metagl::glGetQueryObjectuiv(handle_, metagl::QueryObjectParameter::ResultAvailable, &available);
+        metagl::glGetQueryObjectuiv(metagl::QueryId{handle_}, metagl::QueryObjectParameter::ResultAvailable, &available);
         return available != 0;
     }
 
     unsigned int Query::result() const
     {
         unsigned int value = 0;
-        metagl::glGetQueryObjectuiv(handle_, metagl::QueryObjectParameter::Result, &value);
+        metagl::glGetQueryObjectuiv(metagl::QueryId{handle_}, metagl::QueryObjectParameter::Result, &value);
         return value;
     }
 
-    bool Query::is_created() const noexcept { return handle_ != 0; }
-    void Query::reset_handle_no_gl() noexcept { handle_ = 0; generation_ = 0; }
-    unsigned int Query::native_handle() const noexcept { return handle_; }
-    bool Query::is_valid_for_current_generation() const noexcept
-    {
-        return handle_ != 0 && generation_ == metagl::GetContextGeneration();
-    }
-    std::uint64_t Query::creation_generation() const noexcept { return generation_; }
 }

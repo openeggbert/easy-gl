@@ -11,9 +11,9 @@ namespace easygl
     }
 
     ProgramPipeline::ProgramPipeline(ProgramPipeline&& other) noexcept
-        : handle_(other.handle_)
-        , generation_(other.generation_)
     {
+        handle_ = other.handle_;
+        generation_ = other.generation_;
         other.handle_ = 0;
         other.generation_ = 0;
     }
@@ -34,7 +34,9 @@ namespace easygl
     void ProgramPipeline::create()
     {
         if (is_created()) return;
-        metagl::glGenProgramPipelines(1, &handle_);
+        metagl::ProgramPipelineId ppid{};
+        metagl::glGenProgramPipelines(1, &ppid);
+        handle_ = ppid.value;
         generation_ = metagl::GetContextGeneration();
     }
 
@@ -42,34 +44,35 @@ namespace easygl
     {
         if (is_created())
         {
-            metagl::glDeleteProgramPipelines(1, &handle_);
+            metagl::ProgramPipelineId ppid{handle_};
+            metagl::glDeleteProgramPipelines(1, &ppid);
             handle_ = 0;
         }
     }
 
     void ProgramPipeline::bind() const
     {
-        metagl::glBindProgramPipeline(handle_);
+        metagl::glBindProgramPipeline(metagl::ProgramPipelineId{handle_});
     }
 
     void ProgramPipeline::unbind()
     {
-        metagl::glBindProgramPipeline(0);
+        metagl::glBindProgramPipeline(metagl::ProgramPipelineId{0});
     }
 
     void ProgramPipeline::use_stages(ShaderStageMask stages, unsigned int program)
     {
-        metagl::glUseProgramStages(handle_, stages, program);
+        metagl::glUseProgramStages(metagl::ProgramPipelineId{handle_}, stages, metagl::ProgramId{program});
     }
 
     void ProgramPipeline::set_active_shader_program(unsigned int program)
     {
-        metagl::glActiveShaderProgram(handle_, program);
+        metagl::glActiveShaderProgram(metagl::ProgramPipelineId{handle_}, metagl::ProgramId{program});
     }
 
     void ProgramPipeline::validate() const
     {
-        metagl::glValidateProgramPipeline(handle_);
+        metagl::glValidateProgramPipeline(metagl::ProgramPipelineId{handle_});
     }
 
     std::string ProgramPipeline::info_log() const
@@ -77,20 +80,12 @@ namespace easygl
         if (!is_created()) return "";
 
         int length = 0;
-        metagl::glGetProgramPipelineiv(handle_, metagl::ProgramPipelineParameter::InfoLogLength, &length);
+        metagl::glGetProgramPipelineiv(metagl::ProgramPipelineId{handle_}, metagl::ProgramPipelineParameter::InfoLogLength, &length);
         if (length <= 0) return "";
 
         std::vector<char> buffer(static_cast<std::size_t>(length));
-        metagl::glGetProgramPipelineInfoLog(handle_, length, nullptr, buffer.data());
+        metagl::glGetProgramPipelineInfoLog(metagl::ProgramPipelineId{handle_}, length, nullptr, buffer.data());
         return std::string(buffer.data());
     }
 
-    bool ProgramPipeline::is_created() const noexcept { return handle_ != 0; }
-    void ProgramPipeline::reset_handle_no_gl() noexcept { handle_ = 0; generation_ = 0; }
-    unsigned int ProgramPipeline::native_handle() const noexcept { return handle_; }
-    bool ProgramPipeline::is_valid_for_current_generation() const noexcept
-    {
-        return handle_ != 0 && generation_ == metagl::GetContextGeneration();
-    }
-    std::uint64_t ProgramPipeline::creation_generation() const noexcept { return generation_; }
 }

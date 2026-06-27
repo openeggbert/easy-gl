@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "easygl/Export.hpp"
 #include "easygl/Types.hpp"
+#include "easygl/detail/GenerationTracked.hpp"
 #include "easygl/detail/NonCopyable.hpp"
 
 namespace easygl
@@ -18,7 +19,7 @@ namespace easygl
         bool enabled = true;
     };
 
-    class EASYGL_API VertexArray : public detail::NonCopyable
+    class EASYGL_API VertexArray : public detail::NonCopyable, public detail::GenerationTracked
     {
     public:
         VertexArray();
@@ -41,15 +42,5 @@ namespace easygl
         void disable_attribute(unsigned int index);
         void set_attribute_divisor(unsigned int index, unsigned int divisor);
 
-        [[nodiscard]] bool is_created() const noexcept;
-        [[nodiscard]] unsigned int native_handle() const noexcept;
-        [[nodiscard]] bool is_valid_for_current_generation() const noexcept;
-        [[nodiscard]] std::uint64_t creation_generation() const noexcept;
-
-        void reset_handle_no_gl() noexcept;
-
-    private:
-        unsigned int handle_ = 0;
-        std::uint64_t generation_ = 0;
     };
 }

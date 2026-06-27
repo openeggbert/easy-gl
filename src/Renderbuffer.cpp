@@ -10,9 +10,9 @@ namespace easygl
     }
 
     Renderbuffer::Renderbuffer(Renderbuffer&& other) noexcept
-        : handle_(other.handle_)
-        , generation_(other.generation_)
     {
+        handle_ = other.handle_;
+        generation_ = other.generation_;
         other.handle_ = 0;
         other.generation_ = 0;
     }
@@ -33,7 +33,9 @@ namespace easygl
     void Renderbuffer::create()
     {
         if (is_created()) return;
-        metagl::glGenRenderbuffers(1, &handle_);
+        metagl::RenderbufferId rid{};
+        metagl::glGenRenderbuffers(1, &rid);
+        handle_ = rid.value;
         generation_ = metagl::GetContextGeneration();
     }
 
@@ -41,19 +43,20 @@ namespace easygl
     {
         if (is_created())
         {
-            metagl::glDeleteRenderbuffers(1, &handle_);
+            metagl::RenderbufferId rid{handle_};
+            metagl::glDeleteRenderbuffers(1, &rid);
             handle_ = 0;
         }
     }
 
     void Renderbuffer::bind() const
     {
-        metagl::glBindRenderbuffer(metagl::RenderbufferTarget::Renderbuffer, handle_);
+        metagl::glBindRenderbuffer(metagl::RenderbufferTarget::Renderbuffer, metagl::RenderbufferId{handle_});
     }
 
     void Renderbuffer::unbind()
     {
-        metagl::glBindRenderbuffer(metagl::RenderbufferTarget::Renderbuffer, 0);
+        metagl::glBindRenderbuffer(metagl::RenderbufferTarget::Renderbuffer, metagl::RenderbufferId{0});
     }
 
     void Renderbuffer::set_storage(InternalFormat internal_format, int width, int height)
@@ -68,12 +71,4 @@ namespace easygl
                                                   samples, internal_format, width, height);
     }
 
-    bool Renderbuffer::is_created() const noexcept { return handle_ != 0; }
-    void Renderbuffer::reset_handle_no_gl() noexcept { handle_ = 0; generation_ = 0; }
-    unsigned int Renderbuffer::native_handle() const noexcept { return handle_; }
-    bool Renderbuffer::is_valid_for_current_generation() const noexcept
-    {
-        return handle_ != 0 && generation_ == metagl::GetContextGeneration();
-    }
-    std::uint64_t Renderbuffer::creation_generation() const noexcept { return generation_; }
 }

@@ -28,6 +28,7 @@ set_target_properties(easy-gl PROPERTIES
 
 target_sources(easy-gl
     PRIVATE
+        src/GenerationTracked.cpp
         src/Config.cpp
         src/ContextInfo.cpp
         src/Capabilities.cpp
@@ -74,6 +75,7 @@ target_sources(easy-gl
         include/easygl/Texture.hpp
         include/easygl/TransformFeedback.hpp
         include/easygl/VertexArray.hpp
+        include/easygl/detail/GenerationTracked.hpp
         include/easygl/detail/NonCopyable.hpp
         include/easygl/RecoverableResource.hpp
         include/easygl/ResourceRegistry.hpp

@@ -4,12 +4,13 @@
 #include <string>
 #include "easygl/Export.hpp"
 #include "easygl/Types.hpp"
+#include "easygl/detail/GenerationTracked.hpp"
 #include "easygl/detail/NonCopyable.hpp"
 
 namespace easygl
 {
 
-    class EASYGL_API Shader : public detail::NonCopyable
+    class EASYGL_API Shader : public detail::NonCopyable, public detail::GenerationTracked
     {
     public:
         explicit Shader(ShaderType type);
@@ -26,15 +27,9 @@ namespace easygl
         [[nodiscard]] std::string info_log() const;
         [[nodiscard]] ShaderType shader_type() const noexcept;
         [[nodiscard]] bool is_compiled() const noexcept;
-        [[nodiscard]] bool is_created() const noexcept;
-        [[nodiscard]] unsigned int native_handle() const noexcept;
-        [[nodiscard]] bool is_valid_for_current_generation() const noexcept;
-        [[nodiscard]] std::uint64_t creation_generation() const noexcept;
 
     private:
         ShaderType type_;
-        unsigned int handle_ = 0;
         bool compiled_ = false;
-        std::uint64_t generation_ = 0;
     };
 }

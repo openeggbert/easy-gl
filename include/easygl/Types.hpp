@@ -34,10 +34,10 @@ namespace easygl
     using TextureTarget        = metagl::TextureTarget;
     using TextureUnit          = metagl::TextureUnit;
     using TextureParameter     = metagl::TextureParameter;
-    using TextureFilter        = metagl::TextureFilter;
+    using SamplerParameter     = metagl::SamplerParameter;
     using TextureMinFilter     = metagl::TextureMinFilter;
     using TextureMagFilter     = metagl::TextureMagFilter;
-    using TextureWrap          = metagl::TextureWrap;
+    using BlitFilter           = metagl::BlitFilter;
     using TextureWrapMode      = metagl::TextureWrapMode;
     using TextureCompareMode   = metagl::TextureCompareMode;
     using TextureSwizzle       = metagl::TextureSwizzle;

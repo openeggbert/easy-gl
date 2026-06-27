@@ -12,9 +12,9 @@ namespace easygl
     }
 
     VertexArray::VertexArray(VertexArray&& other) noexcept
-        : handle_(other.handle_)
-        , generation_(other.generation_)
     {
+        handle_ = other.handle_;
+        generation_ = other.generation_;
         other.handle_ = 0;
         other.generation_ = 0;
     }
@@ -35,7 +35,9 @@ namespace easygl
     void VertexArray::create()
     {
         if (is_created()) return;
-        metagl::glGenVertexArrays(1, &handle_);
+        metagl::VertexArrayId vaid{};
+        metagl::glGenVertexArrays(1, &vaid);
+        handle_ = vaid.value;
         generation_ = metagl::GetContextGeneration();
     }
 
@@ -43,19 +45,20 @@ namespace easygl
     {
         if (is_created())
         {
-            metagl::glDeleteVertexArrays(1, &handle_);
+            metagl::VertexArrayId vaid{handle_};
+            metagl::glDeleteVertexArrays(1, &vaid);
             handle_ = 0;
         }
     }
 
     void VertexArray::bind() const
     {
-        metagl::glBindVertexArray(handle_);
+        metagl::glBindVertexArray(metagl::VertexArrayId{handle_});
     }
 
     void VertexArray::unbind() const
     {
-        metagl::glBindVertexArray(0);
+        metagl::glBindVertexArray(metagl::VertexArrayId{0});
     }
 
     void VertexArray::set_attribute(const VertexAttribute& attribute)
@@ -75,38 +78,30 @@ namespace easygl
     void VertexArray::set_attribute_pointer(unsigned int index, int size, DataType type,
                                              bool normalized, std::size_t stride, const void* pointer)
     {
-        metagl::glVertexAttribPointer(index, size, type, normalized ? 1 : 0,
+        metagl::glVertexAttribPointer(metagl::AttribLocation{index}, size, type, normalized ? 1 : 0,
                                       static_cast<metagl::GLsizei>(stride), pointer);
     }
 
     void VertexArray::set_attribute_i_pointer(unsigned int index, int size, DataType type,
                                                std::size_t stride, const void* pointer)
     {
-        metagl::glVertexAttribIPointer(index, size, type,
+        metagl::glVertexAttribIPointer(metagl::AttribLocation{index}, size, type,
                                        static_cast<metagl::GLsizei>(stride), pointer);
     }
 
     void VertexArray::enable_attribute(unsigned int index)
     {
-        metagl::glEnableVertexAttribArray(index);
+        metagl::glEnableVertexAttribArray(metagl::AttribLocation{index});
     }
 
     void VertexArray::disable_attribute(unsigned int index)
     {
-        metagl::glDisableVertexAttribArray(index);
+        metagl::glDisableVertexAttribArray(metagl::AttribLocation{index});
     }
 
     void VertexArray::set_attribute_divisor(unsigned int index, unsigned int divisor)
     {
-        metagl::glVertexAttribDivisor(index, divisor);
+        metagl::glVertexAttribDivisor(metagl::AttribLocation{index}, divisor);
     }
 
-    bool VertexArray::is_created() const noexcept { return handle_ != 0; }
-    void VertexArray::reset_handle_no_gl() noexcept { handle_ = 0; generation_ = 0; }
-    unsigned int VertexArray::native_handle() const noexcept { return handle_; }
-    bool VertexArray::is_valid_for_current_generation() const noexcept
-    {
-        return handle_ != 0 && generation_ == metagl::GetContextGeneration();
-    }
-    std::uint64_t VertexArray::creation_generation() const noexcept { return generation_; }
 }

@@ -5,13 +5,14 @@
 #include <string_view>
 #include "easygl/Export.hpp"
 #include "easygl/Types.hpp"
+#include "easygl/detail/GenerationTracked.hpp"
 #include "easygl/detail/NonCopyable.hpp"
 
 namespace easygl
 {
     class Program;
 
-    class EASYGL_API TransformFeedback : public detail::NonCopyable
+    class EASYGL_API TransformFeedback : public detail::NonCopyable, public detail::GenerationTracked
     {
     public:
         TransformFeedback();
@@ -34,15 +35,5 @@ namespace easygl
                                   std::span<const char* const> varyings,
                                   TransformFeedbackBufferMode buffer_mode);
 
-        [[nodiscard]] bool is_created() const noexcept;
-        [[nodiscard]] unsigned int native_handle() const noexcept;
-        [[nodiscard]] bool is_valid_for_current_generation() const noexcept;
-        [[nodiscard]] std::uint64_t creation_generation() const noexcept;
-
-        void reset_handle_no_gl() noexcept;
-
-    private:
-        unsigned int handle_ = 0;
-        std::uint64_t generation_ = 0;
     };
 }
