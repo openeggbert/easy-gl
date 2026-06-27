@@ -135,6 +135,12 @@ namespace easygl
         [[nodiscard]] GraphicsResetStatus get_graphics_reset_status();
         [[nodiscard]] bool is_enabled(Capability cap) const;
 
+        // ---- State getters ----
+        void get_blend_func(BlendFactor& src, BlendFactor& dst) const;
+        [[nodiscard]] CompareFunc get_depth_func() const;
+        [[nodiscard]] CullFace get_cull_face() const;
+        void get_color_mask(bool& r, bool& g, bool& b, bool& a) const;
+
     private:
         Config config_{};
         Capabilities capabilities_{};

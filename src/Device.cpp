@@ -478,4 +478,37 @@ namespace easygl
     {
         return metagl::glIsEnabled(cap);
     }
+
+    void Device::get_blend_func(BlendFactor& src, BlendFactor& dst) const
+    {
+        GLint s = 0, d = 0;
+        metagl::glGetIntegerv(metagl::GetParameter::BlendSrcRgb, &s);
+        metagl::glGetIntegerv(metagl::GetParameter::BlendDstRgb, &d);
+        src = static_cast<BlendFactor>(s);
+        dst = static_cast<BlendFactor>(d);
+    }
+
+    CompareFunc Device::get_depth_func() const
+    {
+        GLint v = 0;
+        metagl::glGetIntegerv(metagl::GetParameter::DepthFunc, &v);
+        return static_cast<CompareFunc>(v);
+    }
+
+    CullFace Device::get_cull_face() const
+    {
+        GLint v = 0;
+        metagl::glGetIntegerv(metagl::GetParameter::CullFaceMode, &v);
+        return static_cast<CullFace>(v);
+    }
+
+    void Device::get_color_mask(bool& r, bool& g, bool& b, bool& a) const
+    {
+        GLboolean mask[4] = {};
+        metagl::glGetBooleanv(metagl::GetParameter::ColorWritemask, mask);
+        r = mask[0] != GL_FALSE;
+        g = mask[1] != GL_FALSE;
+        b = mask[2] != GL_FALSE;
+        a = mask[3] != GL_FALSE;
+    }
 }
