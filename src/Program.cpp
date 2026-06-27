@@ -200,6 +200,34 @@ namespace easygl
         metagl::glUseProgram(metagl::ProgramId{handle_});
     }
 
+    void Program::set_parameter(ProgramParameter pname, int value)
+    {
+        if (!is_created()) create();
+        metagl::glProgramParameteri(metagl::ProgramId{handle_}, pname, value);
+    }
+
+    Program Program::create_separable(ShaderType type, const std::string& source)
+    {
+        Shader shader(type);
+        shader.compile_from_source(source);
+        if (!shader.is_compiled())
+            throw Exception("Shader compilation failed:\n" + shader.info_log());
+
+        Program p;
+        p.create();
+        p.set_parameter(metagl::ProgramParameter::Separable, GL_TRUE);
+        p.attach_owned(shader);
+        p.link();
+
+        if (!p.is_linked())
+        {
+            const auto log = p.info_log();
+            p.destroy();
+            throw Exception("Separable program linking failed:\n" + log);
+        }
+        return p;
+    }
+
     void Program::validate() const
     {
         if (is_created())

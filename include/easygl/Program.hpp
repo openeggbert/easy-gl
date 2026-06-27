@@ -39,6 +39,9 @@ namespace easygl
                                                    const std::string& fragment_source);
         void use() const;
         void validate() const;
+        void set_parameter(ProgramParameter pname, int value);
+
+        [[nodiscard]] static Program create_separable(ShaderType type, const std::string& source);
 
         [[nodiscard]] std::string info_log() const;
 

@@ -52,6 +52,7 @@ namespace easygl
     // Shaders / Programs
     using ShaderType           = metagl::ShaderType;
     using ShaderStageMask      = metagl::ShaderStageMask;
+    using ProgramParameter     = metagl::ProgramParameter;
 
     // Framebuffers / Renderbuffers
     using FramebufferTarget         = metagl::FramebufferTarget;
