@@ -62,5 +62,13 @@ namespace easygl
         void bind_image(unsigned int unit, int level, bool layered, int layer,
                         ImageAccess access, InternalFormat format);
 
+        static Texture create_2d(int width, int height,
+                                  InternalFormat internal_format = InternalFormat::Rgba8,
+                                  bool generate_mipmaps = false);
+
+        static Texture create_2d_rgba8(int width, int height,
+                                        const void* pixels,
+                                        bool generate_mipmaps = false);
+
     };
 }

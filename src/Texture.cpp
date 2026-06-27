@@ -158,4 +158,26 @@ namespace easygl
         metagl::glBindImageTexture(metagl::ImageUnit{unit}, metagl::TextureId{handle_}, level, layered ? 1 : 0, layer, access, format);
     }
 
+    Texture Texture::create_2d(int width, int height, InternalFormat internal_format, bool generate_mipmaps)
+    {
+        Texture tex;
+        tex.create();
+        tex.set_storage_2d(TextureTarget::Texture2D,
+                           generate_mipmaps ? 4 : 1,
+                           internal_format, width, height);
+        if (generate_mipmaps)
+            tex.generate_mipmap(TextureTarget::Texture2D);
+        return tex;
+    }
+
+    Texture Texture::create_2d_rgba8(int width, int height, const void* pixels, bool generate_mipmaps)
+    {
+        Texture tex;
+        tex.create();
+        tex.set_image_2d(TextureTarget::Texture2D, 0, width, height, pixels);
+        if (generate_mipmaps)
+            tex.generate_mipmap(TextureTarget::Texture2D);
+        return tex;
+    }
+
 }

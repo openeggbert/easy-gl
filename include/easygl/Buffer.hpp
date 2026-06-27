@@ -65,5 +65,34 @@ namespace easygl
                                    std::ptrdiff_t read_offset, std::ptrdiff_t write_offset,
                                    std::ptrdiff_t size);
 
+        template<typename T>
+        static Buffer create_vertex_buffer(std::span<const T> data,
+                                           BufferUsage usage = BufferUsage::StaticDraw)
+        {
+            Buffer buf;
+            buf.create();
+            buf.set_data(BufferTarget::Array, data, usage);
+            return buf;
+        }
+
+        template<typename T>
+        static Buffer create_index_buffer(std::span<const T> data,
+                                          BufferUsage usage = BufferUsage::StaticDraw)
+        {
+            Buffer buf;
+            buf.create();
+            buf.set_data(BufferTarget::ElementArray, data, usage);
+            return buf;
+        }
+
+        static Buffer create_uniform_buffer(std::size_t size_in_bytes,
+                                            BufferUsage usage = BufferUsage::DynamicDraw)
+        {
+            Buffer buf;
+            buf.create();
+            buf.set_data(BufferTarget::Uniform, nullptr, size_in_bytes, usage);
+            return buf;
+        }
+
     };
 }
