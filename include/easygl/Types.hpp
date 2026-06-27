@@ -25,6 +25,7 @@ namespace easygl
     // Buffer
     using BufferTarget         = metagl::BufferTarget;
     using BufferUsage          = metagl::BufferUsage;
+    using BufferParameter      = metagl::BufferParameter;
     using MapBufferAccessMask  = metagl::MapBufferAccessMask;
 
     // Vertex arrays

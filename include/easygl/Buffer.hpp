@@ -63,6 +63,10 @@ namespace easygl
         void flush_mapped_range(BufferTarget target, std::ptrdiff_t offset, std::ptrdiff_t length);
         bool unmap(BufferTarget target);
 
+        [[nodiscard]] int   get_parameter(BufferTarget target, BufferParameter pname) const;
+        [[nodiscard]] i64   get_parameter64(BufferTarget target, BufferParameter pname) const;
+        [[nodiscard]] void* get_pointer(BufferTarget target) const;
+
         static void copy_sub_data(BufferTarget read_target, BufferTarget write_target,
                                    std::ptrdiff_t read_offset, std::ptrdiff_t write_offset,
                                    std::ptrdiff_t size);

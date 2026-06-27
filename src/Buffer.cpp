@@ -110,6 +110,27 @@ namespace easygl
         return metagl::glUnmapBuffer(target) != 0;
     }
 
+    int Buffer::get_parameter(BufferTarget target, BufferParameter pname) const
+    {
+        int value = 0;
+        metagl::glGetBufferParameteriv(target, pname, &value);
+        return value;
+    }
+
+    i64 Buffer::get_parameter64(BufferTarget target, BufferParameter pname) const
+    {
+        GLint64 value = 0;
+        metagl::glGetBufferParameteri64v(target, pname, &value);
+        return static_cast<i64>(value);
+    }
+
+    void* Buffer::get_pointer(BufferTarget target) const
+    {
+        void* ptr = nullptr;
+        metagl::glGetBufferPointerv(target, metagl::BufferPointerParameter::MapPointer, &ptr);
+        return ptr;
+    }
+
     void Buffer::copy_sub_data(BufferTarget read_target, BufferTarget write_target,
                                 std::ptrdiff_t read_offset, std::ptrdiff_t write_offset,
                                 std::ptrdiff_t size)
