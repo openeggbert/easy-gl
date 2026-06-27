@@ -59,10 +59,15 @@ namespace easygl
         // ---- Blend ----
         void set_blend_enabled(bool enabled);
         void set_blend_func(BlendFactor sfactor, BlendFactor dfactor);
+        void set_blend_func(unsigned int index, BlendFactor sfactor, BlendFactor dfactor);
         void set_blend_func_separate(BlendFactor src_rgb, BlendFactor dst_rgb,
                                      BlendFactor src_alpha, BlendFactor dst_alpha);
+        void set_blend_func_separate(unsigned int index, BlendFactor src_rgb, BlendFactor dst_rgb,
+                                     BlendFactor src_alpha, BlendFactor dst_alpha);
         void set_blend_equation(BlendEquation mode);
+        void set_blend_equation(unsigned int index, BlendEquation mode);
         void set_blend_equation_separate(BlendEquation mode_rgb, BlendEquation mode_alpha);
+        void set_blend_equation_separate(unsigned int index, BlendEquation mode_rgb, BlendEquation mode_alpha);
         void set_blend_color(float r, float g, float b, float a);
 
         // ---- Depth ----
@@ -92,6 +97,11 @@ namespace easygl
 
         // ---- Color mask ----
         void set_color_mask(bool r, bool g, bool b, bool a);
+        void set_color_mask(unsigned int index, bool r, bool g, bool b, bool a);
+
+        // ---- Indexed enable/disable ----
+        void enable(Capability cap, unsigned int index);
+        void disable(Capability cap, unsigned int index);
 
         // ---- Sample ----
         void set_sample_coverage(float value, bool invert);

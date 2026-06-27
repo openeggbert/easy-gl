@@ -232,6 +232,27 @@ namespace easygl
         metagl::glBlendColor(r, g, b, a);
     }
 
+    void Device::set_blend_func(unsigned int index, BlendFactor sfactor, BlendFactor dfactor)
+    {
+        metagl::glBlendFunci(index, sfactor, dfactor);
+    }
+
+    void Device::set_blend_func_separate(unsigned int index, BlendFactor src_rgb, BlendFactor dst_rgb,
+                                          BlendFactor src_alpha, BlendFactor dst_alpha)
+    {
+        metagl::glBlendFuncSeparatei(index, src_rgb, dst_rgb, src_alpha, dst_alpha);
+    }
+
+    void Device::set_blend_equation(unsigned int index, BlendEquation mode)
+    {
+        metagl::glBlendEquationi(index, mode);
+    }
+
+    void Device::set_blend_equation_separate(unsigned int index, BlendEquation mode_rgb, BlendEquation mode_alpha)
+    {
+        metagl::glBlendEquationSeparatei(index, mode_rgb, mode_alpha);
+    }
+
     // ---- Depth ----
 
     void Device::set_depth_test_enabled(bool enabled)
@@ -327,6 +348,22 @@ namespace easygl
     void Device::set_color_mask(bool r, bool g, bool b, bool a)
     {
         metagl::glColorMask(r ? 1 : 0, g ? 1 : 0, b ? 1 : 0, a ? 1 : 0);
+    }
+
+    void Device::set_color_mask(unsigned int index, bool r, bool g, bool b, bool a)
+    {
+        metagl::glColorMaski(index, r ? GL_TRUE : GL_FALSE, g ? GL_TRUE : GL_FALSE,
+                              b ? GL_TRUE : GL_FALSE, a ? GL_TRUE : GL_FALSE);
+    }
+
+    void Device::enable(Capability cap, unsigned int index)
+    {
+        metagl::glEnablei(cap, index);
+    }
+
+    void Device::disable(Capability cap, unsigned int index)
+    {
+        metagl::glDisablei(cap, index);
     }
 
     // ---- Sample ----
