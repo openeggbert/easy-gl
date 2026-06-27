@@ -40,6 +40,7 @@ namespace easygl
         void use() const;
         void validate() const;
         void set_parameter(ProgramParameter pname, int value);
+        void load_binary(ProgramBinaryFormat format, const void* data, std::size_t length);
 
         [[nodiscard]] static Program create_separable(ShaderType type, const std::string& source);
 

@@ -206,6 +206,16 @@ namespace easygl
         metagl::glProgramParameteri(metagl::ProgramId{handle_}, pname, value);
     }
 
+    void Program::load_binary(ProgramBinaryFormat format, const void* data, std::size_t length)
+    {
+        if (!is_created()) create();
+        metagl::glProgramBinary(metagl::ProgramId{handle_}, format, data,
+                                 static_cast<GLsizei>(length));
+        int status = 0;
+        metagl::glGetProgramiv(metagl::ProgramId{handle_}, metagl::ProgramParameter::LinkStatus, &status);
+        linked_ = (status != 0);
+    }
+
     Program Program::create_separable(ShaderType type, const std::string& source)
     {
         Shader shader(type);
