@@ -68,6 +68,16 @@ namespace easygl
         compiled_ = (status != 0);
     }
 
+    void Shader::load_binary(ShaderBinaryFormat format, const void* data, std::size_t length)
+    {
+        if (!is_created()) create();
+        metagl::ShaderId sid{handle_};
+        metagl::glShaderBinary(1, &sid, format, data, static_cast<GLsizei>(length));
+        int status = 0;
+        metagl::glGetShaderiv(sid, metagl::ShaderParameter::CompileStatus, &status);
+        compiled_ = (status != 0);
+    }
+
     unsigned int Shader::release_native_handle() noexcept
     {
         const unsigned int released = handle_;

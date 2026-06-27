@@ -56,6 +56,7 @@ namespace easygl
     using ShaderStageMask         = metagl::ShaderStageMask;
     using ProgramParameter        = metagl::ProgramParameter;
     using ProgramBinaryFormat     = metagl::ProgramBinaryFormat;
+    using ShaderBinaryFormat      = metagl::ShaderBinaryFormat;
 
     // Framebuffers / Renderbuffers
     using FramebufferTarget         = metagl::FramebufferTarget;

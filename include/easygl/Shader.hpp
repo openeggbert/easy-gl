@@ -22,6 +22,7 @@ namespace easygl
         void create();
         void destroy() noexcept;
         void compile_from_source(const std::string& source);
+        void load_binary(ShaderBinaryFormat format, const void* data, std::size_t length);
         [[nodiscard]] unsigned int release_native_handle() noexcept;
 
         [[nodiscard]] std::string info_log() const;
