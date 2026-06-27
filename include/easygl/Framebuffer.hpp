@@ -44,5 +44,7 @@ namespace easygl
                          int dst_x0, int dst_y0, int dst_x1, int dst_y1,
                          ClearBufferBit mask, BlitFilter filter);
 
+        static Framebuffer create_color_depth(const Texture& color, const Renderbuffer& depth);
+
     };
 }

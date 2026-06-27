@@ -108,6 +108,19 @@ namespace easygl
         metagl::glInvalidateFramebuffer(target, static_cast<GLsizei>(attachments.size()), attachments.data());
     }
 
+    Framebuffer Framebuffer::create_color_depth(const Texture& color, const Renderbuffer& depth)
+    {
+        Framebuffer fb;
+        fb.create();
+        fb.bind();
+        fb.attach_texture_2d(FramebufferTarget::Framebuffer,
+                              metagl::to_framebuffer_attachment(metagl::ColorAttachment::Color0),
+                              TextureTarget::Texture2D, color, 0);
+        fb.attach_renderbuffer(FramebufferTarget::Framebuffer,
+                                FramebufferAttachment::Depth, depth);
+        return fb;
+    }
+
     void Framebuffer::blit(int src_x0, int src_y0, int src_x1, int src_y1,
                             int dst_x0, int dst_y0, int dst_x1, int dst_y1,
                             ClearBufferBit mask, BlitFilter filter)
