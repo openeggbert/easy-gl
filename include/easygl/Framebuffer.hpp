@@ -25,6 +25,8 @@ namespace easygl
         void bind(FramebufferTarget target = FramebufferTarget::Framebuffer) const;
         static void unbind(FramebufferTarget target = FramebufferTarget::Framebuffer);
 
+        void attach_texture(FramebufferTarget target, FramebufferAttachment attachment,
+                             const Texture& texture, int level);
         void attach_texture_2d(FramebufferTarget target, FramebufferAttachment attachment,
                                 TextureTarget tex_target, const Texture& texture, int level);
         void attach_texture_layer(FramebufferTarget target, FramebufferAttachment attachment,

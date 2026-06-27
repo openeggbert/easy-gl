@@ -61,6 +61,13 @@ namespace easygl
         metagl::glBindFramebuffer(target, metagl::FramebufferId{0});
     }
 
+    void Framebuffer::attach_texture(FramebufferTarget target, FramebufferAttachment attachment,
+                                      const Texture& texture, int level)
+    {
+        metagl::glFramebufferTexture(target, attachment,
+                                      metagl::TextureId{texture.native_handle()}, level);
+    }
+
     void Framebuffer::attach_texture_2d(FramebufferTarget target, FramebufferAttachment attachment,
                                          TextureTarget tex_target, const Texture& texture, int level)
     {
