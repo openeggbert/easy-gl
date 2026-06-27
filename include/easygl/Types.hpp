@@ -59,6 +59,7 @@ namespace easygl
     using FramebufferAttachment     = metagl::FramebufferAttachment;
     using FramebufferStatus         = metagl::FramebufferStatus;
     using RenderbufferTarget        = metagl::RenderbufferTarget;
+    using RenderbufferParameter     = metagl::RenderbufferParameter;
 
     // Render state
     using PrimitiveType        = metagl::PrimitiveType;

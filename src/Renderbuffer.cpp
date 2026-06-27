@@ -71,5 +71,12 @@ namespace easygl
                                                   samples, internal_format, width, height);
     }
 
+    int Renderbuffer::get_parameter(RenderbufferParameter pname) const
+    {
+        int value = 0;
+        metagl::glGetRenderbufferParameteriv(metagl::RenderbufferTarget::Renderbuffer, pname, &value);
+        return value;
+    }
+
 }
 namespace easygl { bool Renderbuffer::is_valid_gl_object() const { return is_created() && metagl::glIsRenderbuffer(metagl::RenderbufferId{handle_}); } }

@@ -27,5 +27,7 @@ namespace easygl
         void set_storage(InternalFormat internal_format, int width, int height);
         void set_storage_multisample(int samples, InternalFormat internal_format, int width, int height);
 
+        [[nodiscard]] int get_parameter(RenderbufferParameter pname) const;
+
     };
 }
