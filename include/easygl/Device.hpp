@@ -120,6 +120,9 @@ namespace easygl
         void set_pixel_store(PixelStoreParam pname, int value);
         void read_pixels(int x, int y, int width, int height,
                          PixelFormat format, PixelType type, void* pixels);
+        void read_pixels_robust(int x, int y, int width, int height,
+                                 PixelFormat format, PixelType type,
+                                 std::size_t buf_size, void* pixels);
         void set_read_buffer(ReadBuffer src);
         void set_draw_buffers(std::span<const DrawBuffer> buffers);
 

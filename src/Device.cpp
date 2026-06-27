@@ -413,6 +413,14 @@ namespace easygl
         metagl::glReadPixels(x, y, width, height, format, type, pixels);
     }
 
+    void Device::read_pixels_robust(int x, int y, int width, int height,
+                                     PixelFormat format, PixelType type,
+                                     std::size_t buf_size, void* pixels)
+    {
+        metagl::glReadnPixels(x, y, width, height, format, type,
+                               static_cast<GLsizei>(buf_size), pixels);
+    }
+
     void Device::set_read_buffer(ReadBuffer src)
     {
         metagl::glReadBuffer(src);
