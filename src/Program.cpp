@@ -443,6 +443,21 @@ namespace easygl
     void Program::set_program_uniform_matrix4x3(int location, const float* data, bool transpose) const
         { metagl::glProgramUniformMatrix4x3fv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data); }
 
+    void Program::get_uniform_fv(int location, float* out) const
+    {
+        metagl::glGetUniformfv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, out);
+    }
+
+    void Program::get_uniform_iv(int location, int* out) const
+    {
+        metagl::glGetUniformiv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, out);
+    }
+
+    void Program::get_uniform_uiv(int location, unsigned int* out) const
+    {
+        metagl::glGetUniformuiv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, out);
+    }
+
     std::optional<unsigned int> Program::uniform_block_index(const std::string& name) const
     {
         if (!is_created()) return std::nullopt;
