@@ -155,7 +155,7 @@ namespace easygl
     void Texture::bind_image(unsigned int unit, int level, bool layered, int layer,
                               ImageAccess access, InternalFormat format)
     {
-        metagl::glBindImageTexture(unit, metagl::TextureId{handle_}, level, layered ? 1 : 0, layer, access, format);
+        metagl::glBindImageTexture(metagl::ImageUnit{unit}, metagl::TextureId{handle_}, level, layered ? 1 : 0, layer, access, format);
     }
 
 }

@@ -33,6 +33,7 @@ namespace easygl
     // Textures
     using TextureTarget        = metagl::TextureTarget;
     using TextureUnit          = metagl::TextureUnit;
+    using ImageUnit            = metagl::ImageUnit;
     using TextureParameter     = metagl::TextureParameter;
     using SamplerParameter     = metagl::SamplerParameter;
     using TextureMinFilter     = metagl::TextureMinFilter;
