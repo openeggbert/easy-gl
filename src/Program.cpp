@@ -257,6 +257,34 @@ namespace easygl
         }
     }
 
+    void Program::set_uniform_iv(int location, std::span<const int> values, int components)
+    {
+        const auto loc = metagl::UniformLocation{location};
+        const auto count = static_cast<GLsizei>(values.size() / static_cast<std::size_t>(components));
+        switch (components)
+        {
+            case 1: metagl::glUniform1iv(loc, count, values.data()); break;
+            case 2: metagl::glUniform2iv(loc, count, values.data()); break;
+            case 3: metagl::glUniform3iv(loc, count, values.data()); break;
+            case 4: metagl::glUniform4iv(loc, count, values.data()); break;
+            default: break;
+        }
+    }
+
+    void Program::set_uniform_uiv(int location, std::span<const unsigned int> values, int components)
+    {
+        const auto loc = metagl::UniformLocation{location};
+        const auto count = static_cast<GLsizei>(values.size() / static_cast<std::size_t>(components));
+        switch (components)
+        {
+            case 1: metagl::glUniform1uiv(loc, count, values.data()); break;
+            case 2: metagl::glUniform2uiv(loc, count, values.data()); break;
+            case 3: metagl::glUniform3uiv(loc, count, values.data()); break;
+            case 4: metagl::glUniform4uiv(loc, count, values.data()); break;
+            default: break;
+        }
+    }
+
     // int
     void Program::set_uniform(int location, int value)                { metagl::glUniform1i(metagl::UniformLocation{location}, value); }
     void Program::set_uniform(int location, int x, int y)             { metagl::glUniform2i(metagl::UniformLocation{location}, x, y); }

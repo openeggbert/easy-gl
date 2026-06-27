@@ -55,6 +55,8 @@ namespace easygl
         void set_uniform(int location, float x, float y, float z);
         void set_uniform(int location, float x, float y, float z, float w);
         void set_uniform_fv(int location, std::span<const float> values, int components = 1);
+        void set_uniform_iv(int location, std::span<const int> values, int components = 1);
+        void set_uniform_uiv(int location, std::span<const unsigned int> values, int components = 1);
 
         // int uniforms
         void set_uniform(int location, int value);
