@@ -477,6 +477,11 @@ namespace easygl
         metagl::glDispatchCompute(num_groups_x, num_groups_y, num_groups_z);
     }
 
+    void Device::dispatch_compute_indirect(std::ptrdiff_t indirect)
+    {
+        metagl::glDispatchComputeIndirect(static_cast<GLintptr>(indirect));
+    }
+
     void Device::memory_barrier(MemoryBarrierMask barriers)
     {
         metagl::glMemoryBarrier(barriers);

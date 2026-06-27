@@ -139,6 +139,7 @@ namespace easygl
 
         // ---- Compute ----
         void dispatch_compute(unsigned int num_groups_x, unsigned int num_groups_y, unsigned int num_groups_z);
+        void dispatch_compute_indirect(std::ptrdiff_t indirect);
         void memory_barrier(MemoryBarrierMask barriers);
         void memory_barrier_by_region(MemoryBarrierMask barriers);
 
