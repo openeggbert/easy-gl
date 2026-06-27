@@ -51,6 +51,14 @@ namespace easygl
         metagl::glWaitSync(sync_, metagl::SyncFlag::None, timeout_ns);
     }
 
+    int Sync::get_parameter(SyncParameter pname) const
+    {
+        GLint value = 0;
+        GLsizei length = 0;
+        metagl::glGetSynciv(sync_, pname, 1, &length, &value);
+        return value;
+    }
+
     bool Sync::is_created() const noexcept { return sync_ != nullptr; }
     void Sync::reset_handle_no_gl() noexcept { sync_ = nullptr; }
     metagl::GLsync Sync::native_handle() const noexcept { return sync_; }

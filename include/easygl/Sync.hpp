@@ -22,6 +22,7 @@ namespace easygl
         [[nodiscard]] SyncWaitResult client_wait(SyncFlushMask flags, std::uint64_t timeout_ns);
         void server_wait(std::uint64_t timeout_ns);
 
+        [[nodiscard]] int get_parameter(SyncParameter pname) const;
         [[nodiscard]] bool is_created() const noexcept;
         [[nodiscard]] metagl::GLsync native_handle() const noexcept;
 

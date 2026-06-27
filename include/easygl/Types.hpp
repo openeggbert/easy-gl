@@ -91,6 +91,7 @@ namespace easygl
     using SyncCondition        = metagl::SyncCondition;
     using SyncFlushMask        = metagl::SyncFlushMask;
     using SyncWaitResult       = metagl::SyncWaitResult;
+    using SyncParameter        = metagl::SyncParameter;
 
     // Compute
     using MemoryBarrierMask    = metagl::MemoryBarrierMask;

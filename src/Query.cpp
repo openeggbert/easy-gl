@@ -73,5 +73,12 @@ namespace easygl
         return value;
     }
 
+    u64 Query::result_u64() const
+    {
+        unsigned int value = 0;
+        metagl::glGetQueryObjectuiv(metagl::QueryId{handle_}, metagl::QueryObjectParameter::Result, &value);
+        return static_cast<u64>(value);
+    }
+
 }
 namespace easygl { bool Query::is_valid_gl_object() const { return is_created() && metagl::glIsQuery(metagl::QueryId{handle_}); } }

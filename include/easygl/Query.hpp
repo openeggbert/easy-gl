@@ -27,6 +27,7 @@ namespace easygl
 
         [[nodiscard]] bool is_result_available() const;
         [[nodiscard]] unsigned int result() const;
+        [[nodiscard]] u64 result_u64() const;
 
     };
 }
