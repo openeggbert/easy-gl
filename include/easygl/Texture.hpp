@@ -68,6 +68,11 @@ namespace easygl
                                      int width, int height, int depth,
                                      std::size_t image_size, const void* data);
 
+        void set_compressed_sub_image_2d(TextureTarget target, int level,
+                                          int x, int y, int width, int height,
+                                          CompressedInternalFormat internal_format,
+                                          std::size_t image_size, const void* data);
+
         void generate_mipmap(TextureTarget target);
 
         void set_buffer(TextureTarget target, InternalFormat internal_format, const Buffer& buffer);

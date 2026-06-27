@@ -192,6 +192,15 @@ namespace easygl
                                        static_cast<GLsizei>(image_size), data);
     }
 
+    void Texture::set_compressed_sub_image_2d(TextureTarget target, int level,
+                                               int x, int y, int width, int height,
+                                               CompressedInternalFormat internal_format,
+                                               std::size_t image_size, const void* data)
+    {
+        metagl::glCompressedTexSubImage2D(target, level, x, y, width, height,
+                                           internal_format, static_cast<GLsizei>(image_size), data);
+    }
+
     void Texture::generate_mipmap(TextureTarget target)
     {
         metagl::glGenerateMipmap(target);
