@@ -138,8 +138,18 @@ namespace easygl
         [[nodiscard]] ErrorCode get_error();
         [[nodiscard]] GraphicsResetStatus get_graphics_reset_status();
         [[nodiscard]] bool is_enabled(Capability cap) const;
+        [[nodiscard]] bool is_enabled(Capability cap, unsigned int index) const;
 
-        // ---- State getters ----
+        // ---- Generic state getters ----
+        [[nodiscard]] bool    get_boolean(GetParameter pname) const;
+        [[nodiscard]] float   get_float(GetParameter pname) const;
+        [[nodiscard]] int     get_integer(GetParameter pname) const;
+        [[nodiscard]] i64     get_integer64(GetParameter pname) const;
+        [[nodiscard]] int     get_integeri(GetParameter pname, unsigned int index) const;
+        [[nodiscard]] i64     get_integer64i(GetParameter pname, unsigned int index) const;
+        [[nodiscard]] bool    get_booleani(GetParameter pname, unsigned int index) const;
+
+        // ---- Named state getters ----
         void get_blend_func(BlendFactor& src, BlendFactor& dst) const;
         [[nodiscard]] CompareFunc get_depth_func() const;
         [[nodiscard]] CullFace get_cull_face() const;

@@ -495,6 +495,60 @@ namespace easygl
         return metagl::glIsEnabled(cap);
     }
 
+    bool Device::is_enabled(Capability cap, unsigned int index) const
+    {
+        return metagl::glIsEnabledi(cap, index);
+    }
+
+    bool Device::get_boolean(GetParameter pname) const
+    {
+        GLboolean v = GL_FALSE;
+        metagl::glGetBooleanv(pname, &v);
+        return v != GL_FALSE;
+    }
+
+    float Device::get_float(GetParameter pname) const
+    {
+        GLfloat v = 0.0f;
+        metagl::glGetFloatv(pname, &v);
+        return v;
+    }
+
+    int Device::get_integer(GetParameter pname) const
+    {
+        GLint v = 0;
+        metagl::glGetIntegerv(pname, &v);
+        return v;
+    }
+
+    i64 Device::get_integer64(GetParameter pname) const
+    {
+        GLint64 v = 0;
+        metagl::glGetInteger64v(pname, &v);
+        return static_cast<i64>(v);
+    }
+
+    int Device::get_integeri(GetParameter pname, unsigned int index) const
+    {
+        GLint v = 0;
+        metagl::glGetIntegeri_v(pname, index, &v);
+        return v;
+    }
+
+    i64 Device::get_integer64i(GetParameter pname, unsigned int index) const
+    {
+        GLint64 v = 0;
+        metagl::glGetInteger64i_v(pname, index, &v);
+        return static_cast<i64>(v);
+    }
+
+    bool Device::get_booleani(GetParameter pname, unsigned int index) const
+    {
+        GLboolean v = GL_FALSE;
+        metagl::glGetBooleani_v(pname, index, &v);
+        return v != GL_FALSE;
+    }
+
     void Device::get_blend_func(BlendFactor& src, BlendFactor& dst) const
     {
         GLint s = 0, d = 0;
