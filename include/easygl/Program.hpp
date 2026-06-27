@@ -31,6 +31,12 @@ namespace easygl
         void detach(const Shader& shader);
         void link();
         void compile_from_sources(const std::string& vertex_source, const std::string& fragment_source);
+
+        [[nodiscard]] static Program from_sources(const std::string& vertex_source,
+                                                   const std::string& fragment_source);
+        [[nodiscard]] static Program from_sources(const std::string& vertex_source,
+                                                   const std::string& geometry_source,
+                                                   const std::string& fragment_source);
         void use() const;
         void validate() const;
 

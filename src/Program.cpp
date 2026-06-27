@@ -126,6 +126,49 @@ namespace easygl
         }
     }
 
+    Program Program::from_sources(const std::string& vertex_source, const std::string& fragment_source)
+    {
+        Program p;
+        p.compile_from_sources(vertex_source, fragment_source);
+        return p;
+    }
+
+    Program Program::from_sources(const std::string& vertex_source,
+                                   const std::string& geometry_source,
+                                   const std::string& fragment_source)
+    {
+        Program p;
+        p.destroy();
+
+        Shader vertex_shader(metagl::ShaderType::Vertex);
+        vertex_shader.compile_from_source(vertex_source);
+        if (!vertex_shader.is_compiled())
+            throw Exception("Vertex shader compilation failed:\n" + vertex_shader.info_log());
+
+        Shader geometry_shader(metagl::ShaderType::Geometry);
+        geometry_shader.compile_from_source(geometry_source);
+        if (!geometry_shader.is_compiled())
+            throw Exception("Geometry shader compilation failed:\n" + geometry_shader.info_log());
+
+        Shader fragment_shader(metagl::ShaderType::Fragment);
+        fragment_shader.compile_from_source(fragment_source);
+        if (!fragment_shader.is_compiled())
+            throw Exception("Fragment shader compilation failed:\n" + fragment_shader.info_log());
+
+        p.attach_owned(vertex_shader);
+        p.attach_owned(geometry_shader);
+        p.attach_owned(fragment_shader);
+        p.link();
+
+        if (!p.is_linked())
+        {
+            const auto log = p.info_log();
+            p.destroy();
+            throw Exception("Program linking failed:\n" + log);
+        }
+        return p;
+    }
+
     void Program::compile_from_sources(const std::string& vertex_source, const std::string& fragment_source)
     {
         destroy();
