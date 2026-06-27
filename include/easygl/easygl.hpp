@@ -13,6 +13,7 @@
 #include "easygl/Query.hpp"
 #include "easygl/RecoverableResource.hpp"
 #include "easygl/Renderbuffer.hpp"
+#include "easygl/ResourceRegistration.hpp"
 #include "easygl/ResourceRegistry.hpp"
 #include "easygl/Sampler.hpp"
 #include "easygl/ScopedBind.hpp"
