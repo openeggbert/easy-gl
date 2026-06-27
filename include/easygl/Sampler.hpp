@@ -27,6 +27,8 @@ namespace easygl
 
         void set_parameter(SamplerParameter pname, int value);
         void set_parameter(SamplerParameter pname, float value);
+        void get_parameter_fv(SamplerParameter pname, float* out) const;
+        void get_parameter_iv(SamplerParameter pname, int* out) const;
 
         static Sampler create_linear_clamp();
         static Sampler create_nearest_clamp();

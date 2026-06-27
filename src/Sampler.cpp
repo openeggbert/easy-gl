@@ -109,5 +109,15 @@ namespace easygl
         return s;
     }
 
+    void Sampler::get_parameter_fv(SamplerParameter pname, float* out) const
+    {
+        metagl::glGetSamplerParameterfv(metagl::SamplerId{handle_}, pname, out);
+    }
+
+    void Sampler::get_parameter_iv(SamplerParameter pname, int* out) const
+    {
+        metagl::glGetSamplerParameteriv(metagl::SamplerId{handle_}, pname, out);
+    }
+
 }
 namespace easygl { bool Sampler::is_valid_gl_object() const { return is_created() && metagl::glIsSampler(metagl::SamplerId{handle_}); } }
