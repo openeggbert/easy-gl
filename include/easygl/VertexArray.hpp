@@ -56,6 +56,11 @@ namespace easygl
                                 std::ptrdiff_t offset, std::size_t stride);
         void set_binding_divisor(unsigned int binding_index, unsigned int divisor);
 
+        // Attribute getters
+        void get_attribute_fv(unsigned int index, VertexAttribParameter pname, float* out) const;
+        void get_attribute_iv(unsigned int index, VertexAttribParameter pname, int* out) const;
+        [[nodiscard]] void* get_attribute_pointer(unsigned int index) const;
+
         // Constant vertex attribute values (no buffer)
         void set_attrib_constant(unsigned int index, float x);
         void set_attrib_constant(unsigned int index, float x, float y);

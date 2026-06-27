@@ -149,5 +149,23 @@ namespace easygl
                                            unsigned int z, unsigned int w)
         { metagl::glVertexAttribI4ui(metagl::AttribLocation{index}, x, y, z, w); }
 
+    void VertexArray::get_attribute_fv(unsigned int index, VertexAttribParameter pname, float* out) const
+    {
+        metagl::glGetVertexAttribfv(metagl::AttribLocation{index}, pname, out);
+    }
+
+    void VertexArray::get_attribute_iv(unsigned int index, VertexAttribParameter pname, int* out) const
+    {
+        metagl::glGetVertexAttribiv(metagl::AttribLocation{index}, pname, out);
+    }
+
+    void* VertexArray::get_attribute_pointer(unsigned int index) const
+    {
+        void* ptr = nullptr;
+        metagl::glGetVertexAttribPointerv(metagl::AttribLocation{index},
+                                           metagl::VertexAttribParameter::ArrayPointer, &ptr);
+        return ptr;
+    }
+
 }
 namespace easygl { bool VertexArray::is_valid_gl_object() const { return is_created() && metagl::glIsVertexArray(metagl::VertexArrayId{handle_}); } }
