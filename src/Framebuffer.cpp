@@ -90,6 +90,18 @@ namespace easygl
                                           metagl::RenderbufferId{renderbuffer.native_handle()});
     }
 
+    void Framebuffer::set_parameter(FramebufferTarget target, FramebufferDefaultParameter pname, int value)
+    {
+        metagl::glFramebufferParameteri(target, pname, value);
+    }
+
+    int Framebuffer::get_parameter(FramebufferTarget target, FramebufferDefaultParameter pname) const
+    {
+        int value = 0;
+        metagl::glGetFramebufferParameteriv(target, pname, &value);
+        return value;
+    }
+
     int Framebuffer::get_attachment_parameter(FramebufferTarget target,
                                                FramebufferAttachment attachment,
                                                FramebufferAttachmentParameter pname) const
