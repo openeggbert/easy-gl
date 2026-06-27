@@ -108,6 +108,12 @@ namespace easygl
         metagl::glInvalidateFramebuffer(target, static_cast<GLsizei>(attachments.size()), attachments.data());
     }
 
+    void Framebuffer::invalidate_sub(FramebufferTarget target, std::span<const FramebufferAttachment> attachments,
+                                     int x, int y, int width, int height)
+    {
+        metagl::glInvalidateSubFramebuffer(target, attachments, x, y, width, height);
+    }
+
     Framebuffer Framebuffer::create_color_depth(const Texture& color, const Renderbuffer& depth)
     {
         Framebuffer fb;

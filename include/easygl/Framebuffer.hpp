@@ -41,6 +41,8 @@ namespace easygl
         void set_read_buffer(ReadBuffer src);
 
         void invalidate(FramebufferTarget target, std::span<const FramebufferAttachment> attachments);
+        void invalidate_sub(FramebufferTarget target, std::span<const FramebufferAttachment> attachments,
+                            int x, int y, int width, int height);
 
         static void blit(int src_x0, int src_y0, int src_x1, int src_y1,
                          int dst_x0, int dst_y0, int dst_x1, int dst_y1,
