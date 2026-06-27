@@ -135,5 +135,19 @@ namespace easygl
         metagl::glVertexBindingDivisor(binding_index, divisor);
     }
 
+    void VertexArray::set_attrib_constant(unsigned int index, float x)
+        { metagl::glVertexAttrib1f(metagl::AttribLocation{index}, x); }
+    void VertexArray::set_attrib_constant(unsigned int index, float x, float y)
+        { metagl::glVertexAttrib2f(metagl::AttribLocation{index}, x, y); }
+    void VertexArray::set_attrib_constant(unsigned int index, float x, float y, float z)
+        { metagl::glVertexAttrib3f(metagl::AttribLocation{index}, x, y, z); }
+    void VertexArray::set_attrib_constant(unsigned int index, float x, float y, float z, float w)
+        { metagl::glVertexAttrib4f(metagl::AttribLocation{index}, x, y, z, w); }
+    void VertexArray::set_attrib_constant(unsigned int index, int x, int y, int z, int w)
+        { metagl::glVertexAttribI4i(metagl::AttribLocation{index}, x, y, z, w); }
+    void VertexArray::set_attrib_constant(unsigned int index, unsigned int x, unsigned int y,
+                                           unsigned int z, unsigned int w)
+        { metagl::glVertexAttribI4ui(metagl::AttribLocation{index}, x, y, z, w); }
+
 }
 namespace easygl { bool VertexArray::is_valid_gl_object() const { return is_created() && metagl::glIsVertexArray(metagl::VertexArrayId{handle_}); } }
