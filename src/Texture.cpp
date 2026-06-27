@@ -90,6 +90,30 @@ namespace easygl
         metagl::glTexParameterIuiv(target, pname, values);
     }
 
+    void Texture::get_parameter_fv(TextureTarget target, TextureParameter pname, float* out) const
+    {
+        metagl::glGetTexParameterfv(target, pname, out);
+    }
+
+    void Texture::get_parameter_iv(TextureTarget target, TextureParameter pname, int* out) const
+    {
+        metagl::glGetTexParameteriv(target, pname, out);
+    }
+
+    int Texture::get_level_parameter(TextureTarget target, int level, TextureLevelParameter pname) const
+    {
+        int value = 0;
+        metagl::glGetTexLevelParameteriv(target, level, pname, &value);
+        return value;
+    }
+
+    float Texture::get_level_parameterf(TextureTarget target, int level, TextureLevelParameter pname) const
+    {
+        float value = 0.0f;
+        metagl::glGetTexLevelParameterfv(target, level, pname, &value);
+        return value;
+    }
+
     void Texture::set_image_2d(TextureTarget target, int level, int width, int height, const void* data)
     {
         metagl::glBindTexture(target, metagl::TextureId{handle_});

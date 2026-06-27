@@ -32,6 +32,11 @@ namespace easygl
         void set_parameter_iiv(TextureTarget target, TextureParameter pname, const int* values);
         void set_parameter_iuiv(TextureTarget target, TextureParameter pname, const unsigned int* values);
 
+        void get_parameter_fv(TextureTarget target, TextureParameter pname, float* out) const;
+        void get_parameter_iv(TextureTarget target, TextureParameter pname, int* out) const;
+        [[nodiscard]] int   get_level_parameter(TextureTarget target, int level, TextureLevelParameter pname) const;
+        [[nodiscard]] float get_level_parameterf(TextureTarget target, int level, TextureLevelParameter pname) const;
+
         void set_image_2d(TextureTarget target, int level, int width, int height, const void* data);
         void set_image_2d(TextureTarget target, int level,
                           InternalFormat internal_format, int width, int height,
