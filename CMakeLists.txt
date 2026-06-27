@@ -47,6 +47,7 @@ target_sources(easy-gl
         src/VertexArray.cpp
         src/ResourceRegistry.cpp
         src/UniformCache.cpp
+        src/ScopedDebugGroup.cpp
 )
 
 target_sources(easy-gl
@@ -81,6 +82,7 @@ target_sources(easy-gl
         include/easygl/RecoverableResource.hpp
         include/easygl/ResourceRegistry.hpp
         include/easygl/ScopedBind.hpp
+        include/easygl/ScopedDebugGroup.hpp
         include/easygl/UniformCache.hpp
 )
 
