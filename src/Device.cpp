@@ -473,4 +473,9 @@ namespace easygl
     {
         return metagl::glGetGraphicsResetStatus();
     }
+
+    bool Device::is_enabled(Capability cap) const
+    {
+        return metagl::glIsEnabled(cap);
+    }
 }

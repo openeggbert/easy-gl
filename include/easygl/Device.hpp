@@ -133,6 +133,7 @@ namespace easygl
         void flush();
         [[nodiscard]] ErrorCode get_error();
         [[nodiscard]] GraphicsResetStatus get_graphics_reset_status();
+        [[nodiscard]] bool is_enabled(Capability cap) const;
 
     private:
         Config config_{};
