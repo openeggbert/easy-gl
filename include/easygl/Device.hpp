@@ -111,6 +111,10 @@ namespace easygl
         void draw_elements(PrimitiveType primitive, int count, DataType type, const void* indices);
         void draw_elements_instanced(PrimitiveType primitive, int count, DataType type,
                                      const void* indices, int instance_count);
+        void draw_arrays_indirect(PrimitiveType primitive, const void* indirect);
+        void draw_elements_indirect(PrimitiveType primitive, DataType type, const void* indirect);
+        void draw_range_elements(PrimitiveType primitive, unsigned int start, unsigned int end,
+                                 int count, DataType type, const void* indices);
 
         // ---- Compute ----
         void dispatch_compute(unsigned int num_groups_x, unsigned int num_groups_y, unsigned int num_groups_z);

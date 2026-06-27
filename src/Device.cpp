@@ -394,6 +394,22 @@ namespace easygl
         metagl::glDrawElementsInstanced(primitive, count, type, indices, instance_count);
     }
 
+    void Device::draw_arrays_indirect(PrimitiveType primitive, const void* indirect)
+    {
+        metagl::glDrawArraysIndirect(primitive, indirect);
+    }
+
+    void Device::draw_elements_indirect(PrimitiveType primitive, DataType type, const void* indirect)
+    {
+        metagl::glDrawElementsIndirect(primitive, type, indirect);
+    }
+
+    void Device::draw_range_elements(PrimitiveType primitive, unsigned int start, unsigned int end,
+                                     int count, DataType type, const void* indices)
+    {
+        metagl::glDrawRangeElements(primitive, start, end, static_cast<GLsizei>(count), type, indices);
+    }
+
     // ---- Compute ----
 
     void Device::dispatch_compute(unsigned int num_groups_x, unsigned int num_groups_y, unsigned int num_groups_z)
