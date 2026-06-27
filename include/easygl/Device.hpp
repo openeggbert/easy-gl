@@ -135,6 +135,7 @@ namespace easygl
         void set_hint(HintTarget target, HintMode mode);
         void finish();
         void flush();
+        void release_shader_compiler();
         [[nodiscard]] ErrorCode get_error();
         [[nodiscard]] GraphicsResetStatus get_graphics_reset_status();
         [[nodiscard]] bool is_enabled(Capability cap) const;

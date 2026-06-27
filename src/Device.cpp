@@ -480,6 +480,11 @@ namespace easygl
         metagl::glFlush();
     }
 
+    void Device::release_shader_compiler()
+    {
+        metagl::glReleaseShaderCompiler();
+    }
+
     ErrorCode Device::get_error()
     {
         return metagl::glGetError();
