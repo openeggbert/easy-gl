@@ -486,6 +486,12 @@ namespace easygl
         metagl::glPatchParameteri(metagl::TessellationParameter::PatchVertices, count);
     }
 
+    void Device::set_primitive_bounding_box(float min_x, float min_y, float min_z, float min_w,
+                                             float max_x, float max_y, float max_z, float max_w)
+    {
+        metagl::glPrimitiveBoundingBox(min_x, min_y, min_z, min_w, max_x, max_y, max_z, max_w);
+    }
+
     // ---- Debug ----
 
     void Device::set_debug_output_enabled(bool enabled)

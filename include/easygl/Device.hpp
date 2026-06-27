@@ -141,6 +141,8 @@ namespace easygl
 
         // ---- Tessellation ----
         void set_patch_vertices(int count);
+        void set_primitive_bounding_box(float min_x, float min_y, float min_z, float min_w,
+                                         float max_x, float max_y, float max_z, float max_w);
 
         // ---- Debug ----
         void set_debug_output_enabled(bool enabled);
