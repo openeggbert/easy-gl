@@ -443,6 +443,41 @@ namespace easygl
     void Program::set_program_uniform_matrix4x3(int location, const float* data, bool transpose) const
         { metagl::glProgramUniformMatrix4x3fv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data); }
 
+    int Program::active_attrib_count() const
+    {
+        if (!is_created()) return 0;
+        int count = 0;
+        metagl::glGetProgramiv(metagl::ProgramId{handle_}, metagl::ProgramParameter::ActiveAttributes, &count);
+        return count;
+    }
+
+    int Program::active_uniform_count() const
+    {
+        if (!is_created()) return 0;
+        int count = 0;
+        metagl::glGetProgramiv(metagl::ProgramId{handle_}, metagl::ProgramParameter::ActiveUniforms, &count);
+        return count;
+    }
+
+    std::string Program::uniform_block_name(unsigned int block_index) const
+    {
+        if (!is_created()) return "";
+        int length = 0;
+        metagl::glGetActiveUniformBlockiv(metagl::ProgramId{handle_}, block_index,
+                                           metagl::UniformBlockParameter::NameLength, &length);
+        if (length <= 0) return "";
+        std::vector<char> buf(static_cast<std::size_t>(length));
+        metagl::glGetActiveUniformBlockName(metagl::ProgramId{handle_}, block_index,
+                                             length, nullptr, buf.data());
+        return std::string(buf.data());
+    }
+
+    int Program::frag_data_location(const std::string& name) const
+    {
+        if (!is_created()) return -1;
+        return metagl::glGetFragDataLocation(metagl::ProgramId{handle_}, name.c_str());
+    }
+
     void Program::get_uniform_fv(int location, float* out) const
     {
         metagl::glGetUniformfv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, out);

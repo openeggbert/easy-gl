@@ -113,6 +113,12 @@ namespace easygl
         void set_program_uniform_matrix3x4(int location, const float* data, bool transpose = false) const;
         void set_program_uniform_matrix4x3(int location, const float* data, bool transpose = false) const;
 
+        // Program introspection
+        [[nodiscard]] int active_attrib_count() const;
+        [[nodiscard]] int active_uniform_count() const;
+        [[nodiscard]] std::string uniform_block_name(unsigned int block_index) const;
+        [[nodiscard]] int frag_data_location(const std::string& name) const;
+
         // Uniform value getters
         void get_uniform_fv(int location, float* out) const;
         void get_uniform_iv(int location, int* out) const;
