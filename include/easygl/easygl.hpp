@@ -21,5 +21,6 @@
 #include "easygl/Texture.hpp"
 #include "easygl/TransformFeedback.hpp"
 #include "easygl/Types.hpp"
+#include "easygl/UniformCache.hpp"
 #include "easygl/Version.hpp"
 #include "easygl/VertexArray.hpp"

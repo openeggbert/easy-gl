@@ -46,6 +46,7 @@ target_sources(easy-gl
         src/TransformFeedback.cpp
         src/VertexArray.cpp
         src/ResourceRegistry.cpp
+        src/UniformCache.cpp
 )
 
 target_sources(easy-gl
@@ -79,6 +80,8 @@ target_sources(easy-gl
         include/easygl/detail/NonCopyable.hpp
         include/easygl/RecoverableResource.hpp
         include/easygl/ResourceRegistry.hpp
+        include/easygl/ScopedBind.hpp
+        include/easygl/UniformCache.hpp
 )
 
 target_link_libraries(easy-gl PUBLIC meta-gl::meta-gl)
