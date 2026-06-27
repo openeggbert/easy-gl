@@ -335,6 +335,86 @@ namespace easygl
         metagl::glUniformMatrix4x3fv(metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data);
     }
 
+    // Separable program uniforms
+    void Program::set_program_uniform(int location, float value) const               { metagl::glProgramUniform1f(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, value); }
+    void Program::set_program_uniform(int location, float x, float y) const          { metagl::glProgramUniform2f(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, x, y); }
+    void Program::set_program_uniform(int location, float x, float y, float z) const { metagl::glProgramUniform3f(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, x, y, z); }
+    void Program::set_program_uniform(int location, float x, float y, float z, float w) const { metagl::glProgramUniform4f(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, x, y, z, w); }
+
+    void Program::set_program_uniform_fv(int location, std::span<const float> values, int components) const
+    {
+        const auto pid = metagl::ProgramId{handle_};
+        const auto loc = metagl::UniformLocation{location};
+        const auto count = static_cast<GLsizei>(values.size() / static_cast<std::size_t>(components));
+        switch (components)
+        {
+            case 1: metagl::glProgramUniform1fv(pid, loc, count, values.data()); break;
+            case 2: metagl::glProgramUniform2fv(pid, loc, count, values.data()); break;
+            case 3: metagl::glProgramUniform3fv(pid, loc, count, values.data()); break;
+            case 4: metagl::glProgramUniform4fv(pid, loc, count, values.data()); break;
+            default: break;
+        }
+    }
+
+    void Program::set_program_uniform(int location, int value) const                { metagl::glProgramUniform1i(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, value); }
+    void Program::set_program_uniform(int location, int x, int y) const             { metagl::glProgramUniform2i(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, x, y); }
+    void Program::set_program_uniform(int location, int x, int y, int z) const      { metagl::glProgramUniform3i(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, x, y, z); }
+    void Program::set_program_uniform(int location, int x, int y, int z, int w) const { metagl::glProgramUniform4i(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, x, y, z, w); }
+
+    void Program::set_program_uniform_iv(int location, std::span<const int> values, int components) const
+    {
+        const auto pid = metagl::ProgramId{handle_};
+        const auto loc = metagl::UniformLocation{location};
+        const auto count = static_cast<GLsizei>(values.size() / static_cast<std::size_t>(components));
+        switch (components)
+        {
+            case 1: metagl::glProgramUniform1iv(pid, loc, count, values.data()); break;
+            case 2: metagl::glProgramUniform2iv(pid, loc, count, values.data()); break;
+            case 3: metagl::glProgramUniform3iv(pid, loc, count, values.data()); break;
+            case 4: metagl::glProgramUniform4iv(pid, loc, count, values.data()); break;
+            default: break;
+        }
+    }
+
+    void Program::set_program_uniform(int location, unsigned int value) const                        { metagl::glProgramUniform1ui(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, value); }
+    void Program::set_program_uniform(int location, unsigned int x, unsigned int y) const             { metagl::glProgramUniform2ui(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, x, y); }
+    void Program::set_program_uniform(int location, unsigned int x, unsigned int y, unsigned int z) const { metagl::glProgramUniform3ui(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, x, y, z); }
+    void Program::set_program_uniform(int location, unsigned int x, unsigned int y, unsigned int z, unsigned int w) const { metagl::glProgramUniform4ui(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, x, y, z, w); }
+
+    void Program::set_program_uniform_uiv(int location, std::span<const unsigned int> values, int components) const
+    {
+        const auto pid = metagl::ProgramId{handle_};
+        const auto loc = metagl::UniformLocation{location};
+        const auto count = static_cast<GLsizei>(values.size() / static_cast<std::size_t>(components));
+        switch (components)
+        {
+            case 1: metagl::glProgramUniform1uiv(pid, loc, count, values.data()); break;
+            case 2: metagl::glProgramUniform2uiv(pid, loc, count, values.data()); break;
+            case 3: metagl::glProgramUniform3uiv(pid, loc, count, values.data()); break;
+            case 4: metagl::glProgramUniform4uiv(pid, loc, count, values.data()); break;
+            default: break;
+        }
+    }
+
+    void Program::set_program_uniform_matrix2(int location, const float* data, bool transpose) const
+        { metagl::glProgramUniformMatrix2fv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data); }
+    void Program::set_program_uniform_matrix3(int location, const float* data, bool transpose) const
+        { metagl::glProgramUniformMatrix3fv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data); }
+    void Program::set_program_uniform_matrix4(int location, const float* data, bool transpose) const
+        { metagl::glProgramUniformMatrix4fv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data); }
+    void Program::set_program_uniform_matrix2x3(int location, const float* data, bool transpose) const
+        { metagl::glProgramUniformMatrix2x3fv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data); }
+    void Program::set_program_uniform_matrix3x2(int location, const float* data, bool transpose) const
+        { metagl::glProgramUniformMatrix3x2fv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data); }
+    void Program::set_program_uniform_matrix2x4(int location, const float* data, bool transpose) const
+        { metagl::glProgramUniformMatrix2x4fv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data); }
+    void Program::set_program_uniform_matrix4x2(int location, const float* data, bool transpose) const
+        { metagl::glProgramUniformMatrix4x2fv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data); }
+    void Program::set_program_uniform_matrix3x4(int location, const float* data, bool transpose) const
+        { metagl::glProgramUniformMatrix3x4fv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data); }
+    void Program::set_program_uniform_matrix4x3(int location, const float* data, bool transpose) const
+        { metagl::glProgramUniformMatrix4x3fv(metagl::ProgramId{handle_}, metagl::UniformLocation{location}, 1, transpose ? 1 : 0, data); }
+
     std::optional<unsigned int> Program::uniform_block_index(const std::string& name) const
     {
         if (!is_created()) return std::nullopt;

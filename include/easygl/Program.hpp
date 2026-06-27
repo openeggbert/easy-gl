@@ -81,6 +81,35 @@ namespace easygl
         void set_uniform_matrix3x4(int location, const float* data, bool transpose = false);
         void set_uniform_matrix4x3(int location, const float* data, bool transpose = false);
 
+        // Separable program uniforms (no bind required, for use with ProgramPipeline)
+        void set_program_uniform(int location, float value) const;
+        void set_program_uniform(int location, float x, float y) const;
+        void set_program_uniform(int location, float x, float y, float z) const;
+        void set_program_uniform(int location, float x, float y, float z, float w) const;
+        void set_program_uniform_fv(int location, std::span<const float> values, int components = 1) const;
+
+        void set_program_uniform(int location, int value) const;
+        void set_program_uniform(int location, int x, int y) const;
+        void set_program_uniform(int location, int x, int y, int z) const;
+        void set_program_uniform(int location, int x, int y, int z, int w) const;
+        void set_program_uniform_iv(int location, std::span<const int> values, int components = 1) const;
+
+        void set_program_uniform(int location, unsigned int value) const;
+        void set_program_uniform(int location, unsigned int x, unsigned int y) const;
+        void set_program_uniform(int location, unsigned int x, unsigned int y, unsigned int z) const;
+        void set_program_uniform(int location, unsigned int x, unsigned int y, unsigned int z, unsigned int w) const;
+        void set_program_uniform_uiv(int location, std::span<const unsigned int> values, int components = 1) const;
+
+        void set_program_uniform_matrix2(int location, const float* data, bool transpose = false) const;
+        void set_program_uniform_matrix3(int location, const float* data, bool transpose = false) const;
+        void set_program_uniform_matrix4(int location, const float* data, bool transpose = false) const;
+        void set_program_uniform_matrix2x3(int location, const float* data, bool transpose = false) const;
+        void set_program_uniform_matrix3x2(int location, const float* data, bool transpose = false) const;
+        void set_program_uniform_matrix2x4(int location, const float* data, bool transpose = false) const;
+        void set_program_uniform_matrix4x2(int location, const float* data, bool transpose = false) const;
+        void set_program_uniform_matrix3x4(int location, const float* data, bool transpose = false) const;
+        void set_program_uniform_matrix4x3(int location, const float* data, bool transpose = false) const;
+
         // Uniform blocks
         [[nodiscard]] std::optional<unsigned int> uniform_block_index(const std::string& name) const;
         void set_uniform_block_binding(unsigned int block_index, unsigned int binding_point);
