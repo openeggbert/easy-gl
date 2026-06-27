@@ -105,3 +105,4 @@ namespace easygl
     }
 
 }
+namespace easygl { bool VertexArray::is_valid_gl_object() const { return is_created() && metagl::glIsVertexArray(metagl::VertexArrayId{handle_}); } }

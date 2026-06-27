@@ -27,6 +27,7 @@ namespace easygl
 
         void use_stages(ShaderStageMask stages, const Program& program);
         void set_active_shader_program(const Program& program);
+        [[nodiscard]] bool is_valid_gl_object() const;
         void validate() const;
 
         [[nodiscard]] std::string info_log() const;

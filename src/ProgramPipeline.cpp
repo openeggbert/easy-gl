@@ -92,3 +92,4 @@ namespace easygl
     }
 
 }
+namespace easygl { bool ProgramPipeline::is_valid_gl_object() const { return is_created() && metagl::glIsProgramPipeline(metagl::ProgramPipelineId{handle_}); } }

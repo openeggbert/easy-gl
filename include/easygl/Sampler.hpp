@@ -23,6 +23,8 @@ namespace easygl
         void bind(unsigned int unit) const;
         static void unbind(unsigned int unit);
 
+        [[nodiscard]] bool is_valid_gl_object() const;
+
         void set_parameter(SamplerParameter pname, int value);
         void set_parameter(SamplerParameter pname, float value);
 

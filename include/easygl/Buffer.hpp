@@ -57,6 +57,8 @@ namespace easygl
             set_sub_data(target, data.data(), data.size_bytes(), offset_in_bytes);
         }
 
+        [[nodiscard]] bool is_valid_gl_object() const;
+
         [[nodiscard]] void* map_range(BufferTarget target, std::ptrdiff_t offset, std::ptrdiff_t length, MapBufferAccessMask access);
         void flush_mapped_range(BufferTarget target, std::ptrdiff_t offset, std::ptrdiff_t length);
         bool unmap(BufferTarget target);

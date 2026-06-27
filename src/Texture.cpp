@@ -181,3 +181,4 @@ namespace easygl
     }
 
 }
+namespace easygl { bool Texture::is_valid_gl_object() const { return is_created() && metagl::glIsTexture(metagl::TextureId{handle_}); } }

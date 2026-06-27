@@ -330,3 +330,4 @@ namespace easygl
         owned_shader_handles_.clear();
     }
 }
+namespace easygl { bool Program::is_valid_gl_object() const { return is_created() && metagl::glIsProgram(metagl::ProgramId{handle_}); } }

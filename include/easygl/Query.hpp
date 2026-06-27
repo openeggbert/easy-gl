@@ -20,6 +20,8 @@ namespace easygl
         void create();
         void destroy() noexcept;
 
+        [[nodiscard]] bool is_valid_gl_object() const;
+
         void begin(QueryTarget target) const;
         void end(QueryTarget target) const;
 

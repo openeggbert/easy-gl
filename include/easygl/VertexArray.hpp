@@ -33,6 +33,8 @@ namespace easygl
         void bind() const;
         void unbind() const;
 
+        [[nodiscard]] bool is_valid_gl_object() const;
+
         void set_attribute(const VertexAttribute& attribute);
         void set_attribute_pointer(unsigned int index, int size, DataType type,
                                    bool normalized, std::size_t stride, const void* pointer);

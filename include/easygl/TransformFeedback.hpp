@@ -26,6 +26,8 @@ namespace easygl
         void bind() const;
         static void unbind();
 
+        [[nodiscard]] bool is_valid_gl_object() const;
+
         static void begin(PrimitiveType primitive_mode);
         static void end();
         static void pause();

@@ -90,3 +90,4 @@ namespace easygl
     }
 
 }
+namespace easygl { bool TransformFeedback::is_valid_gl_object() const { return is_created() && metagl::glIsTransformFeedback(metagl::TransformFeedbackId{handle_}); } }

@@ -59,6 +59,8 @@ namespace easygl
 
         void generate_mipmap(TextureTarget target);
 
+        [[nodiscard]] bool is_valid_gl_object() const;
+
         void bind_image(unsigned int unit, int level, bool layered, int layer,
                         ImageAccess access, InternalFormat format);
 

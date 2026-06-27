@@ -83,6 +83,7 @@ namespace easygl
         [[nodiscard]] std::optional<unsigned int> uniform_block_index(const std::string& name) const;
         void set_uniform_block_binding(unsigned int block_index, unsigned int binding_point);
 
+        [[nodiscard]] bool is_valid_gl_object() const;
         [[nodiscard]] bool is_linked() const noexcept;
 
         void reset_handle_no_gl() noexcept;

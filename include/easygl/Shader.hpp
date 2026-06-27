@@ -26,6 +26,7 @@ namespace easygl
 
         [[nodiscard]] std::string info_log() const;
         [[nodiscard]] ShaderType shader_type() const noexcept;
+        [[nodiscard]] bool is_valid_gl_object() const;
         [[nodiscard]] bool is_compiled() const noexcept;
 
     private:

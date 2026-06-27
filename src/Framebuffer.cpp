@@ -131,3 +131,4 @@ namespace easygl
     }
 
 }
+namespace easygl { bool Framebuffer::is_valid_gl_object() const { return is_created() && metagl::glIsFramebuffer(metagl::FramebufferId{handle_}); } }

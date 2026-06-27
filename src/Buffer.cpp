@@ -118,3 +118,4 @@ namespace easygl
     }
 
 }
+namespace easygl { bool Buffer::is_valid_gl_object() const { return is_created() && metagl::glIsBuffer(metagl::BufferId{handle_}); } }

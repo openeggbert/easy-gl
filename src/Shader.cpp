@@ -92,3 +92,4 @@ namespace easygl
     ShaderType Shader::shader_type() const noexcept { return type_; }
     bool Shader::is_compiled() const noexcept { return compiled_; }
 }
+namespace easygl { bool Shader::is_valid_gl_object() const { return is_created() && metagl::glIsShader(metagl::ShaderId{handle_}); } }

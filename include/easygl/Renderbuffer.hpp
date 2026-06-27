@@ -22,6 +22,8 @@ namespace easygl
         void bind() const;
         static void unbind();
 
+        [[nodiscard]] bool is_valid_gl_object() const;
+
         void set_storage(InternalFormat internal_format, int width, int height);
         void set_storage_multisample(int samples, InternalFormat internal_format, int width, int height);
 

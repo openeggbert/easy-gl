@@ -72,3 +72,4 @@ namespace easygl
     }
 
 }
+namespace easygl { bool Renderbuffer::is_valid_gl_object() const { return is_created() && metagl::glIsRenderbuffer(metagl::RenderbufferId{handle_}); } }

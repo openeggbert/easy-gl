@@ -32,6 +32,8 @@ namespace easygl
         void attach_renderbuffer(FramebufferTarget target, FramebufferAttachment attachment,
                                   const Renderbuffer& renderbuffer);
 
+        [[nodiscard]] bool is_valid_gl_object() const;
+
         [[nodiscard]] FramebufferStatus check_status(FramebufferTarget target = FramebufferTarget::Framebuffer) const;
         [[nodiscard]] bool is_complete(FramebufferTarget target = FramebufferTarget::Framebuffer) const;
 

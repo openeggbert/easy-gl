@@ -110,3 +110,4 @@ namespace easygl
     }
 
 }
+namespace easygl { bool Sampler::is_valid_gl_object() const { return is_created() && metagl::glIsSampler(metagl::SamplerId{handle_}); } }

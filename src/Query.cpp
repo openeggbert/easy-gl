@@ -74,3 +74,4 @@ namespace easygl
     }
 
 }
+namespace easygl { bool Query::is_valid_gl_object() const { return is_created() && metagl::glIsQuery(metagl::QueryId{handle_}); } }
