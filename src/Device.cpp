@@ -385,6 +385,21 @@ namespace easygl
         else         metagl::glDisable(metagl::Capability::RasterizerDiscard);
     }
 
+    void Device::set_sample_mask(unsigned int mask_number, unsigned int mask)
+    {
+        metagl::glSampleMaski(mask_number, static_cast<metagl::SampleMaskValue>(mask));
+    }
+
+    void Device::set_min_sample_shading(float value)
+    {
+        metagl::glMinSampleShading(value);
+    }
+
+    void Device::blend_barrier()
+    {
+        metagl::glBlendBarrier();
+    }
+
     // ---- Pixel ----
 
     void Device::set_pixel_store(PixelStoreParam pname, int value)

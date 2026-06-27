@@ -107,6 +107,11 @@ namespace easygl
         void set_sample_coverage(float value, bool invert);
         void set_sample_alpha_to_coverage_enabled(bool enabled);
         void set_rasterizer_discard_enabled(bool enabled);
+        void set_sample_mask(unsigned int mask_number, unsigned int mask);
+        void set_min_sample_shading(float value);
+
+        // ---- Blend barrier ----
+        void blend_barrier();
 
         // ---- Pixel ----
         void set_pixel_store(PixelStoreParam pname, int value);
