@@ -1,4 +1,5 @@
-/// Tests for the WebGL-related fixes tracked in TODO.md (formerly webgl.md):
+/// Tests for the following WebGL-related correctness fixes (originally
+/// tracked in the now-removed webgl.md, then TODO.md; all fully implemented):
 ///  - Device::initialize() reuses meta-gl's own context/version detection
 ///    instead of duplicating GL_VERSION-string parsing.
 ///  - Query/Sampler/TransformFeedback/Sync/ProgramPipeline, and

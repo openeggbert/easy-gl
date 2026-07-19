@@ -107,7 +107,7 @@ namespace easygl
     {
         // glGetTexLevelParameteriv is documented by meta-gl as GL ES 3.1+; on an
         // older/WebGL context the function pointer is null, so guard explicitly
-        // instead of crashing on a null-pointer call. See TODO.md.
+        // instead of crashing on a null-pointer call.
         if (!metagl::IsFunctionAvailable("glGetTexLevelParameteriv"))
             throw UnsupportedFeatureException("Querying texture level parameters is not supported by the current context.");
         int value = 0;

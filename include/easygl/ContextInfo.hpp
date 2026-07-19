@@ -13,9 +13,9 @@ namespace easygl
         OpenGLES,
         /// Emscripten/WebGL context (only ever set when building with Emscripten).
         /// See @ref ContextInfo::is_webgl and Capabilities::is_webgl1/is_webgl2 for
-        /// distinguishing WebGL 1 from WebGL 2, and easy-gl's TODO.md for the
-        /// known permanent gaps this introduces (e.g. ProgramPipeline has no
-        /// WebGL equivalent).
+        /// distinguishing WebGL 1 from WebGL 2. WebGL introduces known permanent
+        /// gaps compared to native GLES (e.g. ProgramPipeline has no WebGL
+        /// equivalent, not even in WebGL 2).
         WebGL
     };
 

@@ -38,7 +38,7 @@ namespace easygl
         // Transform feedback objects are an ES 3.0+ feature (e.g. absent on
         // WebGL 1); without this check glGenTransformFeedbacks would be a null
         // function pointer on such a context, crashing on a null-pointer call
-        // instead of raising a clear error. See TODO.md.
+        // instead of raising a clear error.
         if (!metagl::IsFunctionAvailable("glGenTransformFeedbacks"))
             throw UnsupportedFeatureException("Transform feedback is not supported by the current context.");
         metagl::TransformFeedbackId tfid{};

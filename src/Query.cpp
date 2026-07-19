@@ -37,7 +37,7 @@ namespace easygl
         // Query objects are an ES 3.0+ feature (e.g. absent on WebGL 1); without
         // this check glGenQueries would be a null function pointer on such a
         // context, crashing on a null-pointer call instead of raising a clear
-        // error. See TODO.md.
+        // error.
         if (!metagl::IsFunctionAvailable("glGenQueries"))
             throw UnsupportedFeatureException("Query objects are not supported by the current context.");
         metagl::QueryId qid{};

@@ -406,7 +406,8 @@ void set_program_uniform(unsigned int program, int location, float);
 void set_program_uniform(unsigned int program, int location, float, float);
 // ... int, uint, matrix variants ...
 ```
-(See TODO.md §3 for the full list.)
+(Fully implemented; see `Program.hpp`/`Program.cpp` for the complete list of
+`set_program_uniform*` overloads.)
 
 ---
 

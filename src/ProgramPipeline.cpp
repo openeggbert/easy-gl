@@ -38,10 +38,9 @@ namespace easygl
         if (is_created()) return;
         // Program pipelines (separable shader objects) are an ES 3.1+ feature
         // with no WebGL equivalent at all - not even WebGL 2 (see
-        // ProgramPipeline.hpp and TODO.md). Without this check
-        // glGenProgramPipelines would be a null function pointer on such a
-        // context, crashing on a null-pointer call instead of raising a clear
-        // error.
+        // ProgramPipeline.hpp). Without this check glGenProgramPipelines would
+        // be a null function pointer on such a context, crashing on a
+        // null-pointer call instead of raising a clear error.
         if (!metagl::IsFunctionAvailable("glGenProgramPipelines"))
             throw UnsupportedFeatureException("Program pipelines are not supported by the current context (e.g. never available on WebGL).");
         metagl::ProgramPipelineId ppid{};
