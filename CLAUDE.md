@@ -125,7 +125,8 @@ Good:
 ```cpp
 Texture texture = Texture::create2D(width, height, format);
 texture.setData(pixels);
-texture.bind(unit);
+texture.bind(target);                    // binds on texture unit 0
+texture.active_bind(unit, target);       // binds on a specific texture unit
 ```
 
 Good:

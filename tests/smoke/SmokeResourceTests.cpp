@@ -336,6 +336,26 @@ namespace
         assert(g_state.last_active_texture == 0x84C0);
     }
 
+    void test_texture_bind_and_active_bind_semantics()
+    {
+        reset_state();
+
+        easygl::Texture texture;
+        texture.create();
+
+        // Start from a different active unit than the one bind() should switch to.
+        texture.active_bind(easygl::TextureUnit::Texture1, easygl::TextureTarget::Texture2D);
+        assert(g_state.last_active_texture == 0x84C1);
+
+        // bind() always activates unit 0, regardless of what was active before.
+        texture.bind(easygl::TextureTarget::Texture2D);
+        assert(g_state.last_active_texture == 0x84C0);
+
+        // active_bind() activates the exact unit requested, leaving it active afterwards.
+        texture.active_bind(easygl::TextureUnit::Texture1, easygl::TextureTarget::Texture2D);
+        assert(g_state.last_active_texture == 0x84C1);
+    }
+
     void test_program_owned_shaders_cleanup_after_link()
     {
         reset_state();
@@ -445,6 +465,7 @@ int main()
         test_buffer_upload_target();
         test_vertex_attribute_layout();
         test_texture_upload_sets_unpack_alignment_wrap_and_unit0_binding();
+        test_texture_bind_and_active_bind_semantics();
         test_program_owned_shaders_cleanup_after_link();
         test_program_owned_shaders_cleanup_on_destroy_when_link_fails();
         test_program_compile_from_sources_and_uniform4();

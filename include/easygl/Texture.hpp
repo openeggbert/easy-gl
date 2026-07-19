@@ -24,7 +24,13 @@ namespace easygl
         void create();
         void destroy() noexcept;
 
+        /// Activates texture unit 0 (`TextureUnit::Texture0`) and binds this
+        /// texture to `target` on that unit. Texture unit 0 remains the
+        /// active unit afterwards.
         void bind(TextureTarget target) const;
+
+        /// Activates `unit` and binds this texture to `target` on that unit.
+        /// `unit` remains the active texture unit afterwards.
         void active_bind(TextureUnit unit, TextureTarget target) const;
 
         void set_parameter(TextureTarget target, TextureParameterSetter pname, int value);

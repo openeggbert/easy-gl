@@ -59,6 +59,11 @@ All tests use fake function-pointer loaders and require no real GL context, so t
 - `VertexArrayObject` support below GLES/WebGL 3.0 now depends on `GL_OES_vertex_array_object` being advertised (checked via the existing extension-based detection in `Capabilities::detect_common_features()`), rather than being silently assumed.
 - Rejected as out of scope (per user decision when reviewing `webgl.md`): a real-browser/Emscripten-runtime smoke test beyond the mock-loader-based `easy-gl-webgl-tests` (see "What does NOT work yet" above).
 
+**`Texture::bind()`/`active_bind()` semantics (behavioral fix, not a meta-gl enum change):**
+- `Texture::bind(target)` activates and uses texture unit 0 (`TextureUnit::Texture0`); `Texture::active_bind(unit, target)` activates and uses the given unit. Both leave the corresponding unit active afterwards. This restores behavior that had been lost in an earlier refactoring (`bind()` previously did not call `glActiveTexture` at all).
+- Documented directly on the two methods in `Texture.hpp`, and covered by a dedicated regression test (`test_texture_bind_and_active_bind_semantics` in `tests/smoke/SmokeResourceTests.cpp`) that first activates `Texture1`, then checks `bind()` switches back to `Texture0`, then checks `active_bind(Texture1, ...)` uses `Texture1`.
+- The stale `texture.bind(unit)` example in `CLAUDE.md` was corrected to `bind(target)`/`active_bind(unit, target)`.
+
 **Major additions to existing files:**
 - `Device`: generic state getters (`get_boolean/float/integer/integer64`), indexed blend/color/enable, advanced draw calls, debug message API, ES 3.1+/3.2+ methods
 - `Program`: `set_uniform_iv/uiv`, `set_program_uniform*` (separable), `get_uniform_fv/iv/uiv`, introspection, `load_binary`, `create_separable`, `set_parameter`
