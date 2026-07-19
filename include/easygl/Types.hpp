@@ -36,6 +36,8 @@ namespace easygl
     using TextureUnit          = metagl::TextureUnit;
     using ImageUnit            = metagl::ImageUnit;
     using TextureParameter      = metagl::TextureParameter;
+    using TextureParameterSetter = metagl::TextureParameterSetter;
+    using TextureParameterQuery  = metagl::TextureParameterQuery;
     using TextureLevelParameter = metagl::TextureLevelParameter;
     using SamplerParameter     = metagl::SamplerParameter;
     using TextureMinFilter     = metagl::TextureMinFilter;
@@ -45,6 +47,7 @@ namespace easygl
     using TextureCompareMode   = metagl::TextureCompareMode;
     using TextureSwizzle       = metagl::TextureSwizzle;
     using InternalFormat       = metagl::InternalFormat;
+    using SizedInternalFormat  = metagl::SizedInternalFormat;
     using CompressedInternalFormat = metagl::CompressedInternalFormat;
     using PixelFormat          = metagl::PixelFormat;
     using PixelType            = metagl::PixelType;
@@ -77,7 +80,9 @@ namespace easygl
     using StencilOp            = metagl::StencilOp;
     using Capability           = metagl::Capability;
     using ClearBufferBit       = metagl::ClearBufferBit;
-    using ClearBuffer          = metagl::ClearBuffer;
+    using FloatClearBuffer          = metagl::FloatClearBuffer;
+    using SignedIntegerClearBuffer  = metagl::SignedIntegerClearBuffer;
+    using UnsignedIntegerClearBuffer = metagl::UnsignedIntegerClearBuffer;
     using DrawBuffer           = metagl::DrawBuffer;
     using ReadBuffer           = metagl::ReadBuffer;
     using HintTarget           = metagl::HintTarget;
@@ -97,7 +102,8 @@ namespace easygl
     using SyncParameter        = metagl::SyncParameter;
 
     // Compute
-    using MemoryBarrierMask    = metagl::MemoryBarrierMask;
+    using MemoryBarrierMask          = metagl::MemoryBarrierMask;
+    using MemoryBarrierByRegionMask  = metagl::MemoryBarrierByRegionMask;
 
     // Tessellation
     using TessellationParameter = metagl::TessellationParameter;

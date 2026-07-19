@@ -138,24 +138,24 @@ namespace easygl
         metagl::glClear(mask);
     }
 
-    void Device::clear_bufferfv(ClearBuffer buffer, int drawbuffer, const float* value)
+    void Device::clear_bufferfv(FloatClearBuffer buffer, int drawbuffer, const float* value)
     {
         metagl::glClearBufferfv(buffer, drawbuffer, value);
     }
 
-    void Device::clear_bufferiv(ClearBuffer buffer, int drawbuffer, const int* value)
+    void Device::clear_bufferiv(SignedIntegerClearBuffer buffer, int drawbuffer, const int* value)
     {
         metagl::glClearBufferiv(buffer, drawbuffer, value);
     }
 
-    void Device::clear_bufferuiv(ClearBuffer buffer, int drawbuffer, const unsigned int* value)
+    void Device::clear_bufferuiv(UnsignedIntegerClearBuffer buffer, int drawbuffer, const unsigned int* value)
     {
         metagl::glClearBufferuiv(buffer, drawbuffer, value);
     }
 
-    void Device::clear_bufferfi(int drawbuffer, float depth, int stencil)
+    void Device::clear_bufferfi(float depth, int stencil)
     {
-        metagl::glClearBufferfi(metagl::ClearBuffer::Depth, drawbuffer, depth, stencil);
+        metagl::glClearBufferfi(depth, stencil);
     }
 
     void Device::set_clear_color(float r, float g, float b, float a)
@@ -493,7 +493,7 @@ namespace easygl
         metagl::glMemoryBarrier(barriers);
     }
 
-    void Device::memory_barrier_by_region(MemoryBarrierMask barriers)
+    void Device::memory_barrier_by_region(MemoryBarrierByRegionMask barriers)
     {
         metagl::glMemoryBarrierByRegion(barriers);
     }

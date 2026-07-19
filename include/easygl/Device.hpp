@@ -45,10 +45,10 @@ namespace easygl
 
         // ---- Clear ----
         void clear(ClearFlags flags);
-        void clear_bufferfv(ClearBuffer buffer, int drawbuffer, const float* value);
-        void clear_bufferiv(ClearBuffer buffer, int drawbuffer, const int* value);
-        void clear_bufferuiv(ClearBuffer buffer, int drawbuffer, const unsigned int* value);
-        void clear_bufferfi(int drawbuffer, float depth, int stencil);
+        void clear_bufferfv(FloatClearBuffer buffer, int drawbuffer, const float* value);
+        void clear_bufferiv(SignedIntegerClearBuffer buffer, int drawbuffer, const int* value);
+        void clear_bufferuiv(UnsignedIntegerClearBuffer buffer, int drawbuffer, const unsigned int* value);
+        void clear_bufferfi(float depth, int stencil);
         void set_clear_color(float r, float g, float b, float a);
         void set_clear_depth(float depth);
         void set_clear_stencil(int value);
@@ -143,7 +143,7 @@ namespace easygl
         void dispatch_compute(unsigned int num_groups_x, unsigned int num_groups_y, unsigned int num_groups_z);
         void dispatch_compute_indirect(std::ptrdiff_t indirect);
         void memory_barrier(MemoryBarrierMask barriers);
-        void memory_barrier_by_region(MemoryBarrierMask barriers);
+        void memory_barrier_by_region(MemoryBarrierByRegionMask barriers);
 
         // ---- Tessellation ----
         void set_patch_vertices(int count);

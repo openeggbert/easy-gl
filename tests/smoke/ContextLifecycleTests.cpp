@@ -202,7 +202,13 @@ namespace
             "glVertexAttribFormat", "glVertexAttribIFormat", "glVertexAttribBinding",
             "glBindVertexBuffer", "glVertexBindingDivisor",
             "glDrawArraysIndirect", "glDrawElementsIndirect",
-            "glTexStorage2DMultisample", "glGetInternalformativ", "glBindImageTexture",
+            // NOTE: glGetInternalformativ is GLES 3.0 core (see
+            // meta-gl's OpenGL_ES.md reference table and its
+            // gles30_required_names in RequiredFunctions.inc), not
+            // 3.1-only, so it must stay available for this GLES-3.0-only
+            // loader; only glTexStorage2DMultisample/glBindImageTexture
+            // are genuinely 3.1+.
+            "glTexStorage2DMultisample", "glBindImageTexture",
             "glFramebufferParameteri", "glGetFramebufferParameteriv",
             "glGetProgramInterfaceiv", "glGetProgramResourceIndex", "glGetProgramResourceName",
             "glGetProgramResourceiv", "glGetProgramResourceLocation",

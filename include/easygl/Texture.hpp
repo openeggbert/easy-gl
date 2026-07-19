@@ -27,15 +27,15 @@ namespace easygl
         void bind(TextureTarget target) const;
         void active_bind(TextureUnit unit, TextureTarget target) const;
 
-        void set_parameter(TextureTarget target, TextureParameter pname, int value);
-        void set_parameter(TextureTarget target, TextureParameter pname, float value);
-        void set_parameter_fv(TextureTarget target, TextureParameter pname, const float* values);
-        void set_parameter_iv(TextureTarget target, TextureParameter pname, const int* values);
-        void set_parameter_iiv(TextureTarget target, TextureParameter pname, const int* values);
-        void set_parameter_iuiv(TextureTarget target, TextureParameter pname, const unsigned int* values);
+        void set_parameter(TextureTarget target, TextureParameterSetter pname, int value);
+        void set_parameter(TextureTarget target, TextureParameterSetter pname, float value);
+        void set_parameter_fv(TextureTarget target, TextureParameterSetter pname, const float* values);
+        void set_parameter_iv(TextureTarget target, TextureParameterSetter pname, const int* values);
+        void set_parameter_iiv(TextureTarget target, TextureParameterSetter pname, const int* values);
+        void set_parameter_iuiv(TextureTarget target, TextureParameterSetter pname, const unsigned int* values);
 
-        void get_parameter_fv(TextureTarget target, TextureParameter pname, float* out) const;
-        void get_parameter_iv(TextureTarget target, TextureParameter pname, int* out) const;
+        void get_parameter_fv(TextureTarget target, TextureParameterQuery pname, float* out) const;
+        void get_parameter_iv(TextureTarget target, TextureParameterQuery pname, int* out) const;
         [[nodiscard]] int   get_level_parameter(TextureTarget target, int level, TextureLevelParameter pname) const;
         [[nodiscard]] float get_level_parameterf(TextureTarget target, int level, TextureLevelParameter pname) const;
 
@@ -54,9 +54,9 @@ namespace easygl
                                int x, int y, int z, int width, int height, int depth,
                                PixelFormat format, PixelType type, const void* data);
 
-        void set_storage_2d(TextureTarget target, int levels, InternalFormat internal_format, int width, int height);
-        void set_storage_3d(TextureTarget target, int levels, InternalFormat internal_format, int width, int height, int depth);
-        void set_storage_2d_multisample(TextureTarget target, int samples, InternalFormat internal_format,
+        void set_storage_2d(TextureTarget target, int levels, SizedInternalFormat internal_format, int width, int height);
+        void set_storage_3d(TextureTarget target, int levels, SizedInternalFormat internal_format, int width, int height, int depth);
+        void set_storage_2d_multisample(TextureTarget target, int samples, SizedInternalFormat internal_format,
                                         int width, int height, bool fixed_sample_locations);
 
         void set_compressed_image_2d(TextureTarget target, int level,
@@ -94,7 +94,7 @@ namespace easygl
                         ImageAccess access, InternalFormat format);
 
         static Texture create_2d(int width, int height,
-                                  InternalFormat internal_format = InternalFormat::Rgba8,
+                                  SizedInternalFormat internal_format = SizedInternalFormat::Rgba8,
                                   bool generate_mipmaps = false);
 
         static Texture create_2d_rgba8(int width, int height,

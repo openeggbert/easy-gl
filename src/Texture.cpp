@@ -52,6 +52,7 @@ namespace easygl
 
     void Texture::bind(TextureTarget target) const
     {
+        metagl::glActiveTexture(metagl::TextureUnit::Texture0);
         metagl::glBindTexture(target, metagl::TextureId{handle_});
     }
 
@@ -61,42 +62,42 @@ namespace easygl
         metagl::glBindTexture(target, metagl::TextureId{handle_});
     }
 
-    void Texture::set_parameter(TextureTarget target, TextureParameter pname, int value)
+    void Texture::set_parameter(TextureTarget target, TextureParameterSetter pname, int value)
     {
         metagl::glTexParameteri(target, pname, value);
     }
 
-    void Texture::set_parameter(TextureTarget target, TextureParameter pname, float value)
+    void Texture::set_parameter(TextureTarget target, TextureParameterSetter pname, float value)
     {
         metagl::glTexParameterf(target, pname, value);
     }
 
-    void Texture::set_parameter_fv(TextureTarget target, TextureParameter pname, const float* values)
+    void Texture::set_parameter_fv(TextureTarget target, TextureParameterSetter pname, const float* values)
     {
         metagl::glTexParameterfv(target, pname, values);
     }
 
-    void Texture::set_parameter_iv(TextureTarget target, TextureParameter pname, const int* values)
+    void Texture::set_parameter_iv(TextureTarget target, TextureParameterSetter pname, const int* values)
     {
         metagl::glTexParameteriv(target, pname, values);
     }
 
-    void Texture::set_parameter_iiv(TextureTarget target, TextureParameter pname, const int* values)
+    void Texture::set_parameter_iiv(TextureTarget target, TextureParameterSetter pname, const int* values)
     {
         metagl::glTexParameterIiv(target, pname, values);
     }
 
-    void Texture::set_parameter_iuiv(TextureTarget target, TextureParameter pname, const unsigned int* values)
+    void Texture::set_parameter_iuiv(TextureTarget target, TextureParameterSetter pname, const unsigned int* values)
     {
         metagl::glTexParameterIuiv(target, pname, values);
     }
 
-    void Texture::get_parameter_fv(TextureTarget target, TextureParameter pname, float* out) const
+    void Texture::get_parameter_fv(TextureTarget target, TextureParameterQuery pname, float* out) const
     {
         metagl::glGetTexParameterfv(target, pname, out);
     }
 
-    void Texture::get_parameter_iv(TextureTarget target, TextureParameter pname, int* out) const
+    void Texture::get_parameter_iv(TextureTarget target, TextureParameterQuery pname, int* out) const
     {
         metagl::glGetTexParameteriv(target, pname, out);
     }
@@ -123,10 +124,10 @@ namespace easygl
                              metagl::InternalFormat::Rgba,
                              width, height, 0,
                              metagl::PixelFormat::Rgba, metagl::PixelType::UnsignedByte, data);
-        metagl::glTexParameteri(target, metagl::TextureParameter::MinFilter, static_cast<GLint>(metagl::TextureMinFilter::Linear));
-        metagl::glTexParameteri(target, metagl::TextureParameter::MagFilter, static_cast<GLint>(metagl::TextureMagFilter::Linear));
-        metagl::glTexParameteri(target, metagl::TextureParameter::WrapS, static_cast<GLint>(metagl::TextureWrapMode::ClampToEdge));
-        metagl::glTexParameteri(target, metagl::TextureParameter::WrapT, static_cast<GLint>(metagl::TextureWrapMode::ClampToEdge));
+        metagl::glTexParameteri(target, metagl::TextureParameterSetter::MinFilter, static_cast<GLint>(metagl::TextureMinFilter::Linear));
+        metagl::glTexParameteri(target, metagl::TextureParameterSetter::MagFilter, static_cast<GLint>(metagl::TextureMagFilter::Linear));
+        metagl::glTexParameteri(target, metagl::TextureParameterSetter::WrapS, static_cast<GLint>(metagl::TextureWrapMode::ClampToEdge));
+        metagl::glTexParameteri(target, metagl::TextureParameterSetter::WrapT, static_cast<GLint>(metagl::TextureWrapMode::ClampToEdge));
     }
 
     void Texture::set_image_2d(TextureTarget target, int level,
@@ -157,17 +158,17 @@ namespace easygl
         metagl::glTexSubImage3D(target, level, x, y, z, width, height, depth, format, type, data);
     }
 
-    void Texture::set_storage_2d(TextureTarget target, int levels, InternalFormat internal_format, int width, int height)
+    void Texture::set_storage_2d(TextureTarget target, int levels, SizedInternalFormat internal_format, int width, int height)
     {
         metagl::glTexStorage2D(target, levels, internal_format, width, height);
     }
 
-    void Texture::set_storage_3d(TextureTarget target, int levels, InternalFormat internal_format, int width, int height, int depth)
+    void Texture::set_storage_3d(TextureTarget target, int levels, SizedInternalFormat internal_format, int width, int height, int depth)
     {
         metagl::glTexStorage3D(target, levels, internal_format, width, height, depth);
     }
 
-    void Texture::set_storage_2d_multisample(TextureTarget target, int samples, InternalFormat internal_format,
+    void Texture::set_storage_2d_multisample(TextureTarget target, int samples, SizedInternalFormat internal_format,
                                               int width, int height, bool fixed_sample_locations)
     {
         metagl::glTexStorage2DMultisample(target, samples, internal_format, width, height,
@@ -224,7 +225,7 @@ namespace easygl
         metagl::glBindImageTexture(metagl::ImageUnit{unit}, metagl::TextureId{handle_}, level, layered ? 1 : 0, layer, access, format);
     }
 
-    Texture Texture::create_2d(int width, int height, InternalFormat internal_format, bool generate_mipmaps)
+    Texture Texture::create_2d(int width, int height, SizedInternalFormat internal_format, bool generate_mipmaps)
     {
         Texture tex;
         tex.create();
