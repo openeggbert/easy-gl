@@ -11,6 +11,14 @@ namespace easygl
 {
     class Program;
 
+    /// Separable shader program pipeline (ES 3.1+).
+    ///
+    /// @warning Permanently unavailable on WebGL, in both WebGL 1 and WebGL 2:
+    ///          browser GL has no equivalent of separable shader objects, so
+    ///          this is not a version/tier gap that a future WebGL version
+    ///          could close. @ref create throws @ref UnsupportedFeatureException
+    ///          instead of crashing when the underlying `glGenProgramPipelines`
+    ///          entry point is unavailable (e.g. on any WebGL context).
     class EASYGL_API ProgramPipeline : public detail::NonCopyable, public detail::GenerationTracked
     {
     public:

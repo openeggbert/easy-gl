@@ -1,4 +1,5 @@
 #include "easygl/Sampler.hpp"
+#include "easygl/Exception.hpp"
 #include <metagl/metagl.hpp>
 
 namespace easygl
@@ -33,6 +34,12 @@ namespace easygl
     void Sampler::create()
     {
         if (is_created()) return;
+        // Sampler objects are an ES 3.0+ feature (e.g. absent on WebGL 1); without
+        // this check glGenSamplers would be a null function pointer on such a
+        // context, crashing on a null-pointer call instead of raising a clear
+        // error. See TODO.md.
+        if (!metagl::IsFunctionAvailable("glGenSamplers"))
+            throw UnsupportedFeatureException("Sampler objects are not supported by the current context.");
         metagl::SamplerId sid{};
         metagl::glGenSamplers(1, &sid);
         handle_ = sid.value;

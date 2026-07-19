@@ -1,5 +1,6 @@
 #include "easygl/Texture.hpp"
 #include "easygl/Buffer.hpp"
+#include "easygl/Exception.hpp"
 #include <metagl/metagl.hpp>
 
 namespace easygl
@@ -104,6 +105,11 @@ namespace easygl
 
     int Texture::get_level_parameter(TextureTarget target, int level, TextureLevelParameter pname) const
     {
+        // glGetTexLevelParameteriv is documented by meta-gl as GL ES 3.1+; on an
+        // older/WebGL context the function pointer is null, so guard explicitly
+        // instead of crashing on a null-pointer call. See TODO.md.
+        if (!metagl::IsFunctionAvailable("glGetTexLevelParameteriv"))
+            throw UnsupportedFeatureException("Querying texture level parameters is not supported by the current context.");
         int value = 0;
         metagl::glGetTexLevelParameteriv(target, level, pname, &value);
         return value;
@@ -111,6 +117,8 @@ namespace easygl
 
     float Texture::get_level_parameterf(TextureTarget target, int level, TextureLevelParameter pname) const
     {
+        if (!metagl::IsFunctionAvailable("glGetTexLevelParameterfv"))
+            throw UnsupportedFeatureException("Querying texture level parameters is not supported by the current context.");
         float value = 0.0f;
         metagl::glGetTexLevelParameterfv(target, level, pname, &value);
         return value;

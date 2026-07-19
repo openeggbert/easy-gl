@@ -19,6 +19,12 @@ namespace easygl
         limits_[name] = value;
     }
 
+    void Capabilities::set_webgl(bool webgl1, bool webgl2) noexcept
+    {
+        webgl1_ = webgl1;
+        webgl2_ = webgl2;
+    }
+
     void Capabilities::detect_common_features()
     {
         // Basic version-based detection
@@ -48,8 +54,17 @@ namespace easygl
             set_feature(Feature::OpenGlOnlyPolygonMode, true);
             set_feature(Feature::OpenGlOnlyLineWidthWide, true);
         }
-        else if (is_opengles())
+        else if (is_opengles() || is_webgl())
         {
+            // WebGL is intentionally routed through the same version/extension-based
+            // ES detection algorithm below: meta-gl reports WebGL 1 as major/minor
+            // 2.0 and WebGL 2 as 3.0 (see metagl's Context.cpp), the same numeric
+            // scheme used for native GLES. This makes the GL_OES_vertex_array_object
+            // dependency on WebGL 1 (where VertexArrayObject is an optional
+            // extension, not core) explicit rather than accidental, and correctly
+            // excludes features that are permanently absent from WebGL (e.g.
+            // geometry/tessellation shaders, debug output) via the same is_at_least()
+            // checks that already gate them out below GLES 3.2.
             set_feature(Feature::VertexArrayObject, is_at_least(3, 0) || supports_extension("GL_OES_vertex_array_object"));
             set_feature(Feature::Shader, is_at_least(2, 0));
             set_feature(Feature::Program, is_at_least(2, 0));
@@ -119,6 +134,21 @@ namespace easygl
     bool Capabilities::is_opengles() const noexcept
     {
         return context_info_.is_opengles();
+    }
+
+    bool Capabilities::is_webgl() const noexcept
+    {
+        return context_info_.is_webgl();
+    }
+
+    bool Capabilities::is_webgl1() const noexcept
+    {
+        return webgl1_;
+    }
+
+    bool Capabilities::is_webgl2() const noexcept
+    {
+        return webgl2_;
     }
 
     bool Capabilities::is_at_least(int major, int minor) const noexcept

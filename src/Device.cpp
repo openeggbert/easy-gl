@@ -16,6 +16,20 @@ namespace easygl
     {
     }
 
+    namespace
+    {
+        ApiKind to_easygl_api_kind(metagl::ApiKind api) noexcept
+        {
+            switch (api)
+            {
+                case metagl::ApiKind::OpenGL:   return ApiKind::OpenGL;
+                case metagl::ApiKind::OpenGLES: return ApiKind::OpenGLES;
+                case metagl::ApiKind::WebGL:    return ApiKind::WebGL;
+                case metagl::ApiKind::Unknown:  default: return ApiKind::Unknown;
+            }
+        }
+    }
+
     void Device::initialize(GLGetProcAddressFn loader)
     {
         if (initialized_) return;
@@ -28,79 +42,26 @@ namespace easygl
         if (!metagl::Initialize(loader_))
             throw Exception("Failed to bootstrap GL functions.");
 
-        const char* vendor_ptr     = reinterpret_cast<const char*>(metagl::glGetString(metagl::StringName::Vendor));
-        const char* renderer_ptr   = reinterpret_cast<const char*>(metagl::glGetString(metagl::StringName::Renderer));
-        const char* version_ptr    = reinterpret_cast<const char*>(metagl::glGetString(metagl::StringName::Version));
-        const char* sl_version_ptr = reinterpret_cast<const char*>(metagl::glGetString(metagl::StringName::ShadingLanguageVersion));
-
-        std::string vendor                = vendor_ptr     ? vendor_ptr     : "";
-        std::string renderer              = renderer_ptr   ? renderer_ptr   : "";
-        std::string version_string        = version_ptr    ? version_ptr    : "";
-        std::string shading_language_version = sl_version_ptr ? sl_version_ptr : "";
-
-        ApiKind api = ApiKind::OpenGL;
-        if (version_string.find("OpenGL ES") != std::string::npos)
-            api = ApiKind::OpenGLES;
-
-        int major = 0;
-        int minor = 0;
-
-        metagl::glGetIntegerv(metagl::GetParameter::MajorVersion, &major);
-        metagl::glGetIntegerv(metagl::GetParameter::MinorVersion, &minor);
-
-        if (major == 0)
-        {
-            const char* v = version_string.c_str();
-            if (api == ApiKind::OpenGLES && version_string.length() > 10) v += 10;
-            if (v && *v >= '0' && *v <= '9')
-            {
-                major = *v - '0';
-                if (*(v + 1) == '.' && *(v + 2) >= '0' && *(v + 2) <= '9')
-                    minor = *(v + 2) - '0';
-            }
-        }
-
-        std::vector<std::string> extensions;
-        if (major >= 3)
-        {
-            int num_extensions = 0;
-            metagl::glGetIntegerv(metagl::GetParameter::NumExtensions, &num_extensions);
-            for (int i = 0; i < num_extensions; ++i)
-            {
-                const char* ext = reinterpret_cast<const char*>(
-                    metagl::glGetStringi(metagl::StringName::Extensions, static_cast<unsigned int>(i)));
-                if (ext) extensions.push_back(ext);
-            }
-        }
-        else
-        {
-            const char* ext_ptr = reinterpret_cast<const char*>(metagl::glGetString(metagl::StringName::Extensions));
-            if (ext_ptr)
-            {
-                std::string s(ext_ptr);
-                std::string delimiter = " ";
-                size_t pos = 0;
-                while ((pos = s.find(delimiter)) != std::string::npos)
-                {
-                    std::string token = s.substr(0, pos);
-                    if (!token.empty()) extensions.push_back(token);
-                    s.erase(0, pos + delimiter.length());
-                }
-                if (!s.empty()) extensions.push_back(s);
-            }
-        }
+        // Reuse meta-gl's own tested context/version/extension detection
+        // (metagl::GetContextInfo()/GetCapabilities()) instead of duplicating
+        // GL_VERSION-string parsing here. This also gives easy-gl an explicit
+        // ApiKind::WebGL rather than accidentally classifying WebGL contexts
+        // as plain OpenGLES.
+        const metagl::ContextInfo& mgl_info = metagl::GetContextInfo();
+        const metagl::Capabilities& mgl_caps = metagl::GetCapabilities();
 
         ContextInfo info;
-        info.api = api;
-        info.major = major;
-        info.minor = minor;
-        info.vendor = vendor;
-        info.renderer = renderer;
-        info.version_string = version_string;
-        info.shading_language_version = shading_language_version;
-        info.extensions = std::move(extensions);
+        info.api = to_easygl_api_kind(mgl_info.api);
+        info.major = mgl_info.major;
+        info.minor = mgl_info.minor;
+        info.vendor = mgl_caps.vendor;
+        info.renderer = mgl_caps.renderer;
+        info.version_string = mgl_caps.version_string;
+        info.shading_language_version = mgl_caps.shading_language_version;
+        info.extensions = mgl_caps.extensions;
 
         capabilities_.set_context_info(std::move(info));
+        capabilities_.set_webgl(mgl_caps.webgl1, mgl_caps.webgl2);
         capabilities_.detect_common_features();
 
         if (!capabilities_.supports(Feature::VertexArrayObject)) throw Exception("VertexArrayObject support is required.");

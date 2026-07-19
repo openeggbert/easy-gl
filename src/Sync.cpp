@@ -1,4 +1,5 @@
 #include "easygl/Sync.hpp"
+#include "easygl/Exception.hpp"
 #include <metagl/metagl.hpp>
 
 namespace easygl
@@ -29,6 +30,12 @@ namespace easygl
     void Sync::fence(SyncCondition condition)
     {
         destroy();
+        // Sync objects are an ES 3.0+ feature (e.g. absent on WebGL 1); without
+        // this check glFenceSync would be a null function pointer on such a
+        // context, crashing on a null-pointer call instead of raising a clear
+        // error. See TODO.md.
+        if (!metagl::IsFunctionAvailable("glFenceSync"))
+            throw UnsupportedFeatureException("Sync objects are not supported by the current context.");
         sync_ = metagl::glFenceSync(condition, metagl::SyncFlag::None);
     }
 

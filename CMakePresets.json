@@ -1,0 +1,64 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 23, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Default (host compiler)",
+      "description": "Standard debug build with tests and examples enabled",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release (host compiler)",
+      "description": "Optimized release build",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "emscripten",
+      "displayName": "Emscripten / WebGL",
+      "description": "Cross-compile for WebAssembly using the Emscripten toolchain, exercising the WebGL 1/2 code paths (see tests/smoke/WebGLTests.cpp). Uses a Debug build type so that assert()-based test checks stay active under Node (Release/RelWithDebInfo define NDEBUG, silently no-op'ing them). Requires EMSDK environment variable pointing to your emsdk installation.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "toolchainFile": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CROSSCOMPILING_EMULATOR": "node"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "emscripten",
+      "configurePreset": "emscripten"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "emscripten",
+      "configurePreset": "emscripten",
+      "output": { "outputOnFailure": true }
+    }
+  ]
+}

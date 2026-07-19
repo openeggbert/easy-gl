@@ -21,19 +21,21 @@
 
 **Build:** Clean — all targets build without errors or warnings.
 
-**Tests:** Three smoke test binaries exist:
-- `easy-gl-smoke-tests` — init/device tests (no GL context required)
-- `easy-gl-resource-smoke-tests` — resource object creation smoke tests
-- `easy-gl-context-lifecycle-tests` — ResourceRegistry context-loss/restore cycle
+**Tests:** Four smoke test binaries exist:
+- `easy-gl-smoke-tests` — init/device tests (no GL context required; native/host builds only, see below)
+- `easy-gl-resource-smoke-tests` — resource object creation smoke tests (native/host builds only)
+- `easy-gl-context-lifecycle-tests` — ResourceRegistry context-loss/restore cycle, plus GLES2/GLES3 tiered mock-loader coverage
+- `easy-gl-webgl-tests` — WebGL 1-shaped mock-loader coverage: `ApiKind::WebGL` classification, `GL_OES_vertex_array_object` gating, and `UnsupportedFeatureException` (not a crash) from `Query`/`Sampler`/`TransformFeedback`/`Sync`/`ProgramPipeline`/`Texture::get_level_parameter*` when the underlying entry point is missing
 
-All tests compile and link. Runtime tests require an OpenGL context (EGL/SDL).
+All tests use fake function-pointer loaders and require no real GL context, so they run identically under a native host build (`cmake --preset default`) and cross-compiled with the `emscripten` preset (`cmake --preset emscripten && cmake --build --preset emscripten && ctest --preset emscripten`, executed under Node). `easy-gl-smoke-tests`/`easy-gl-resource-smoke-tests` mock a desktop-OpenGL-shaped context that a real WebGL host can never report (meta-gl always classifies `__EMSCRIPTEN__` builds as `ApiKind::WebGL`), so they are only built/registered for non-Emscripten configurations.
 
 **Library:** `libeasy-gl.a` (static)
 
 **Example:** `hello-triangle-sdl` — SDL2+OpenGL ES triangle demo (builds, requires display).
 
 **What does NOT work yet:**
-- No headless automated test execution (no EGL pbuffer setup in CI).
+- No headless automated test execution against a *real* GL context (no EGL pbuffer setup in CI); all current tests use fake function-pointer loaders instead.
+- No real-browser WebGL verification (`WEBGL_lose_context`, actual canvas) — the `emscripten` preset only proves the code cross-compiles and the mock-loader-based logic holds under Node, not that it runs correctly against a real browser GL implementation.
 - `Config::log_callback` field does not exist yet (S1/S2 not done).
 - No CMake install/package export (`find_package(easy-gl)` not supported — W3).
 - `CXX_STANDARD` is set to 23 in CMake but CLAUDE.md targets C++20 (W1).
@@ -47,6 +49,15 @@ All tests compile and link. Runtime tests require an OpenGL context (EGL/SDL).
 - `include/easygl/ScopedDebugGroup.hpp` + `src/ScopedDebugGroup.cpp` — RAII GPU debug groups
 - `include/easygl/UniformCache.hpp` + `src/UniformCache.cpp` — cached `glGetUniformLocation`
 - `include/easygl/ResourceRegistration.hpp` + `src/ResourceRegistration.cpp` — RAII registry guard
+- `CMakePresets.json` — `default`/`release` (host) and `emscripten` (WebAssembly, `Debug` build type so `assert()`-based test checks stay active under Node) configure/build/test presets
+- `tests/smoke/WebGLTests.cpp` — WebGL-specific correctness coverage (see section 2)
+
+**WebGL correctness fixes (previously tracked in the now-removed `webgl.md`):**
+- `Device::initialize()` now reuses meta-gl's own `GetContextInfo()`/`GetCapabilities()` instead of duplicating `GL_VERSION`-string parsing, and surfaces `ApiKind::WebGL` plus `Capabilities::is_webgl()/is_webgl1()/is_webgl2()`.
+- `Query`, `Sampler`, `TransformFeedback`, `Sync`, `ProgramPipeline::create()`, and `Texture::get_level_parameter()/get_level_parameterf()` now check `metagl::IsFunctionAvailable()` and throw `UnsupportedFeatureException` instead of crashing on a null function pointer on contexts missing the underlying entry point (e.g. WebGL 1).
+- `ProgramPipeline.hpp` documents that separable shader programs have no WebGL equivalent at all (not even WebGL 2) — a permanent gap, not a version tier.
+- `VertexArrayObject` support below GLES/WebGL 3.0 now depends on `GL_OES_vertex_array_object` being advertised (checked via the existing extension-based detection in `Capabilities::detect_common_features()`), rather than being silently assumed.
+- Rejected as out of scope (per user decision when reviewing `webgl.md`): a real-browser/Emscripten-runtime smoke test beyond the mock-loader-based `easy-gl-webgl-tests` (see "What does NOT work yet" above).
 
 **Major additions to existing files:**
 - `Device`: generic state getters (`get_boolean/float/integer/integer64`), indexed blend/color/enable, advanced draw calls, debug message API, ES 3.1+/3.2+ methods
